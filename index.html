@@ -482,6 +482,10 @@ table.gtbl{width:100%;border-collapse:collapse;font-size:13px}
     <div class="groom-bar">
       <span class="gbar-lbl">Date:</span>
       <input type="date" class="gbar-date" id="groomDate" onchange="renderGrooms()">
+      <button class="gbtn paste-claude" id="pasteCBtn" onclick="pasteFromClaude()" style="display:none;background:linear-gradient(135deg,#3d1a6e,#5c3d8f);color:#fff;position:relative">
+        <i class="ti ti-clipboard-check"></i> <span>Paste from Claude</span>
+        <span id="pasteCBadge" style="position:absolute;top:-5px;right:-5px;background:#f5a623;color:#fff;font-size:8px;font-weight:700;padding:2px 6px;border-radius:8px"></span>
+      </button>
       <button class="gbtn add" onclick="addGrow()"><i class="ti ti-plus"></i> Add row</button>
       <button class="gbtn clr" onclick="clearGrooms()"><i class="ti ti-trash"></i> Clear all</button>
       <button class="gbtn print" onclick="window.print()"><i class="ti ti-printer"></i> Print list</button>
@@ -643,10 +647,10 @@ const SEED=[
   {ref:'5868824066',name:'GOLDSMITH',room:'',type:'BGSV',arr:'29/5/26',dep:'5/6/26',ad:2,day1:'',day3:'',rating:0,notes:''},
 ];
 let RES=JSON.parse(localStorage.getItem('wra')||'null')||SEED;
-let GROOMS=JSON.parse(localStorage.getItem('wrag')||'null')||[];
+let GR=JSON.parse(localStorage.getItem('wrag')||'null')||[];
 let flt='all',mflt='all',editIdx=null,raFlt='noroom',openEP=null,parsedRows=[];
 function sv(){try{localStorage.setItem('wra',JSON.stringify(RES));}catch(e){}}
-function svG(){try{localStorage.setItem('wrag',JSON.stringify(GROOMS));}catch(e){}}
+function svG(){try{localStorage.setItem('wrag',JSON.stringify(GR));}catch(e){}}
 const DAY=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 function pd(s){if(!s)return null;if(s.includes('-'))return new Date(s);const p=s.split('/');if(p.length===3){const y=p[2].length===2?'20'+p[2]:p[2];return new Date(y+'-'+p[1].padStart(2,'0')+'-'+p[0].padStart(2,'0'));}return null;}
@@ -849,38 +853,38 @@ function renderGrooms(){
   const d=dv?new Date(dv):null;
   const lbl=d?(' \u2014 '+DAY[d.getDay()]+' '+d.getDate()+' '+MON[d.getMonth()]+' 2026'):'';
   document.getElementById('groomDateLbl').textContent=lbl;
-  document.getElementById('groomCount').textContent=GROOMS.length+' room'+(GROOMS.length!==1?'s':'');
+  document.getElementById('groomCount').textContent=GR.length+' room'+(GR.length!==1?'s':'');
   if(d){
     const fmtDate=DAY[d.getDay()]+', '+d.getDate()+' '+MON[d.getMonth()]+' 2026';
     document.getElementById('printHeader').textContent='Grooms Daily List \u2014 '+fmtDate;
   }
   const tbl=document.getElementById('gtbl');
   const empty=document.getElementById('groomEmpty');
-  if(!GROOMS.length){tbl.style.display='none';empty.classList.remove('hidden');return;}
+  if(!GR.length){tbl.style.display='none';empty.classList.remove('hidden');return;}
   tbl.style.display='';empty.classList.add('hidden');
-  document.getElementById('groomTbody').innerHTML=GROOMS.map((row,i)=>
+  document.getElementById('groomTbody').innerHTML=GR.map((row,i)=>
     '<tr>'+
-    '<td><input class="gc room" value="'+esc(row.room)+'" placeholder="e.g. 309" onchange="GROOMS['+i+'].room=this.value;svG()"></td>'+
-    '<td><input class="gc" value="'+esc(row.name)+'" placeholder="Guest name" onchange="GROOMS['+i+'].name=this.value;svG()"></td>'+
-    '<td><input class="gc time" value="'+esc(row.dep)+'" placeholder="e.g. 7/5/26" onchange="GROOMS['+i+'].dep=this.value;svG()"></td>'+
-    '<td><input class="gc lugg" value="'+esc(row.luggage)+'" placeholder="e.g. 08:00" onchange="GROOMS['+i+'].luggage=this.value;svG()"></td>'+
-    '<td><input class="gc pickup" value="'+esc(row.pickup)+'" placeholder="e.g. 10:30" onchange="GROOMS['+i+'].pickup=this.value;svG()"></td>'+
-    '<td><input class="gc note" value="'+esc(row.notes)+'" placeholder="Notes..." onchange="GROOMS['+i+'].notes=this.value;svG()"></td>'+
+    '<td><input class="gc room" value="'+esc(row.room)+'" placeholder="e.g. 309" onchange="GR['+i+'].room=this.value;svG()"></td>'+
+    '<td><input class="gc" value="'+esc(row.name)+'" placeholder="Guest name" onchange="GR['+i+'].name=this.value;svG()"></td>'+
+    '<td><input class="gc time" value="'+esc(row.dep)+'" placeholder="e.g. 7/5/26" onchange="GR['+i+'].dep=this.value;svG()"></td>'+
+    '<td><input class="gc lugg" value="'+esc(row.luggage)+'" placeholder="e.g. 08:00" onchange="GR['+i+'].luggage=this.value;svG()"></td>'+
+    '<td><input class="gc pickup" value="'+esc(row.pickup)+'" placeholder="e.g. 10:30" onchange="GR['+i+'].pickup=this.value;svG()"></td>'+
+    '<td><input class="gc note" value="'+esc(row.notes)+'" placeholder="Notes..." onchange="GR['+i+'].notes=this.value;svG()"></td>'+
     '<td style="text-align:center;padding:4px 6px"><button class="gdel" onclick="delGrow('+i+')" title="Delete row"><i class="ti ti-x"></i></button></td>'+
     '</tr>'
   ).join('');
 }
 
 function addGrow(){
-  GROOMS.push({room:'',name:'',dep:'',luggage:'',pickup:'',notes:''});
+  GR.push({room:'',name:'',dep:'',luggage:'',pickup:'',notes:''});
   svG();renderGrooms();
   setTimeout(()=>{const cells=document.querySelectorAll('#groomTbody tr:last-child .gc');if(cells.length)cells[0].focus();},60);
 }
-function delGrow(i){GROOMS.splice(i,1);svG();renderGrooms();showToast('Row removed','w');}
+function delGrow(i){GR.splice(i,1);svG();renderGrooms();showToast('Row removed','w');}
 function clearGrooms(){
-  if(!GROOMS.length)return;
-  if(!confirm('Clear all '+GROOMS.length+' rows from the grooms list?'))return;
-  GROOMS=[];svG();renderGrooms();showToast('List cleared','w');
+  if(!GR.length)return;
+  if(!confirm('Clear all '+GR.length+' rows from the grooms list?'))return;
+  GR=[];svG();renderGrooms();showToast('List cleared','w');
 }
 
 function handleGFile(inp){
@@ -918,8 +922,8 @@ async function parseGrooms(){
     if(!Array.isArray(parsed)||!parsed.length)throw new Error('No departures found.');
     let added=0;
     parsed.forEach(p=>{
-      const exists=GROOMS.some(g=>g.room===p.room&&g.name===p.name);
-      if(!exists){GROOMS.push({room:p.room||'',name:p.name||'',dep:p.dep||'',luggage:'',pickup:'',notes:''});added++;}
+      const exists=GR.some(g=>g.room===p.room&&g.name===p.name);
+      if(!exists){GR.push({room:p.room||'',name:p.name||'',dep:p.dep||'',luggage:'',pickup:'',notes:''});added++;}
     });
     svG();renderGrooms();st.classList.add('hidden');
     showToast(added+' rows added','s');
@@ -999,6 +1003,23 @@ function showToast(msg,type){const t=document.getElementById('toast');t.textCont
 
 document.getElementById('groomDate').value=new Date().toISOString().split('T')[0];
 renderStats();renderRes();
+window.CLAUDE_DATA = [];
+window.setGroomData = function(data) {
+  window.CLAUDE_DATA = data;
+  const btn = document.getElementById('pasteCBtn');
+  const badge = document.getElementById('pasteCBadge');
+  if(btn) { btn.style.display='flex'; badge.textContent=data.length+' rooms ready'; }
+  showToast(data.length+' rooms ready — click Paste from Claude!','s');
+};
+function pasteFromClaude(){
+  if(!window.CLAUDE_DATA||!window.CLAUDE_DATA.length){showToast('No data loaded yet','w');return;}
+  let added=0;
+  window.CLAUDE_DATA.forEach(row=>{
+    if(!GR.some(g=>g.room===row.room&&g.name===row.name)){GR.push({...row});added++;}
+  });
+  svG();renderGrooms();showToast(added+' rooms loaded!','s');
+}
+
 </script>
 
 <!-- FIREBASE -->
