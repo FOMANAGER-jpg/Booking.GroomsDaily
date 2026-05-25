@@ -18,7 +18,7 @@
   --sh:0 1px 3px rgba(27,108,168,.08),0 4px 16px rgba(27,108,168,.06);
 }
 body{font-family:var(--sans);background:var(--bg);color:var(--ink);min-height:100vh}
-.app{max-width:1400px;margin:0 auto;background:var(--bg);position:relative}
+.app{width:100%;background:var(--bg);position:relative}
 
 /* HEADER */
 .hdr{background:linear-gradient(135deg,var(--sea-dark),var(--sea));padding:10px 22px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
@@ -389,11 +389,11 @@ table.gtbl{width:100%;border-collapse:collapse;font-size:13px}
 .gym-nav-btn:hover{background:var(--sea);color:#fff}
 .gym-month-lbl{font-family:var(--serif);font-size:18px;font-weight:600;color:var(--ink);flex:1;text-align:center}
 .gym-tbl-wrap{background:var(--white);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--sh);overflow:auto;max-height:72vh}
-table.gym-tbl{border-collapse:collapse;font-size:12px;width:max-content}
-.gym-tbl th{background:linear-gradient(180deg,#f0f7ff,#e0eefa);padding:8px 10px;text-align:center;font-size:10px;color:var(--sea-dark);font-weight:700;letter-spacing:.7px;text-transform:uppercase;border:1px solid var(--border);white-space:nowrap;position:sticky;top:0;z-index:10}
-.gym-tbl th.time-col{min-width:60px;background:linear-gradient(180deg,#f7fbff,#edf4fb);position:sticky;left:0;z-index:20}
-.gym-tbl td{padding:0;border:1px solid var(--border2);min-width:90px;height:32px;vertical-align:middle;position:relative}
-.gym-tbl td.time-cell{background:linear-gradient(180deg,#f7fbff,#edf4fb);font-size:11px;font-weight:700;color:var(--muted);text-align:center;padding:0 8px;white-space:nowrap;position:sticky;left:0;z-index:5;min-width:60px}
+table.gym-tbl{border-collapse:collapse;font-size:12px}
+.gym-tbl th{background:linear-gradient(180deg,#f0f7ff,#e0eefa);padding:8px 6px;text-align:center;font-size:10px;color:var(--sea-dark);font-weight:700;letter-spacing:.7px;text-transform:uppercase;border:1px solid var(--border);white-space:nowrap;min-width:72px}
+.gym-tbl th.time-col{min-width:58px;width:58px;background:linear-gradient(180deg,#f7fbff,#edf4fb)}
+.gym-tbl td{padding:0;border:1px solid var(--border2);min-width:72px;height:32px;vertical-align:middle}
+.gym-tbl td.time-cell{background:linear-gradient(180deg,#f7fbff,#edf4fb);font-size:11px;font-weight:700;color:var(--muted);text-align:center;padding:0 8px;white-space:nowrap;min-width:58px;width:58px}
 .gym-tbl td.time-cell.half{color:var(--muted2);font-weight:400}
 .gym-slot{width:100%;height:100%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .1s;font-size:11px;font-weight:600;padding:2px 4px;text-align:center}
 .gym-slot.empty{background:rgba(74,124,89,.04)}.gym-slot.empty:hover{background:var(--sea-light)}
@@ -1015,6 +1015,39 @@ canvas.an-chart{width:100%!important;height:220px!important}
       <div class="fit-hdr-ico"><i class="ti ti-barbell"></i></div>
       <div><div class="fit-hdr-t">Gym Bookings</div><div class="fit-hdr-s">30-min slots &middot; 1 room per slot &middot; 07:00 &rarr; 20:30 daily</div></div>
     </div>
+
+    <!-- ADD BOOKING FORM -->
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;margin-bottom:14px;box-shadow:var(--sh)">
+      <div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:10px;display:flex;align-items:center;gap:8px">
+        <i class="ti ti-plus" style="color:var(--sea)"></i> Add Gym Booking
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
+        <div>
+          <label style="display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:4px">Room</label>
+          <input id="gym-add-room" class="tr-inp" style="width:90px" placeholder="309" maxlength="5">
+        </div>
+        <div>
+          <label style="display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:4px">Date</label>
+          <input type="date" id="gym-add-date" class="tr-inp">
+        </div>
+        <div>
+          <label style="display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:4px">Time</label>
+          <select id="gym-add-time" class="tr-inp" style="width:100px"></select>
+        </div>
+        <div>
+          <label style="display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:4px">Duration</label>
+          <select id="gym-add-dur" class="tr-inp" style="width:100px">
+            <option value="30">30 min</option>
+            <option value="60">1 hour</option>
+          </select>
+        </div>
+        <button onclick="addGymBookingSimple()" style="padding:9px 18px;background:var(--sea);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:6px;height:38px">
+          <i class="ti ti-check"></i> Save
+        </button>
+      </div>
+    </div>
+
+    <!-- MONTH CALENDAR -->
     <div class="gym-nav">
       <button class="gym-nav-btn" onclick="gymPrevMonth()"><i class="ti ti-chevron-left"></i></button>
       <div class="gym-month-lbl" id="gymMonthLbl"></div>
@@ -2242,13 +2275,12 @@ function renderTopThemes(){
    GYM BOOKINGS
 ═══════════════════════════════ */
 let gymBookings = JSON.parse(localStorage.getItem('gym_bookings') || '{}');
-let gymMonth = new Date().getMonth(); // 0-indexed
+let gymMonth = new Date().getMonth();
 let gymYear = new Date().getFullYear();
-let gymModalData = null;
 let gymDuration = 30;
 
 const GYM_MONTHS = ['May','June','July','August','September','October'];
-const GYM_MONTH_NUMS = [4,5,6,7,8,9]; // 0-indexed
+const GYM_MONTH_NUMS = [4,5,6,7,8,9];
 
 function svGym(){
   try{localStorage.setItem('gym_bookings', JSON.stringify(gymBookings));}catch(e){}
@@ -2258,145 +2290,144 @@ function svGym(){
 function gymSlots(){
   const slots=[];
   for(let h=7;h<21;h++){slots.push(h*60);slots.push(h*60+30);}
-  slots.push(20*60+30); // 20:30 last start (30min goes to 21:00, 1hr would be 21:30 -- we allow up to 20:30 start)
+  slots.push(20*60+30);
   return slots;
 }
 function minToStr(m){return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');}
 
 function gymPrevMonth(){
   const idx=GYM_MONTH_NUMS.indexOf(gymMonth);
-  if(idx>0){gymMonth=GYM_MONTH_NUMS[idx-1];gymYear=2026;}
+  if(idx>0){gymMonth=GYM_MONTH_NUMS[idx-1];}
   renderGym();
 }
 function gymNextMonth(){
   const idx=GYM_MONTH_NUMS.indexOf(gymMonth);
-  if(idx<GYM_MONTH_NUMS.length-1){gymMonth=GYM_MONTH_NUMS[idx+1];gymYear=2026;}
+  if(idx<GYM_MONTH_NUMS.length-1){gymMonth=GYM_MONTH_NUMS[idx+1];}
   renderGym();
 }
 
 function renderGym(){
-  // Clamp to valid months
   if(!GYM_MONTH_NUMS.includes(gymMonth)){gymMonth=GYM_MONTH_NUMS[0];}
   const mName=GYM_MONTHS[GYM_MONTH_NUMS.indexOf(gymMonth)];
   document.getElementById('gymMonthLbl').textContent=mName+' '+gymYear;
-  
+
+  // Populate add form selects
+  const timeSel=document.getElementById('gym-add-time');
+  if(timeSel&&!timeSel.options.length){
+    gymSlots().forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=minToStr(s);timeSel.appendChild(o);});
+  }
+  const dateInp=document.getElementById('gym-add-date');
+  if(dateInp&&!dateInp.value) dateInp.value=new Date().toISOString().split('T')[0];
+
   const daysInMonth=new Date(gymYear,gymMonth+1,0).getDate();
   const today=new Date();today.setHours(0,0,0,0);
   const slots=gymSlots();
   const DAY_S=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  
-  // Build header
+
   let hdr='<thead><tr><th class="time-col">Time</th>';
   for(let d=1;d<=daysInMonth;d++){
     const dt=new Date(gymYear,gymMonth,d);
     const dow=DAY_S[dt.getDay()];
     const isToday=dt.getTime()===today.getTime();
-    hdr+=`<th style="${isToday?'background:linear-gradient(180deg,#e8f3fb,#c5dff2);color:var(--sea-dark)':''}">${dow}<br><span style="font-size:11px;font-weight:400">${d}</span></th>`;
+    const isWe=dt.getDay()===0||dt.getDay()===6;
+    hdr+=`<th style="${isToday?'background:linear-gradient(180deg,#e8f3fb,#c5dff2);color:var(--sea-dark)':isWe?'background:#f5f0ff':''}">${dow}<br><span style="font-size:11px;font-weight:400">${d}</span></th>`;
   }
   hdr+='</tr></thead>';
-  
-  // Build body
+
   let body='<tbody>';
   slots.forEach(slot=>{
     const timeStr=minToStr(slot);
     const isHalf=slot%60===30;
-    body+=`<tr>`;
-    body+=`<td class="time-cell${isHalf?' half':''}">${timeStr}</td>`;
+    body+=`<tr><td class="time-cell${isHalf?' half':''}">${timeStr}</td>`;
     for(let d=1;d<=daysInMonth;d++){
       const dateKey=`${gymYear}-${String(gymMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
       const slotKey=`${dateKey}_${slot}`;
       const booking=gymBookings[slotKey];
       const dt=new Date(gymYear,gymMonth,d);dt.setHours(0,0,0,0);
-      const isToday=dt.getTime()===today.getTime();
-      const isWe=dt.getDay()===0||dt.getDay()===6;
+      const isToday2=dt.getTime()===today.getTime();
+      const isWe2=dt.getDay()===0||dt.getDay()===6;
       if(booking){
         if(booking.isTail){
-          // This is the second half of a 1hr booking - show continuation
-          body+=`<td style="padding:0;border:1px solid var(--border2);width:80px;height:32px"><div class="gym-slot booked" style="background:linear-gradient(135deg,#c0392b,#a93226);opacity:.85;cursor:pointer" onclick="openGymModal('${dateKey}',${slot},true)">${booking.room}<span class="gym-today-lbl">cont.</span></div></td>`;
+          body+=`<td><div class="gym-slot booked" style="background:linear-gradient(135deg,#c0392b,#a93226)" onclick="deleteGymByKey('${slotKey}')">${booking.room}<span class="gym-today-lbl">▼</span></div></td>`;
         } else {
-          body+=`<td><div class="gym-slot booked" onclick="openGymModal('${dateKey}',${slot},true)">${booking.room}<span class="gym-today-lbl">${booking.dur===60?'1hr':'30m'}</span></div></td>`;
+          body+=`<td><div class="gym-slot booked" onclick="deleteGymByKey('${slotKey}')">${booking.room}<span class="gym-today-lbl">${booking.dur===60?'1hr':'30m'}</span></div></td>`;
         }
       } else {
-        body+=`<td class="${isToday?'gym-slot today':isWe?'gym-slot weekend':''}"><div class="gym-slot empty" onclick="openGymModal('${dateKey}',${slot},false)">&nbsp;</div></td>`;
+        body+=`<td style="${isToday2?'background:rgba(27,108,168,.05)':isWe2?'background:rgba(92,61,143,.03)':''}"><div class="gym-slot empty">&nbsp;</div></td>`;
       }
     }
-    body+=`</tr>`;
+    body+='</tr>';
   });
   body+='</tbody>';
-  
+
   document.getElementById('gymTbl').innerHTML=hdr+body;
 }
 
-function openGymModal(dateKey, slot, isEdit){
-  // If clicking tail slot, redirect to head slot
-  const clickedKey=`${dateKey}_${slot}`;
-  if(gymBookings[clickedKey]&&gymBookings[clickedKey].isTail){
-    const headKey=gymBookings[clickedKey].headKey;
-    const headSlot=parseInt(headKey.split('_').pop());
-    slot=headSlot;
-  }
-  gymModalData={dateKey,slot,isEdit};
-  const b=gymBookings[`${dateKey}_${slot}`];
-  const dur=b?b.dur:30;
-  gymDuration=dur===60?60:30;
-  document.getElementById('dur30').classList.toggle('on',gymDuration===30);
-  document.getElementById('dur60').classList.toggle('on',gymDuration===60);
-  
-  // Populate time select
-  const sel=document.getElementById('gm-time');
-  sel.innerHTML=gymSlots().map(s=>`<option value="${s}" ${s===slot?'selected':''}>${minToStr(s)}</option>`).join('');
-  
-  document.getElementById('gm-date').value=dateKey;
-  document.getElementById('gm-room').value=isEdit?(gymBookings[`${dateKey}_${slot}`]?.room||''):'';
-  document.getElementById('gymModalTitle').textContent=isEdit?'Edit Booking':'New Booking';
-  document.getElementById('gmDelBtn').classList.toggle('hidden',!isEdit);
-  document.getElementById('gymOv').classList.add('open');
-  setTimeout(()=>document.getElementById('gm-room').focus(),100);
-}
-function closeGymModal(){document.getElementById('gymOv').classList.remove('open');}
-document.getElementById('gymOv').addEventListener('click',function(e){if(e.target===this)closeGymModal();});
+function addGymBookingSimple(){
+  const room=document.getElementById('gym-add-room').value.trim();
+  const dateKey=document.getElementById('gym-add-date').value;
+  const slot=parseInt(document.getElementById('gym-add-time').value);
+  const dur=parseInt(document.getElementById('gym-add-dur').value);
 
-function setDur(m){
-  gymDuration=m;
-  document.getElementById('dur30').classList.toggle('on',m===30);
-  document.getElementById('dur60').classList.toggle('on',m===60);
-}
+  if(!room){showToast('Βάλε αριθμό δωματίου','w');return;}
+  if(!dateKey){showToast('Επέλεξε ημερομηνία','w');return;}
 
-function saveGymBooking(){
-  const room=document.getElementById('gm-room').value.trim();
-  if(!room){alert('Please enter a room number.');return;}
-  const dateKey=document.getElementById('gm-date').value;
-  const slot=parseInt(document.getElementById('gm-time').value);
   const slotKey=`${dateKey}_${slot}`;
-  
-  if(gymDuration===60){
-    const next=slot+30;
-    const nextKey=`${dateKey}_${next}`;
-    if(gymBookings[nextKey]&&gymBookings[nextKey].room!==room){
-      if(!confirm(`Slot ${minToStr(next)} is already booked by room ${gymBookings[nextKey].room}. Continue anyway?`))return;
+  if(gymBookings[slotKey]){
+    if(!confirm('Αυτό το slot έχει ήδη κρατηθεί από δωμάτιο '+gymBookings[slotKey].room+'. Αντικατάσταση;'))return;
+    // Remove old tail if exists
+    const oldTailKey=`${dateKey}_${slot+30}`;
+    if(gymBookings[slotKey].dur===60 && gymBookings[oldTailKey]?.isTail) delete gymBookings[oldTailKey];
+  }
+
+  gymBookings[slotKey]={room,dur,date:dateKey,slot};
+  if(dur===60){
+    const nextSlot=slot+30;
+    const nextKey=`${dateKey}_${nextSlot}`;
+    if(gymBookings[nextKey]&&!gymBookings[nextKey].isTail){
+      if(!confirm('Το slot '+minToStr(nextSlot)+' είναι ήδη κλεισμένο. Συνέχεια;'))return;
     }
-    // Mark both slots - first slot is "head", second is "tail"
-    gymBookings[slotKey]={room,dur:60,isHead:true,tailKey:nextKey};
-    gymBookings[nextKey]={room,dur:60,isTail:true,headKey:slotKey};
-  } else {
-    gymBookings[slotKey]={room,dur:30};
+    gymBookings[nextKey]={room,dur:30,isTail:true,headKey:slotKey,date:dateKey,slot:nextSlot};
   }
-  svGym();renderGym();closeGymModal();showToast('Gym booking saved','s');
+
+  svGym();
+  renderGym();
+  document.getElementById('gym-add-room').value='';
+  showToast('Booking saved! ✓','s');
+
+  // Navigate to the correct month
+  const bkDate=new Date(dateKey);
+  const bkMonth=bkDate.getMonth();
+  if(bkMonth!==gymMonth){
+    gymMonth=bkMonth;
+    renderGym();
+  }
 }
 
-function deleteGymBooking(){
-  const dateKey=document.getElementById('gm-date').value;
-  const slot=parseInt(document.getElementById('gm-time').value);
-  const slotKey=`${dateKey}_${slot}`;
-  const b=gymBookings[slotKey];
-  if(b){
-    // Delete linked slot too
-    if(b.tailKey) delete gymBookings[b.tailKey];
-    if(b.headKey) delete gymBookings[b.headKey];
+function deleteGymByKey(key){
+  const b=gymBookings[key];
+  if(!b)return;
+  const label=b.isTail?'(part of 1hr booking)':'';
+  if(!confirm('Delete booking for room '+b.room+'? '+label))return;
+  if(b.isTail&&b.headKey) delete gymBookings[b.headKey];
+  if(!b.isTail&&b.dur===60){
+    const tailKey=b.date+'_'+(b.slot+30);
+    if(gymBookings[tailKey]?.isTail) delete gymBookings[tailKey];
   }
-  delete gymBookings[slotKey];
-  svGym();renderGym();closeGymModal();showToast('Booking deleted','w');
+  delete gymBookings[key];
+  svGym();renderGym();showToast('Deleted','w');
 }
+
+// Stubs for compatibility
+function openGymModal(){}
+function closeGymModal(){}
+function saveGymBooking(){}
+function deleteGymBooking(){}
+function setDur(){}
+function renderGymList(){}
+function setGymFilterToday(){}
+function clearGymFilter(){}
+
 
 /* ═══════════════════════════════
    YOGA & PILATES
