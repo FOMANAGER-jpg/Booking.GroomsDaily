@@ -400,6 +400,8 @@ table.gym-tbl{border-collapse:collapse;font-size:12px;min-width:100%}
 .gym-slot.booked{background:linear-gradient(135deg,#e05a4e,#c0392b);color:#fff;border-radius:4px}
 .gym-slot.booked:hover{background:linear-gradient(135deg,#c0392b,#a93226)}
 .gym-slot.booked-half{background:linear-gradient(135deg,#f5a623,#d4860a);color:#fff;border-radius:4px}
+.gym-slot.booked-1hr{background:linear-gradient(135deg,#e05a4e,#c0392b);color:#fff;border-radius:4px 4px 0 0;border-bottom:2px dashed rgba(255,255,255,.4)!important}
+.gym-slot.booked-cont{background:linear-gradient(135deg,#c0392b,#a93226);color:#fff;border-radius:0 0 4px 4px;opacity:.9}
 .gym-slot.today{background:rgba(27,108,168,.07)}
 .gym-slot.weekend{background:rgba(92,61,143,.04)}
 .gym-today-lbl{font-size:9px;display:block;opacity:.7}
@@ -2308,7 +2310,12 @@ function renderGym(){
       const isToday=dt.getTime()===today.getTime();
       const isWe=dt.getDay()===0||dt.getDay()===6;
       if(booking){
-        body+=`<td><div class="gym-slot booked" onclick="openGymModal('${dateKey}',${slot},true)">${booking.room}<span class="gym-today-lbl">${booking.dur===60?'1hr':'30m'}</span></div></td>`;
+        if(booking.isTail){
+          // This is the second half of a 1hr booking - show continuation
+          body+=`<td style="padding:0;border:1px solid var(--border2);width:80px;height:32px"><div class="gym-slot booked" style="background:linear-gradient(135deg,#c0392b,#a93226);opacity:.85;cursor:pointer" onclick="openGymModal('${dateKey}',${slot},true)">${booking.room}<span class="gym-today-lbl">cont.</span></div></td>`;
+        } else {
+          body+=`<td><div class="gym-slot booked" onclick="openGymModal('${dateKey}',${slot},true)">${booking.room}<span class="gym-today-lbl">${booking.dur===60?'1hr':'30m'}</span></div></td>`;
+        }
       } else {
         body+=`<td class="${isToday?'gym-slot today':isWe?'gym-slot weekend':''}"><div class="gym-slot empty" onclick="openGymModal('${dateKey}',${slot},false)">&nbsp;</div></td>`;
       }
@@ -2321,10 +2328,19 @@ function renderGym(){
 }
 
 function openGymModal(dateKey, slot, isEdit){
+  // If clicking tail slot, redirect to head slot
+  const clickedKey=`${dateKey}_${slot}`;
+  if(gymBookings[clickedKey]&&gymBookings[clickedKey].isTail){
+    const headKey=gymBookings[clickedKey].headKey;
+    const headSlot=parseInt(headKey.split('_').pop());
+    slot=headSlot;
+  }
   gymModalData={dateKey,slot,isEdit};
-  gymDuration=30;
-  document.getElementById('dur30').classList.add('on');
-  document.getElementById('dur60').classList.remove('on');
+  const b=gymBookings[`${dateKey}_${slot}`];
+  const dur=b?b.dur:30;
+  gymDuration=dur===60?60:30;
+  document.getElementById('dur30').classList.toggle('on',gymDuration===30);
+  document.getElementById('dur60').classList.toggle('on',gymDuration===60);
   
   // Populate time select
   const sel=document.getElementById('gm-time');
@@ -2353,16 +2369,18 @@ function saveGymBooking(){
   const slot=parseInt(document.getElementById('gm-time').value);
   const slotKey=`${dateKey}_${slot}`;
   
-  // If 1hr, also book next slot
   if(gymDuration===60){
     const next=slot+30;
     const nextKey=`${dateKey}_${next}`;
     if(gymBookings[nextKey]&&gymBookings[nextKey].room!==room){
       if(!confirm(`Slot ${minToStr(next)} is already booked by room ${gymBookings[nextKey].room}. Continue anyway?`))return;
     }
-    gymBookings[nextKey]={room,dur:30,linked:slotKey};
+    // Mark both slots - first slot is "head", second is "tail"
+    gymBookings[slotKey]={room,dur:60,isHead:true,tailKey:nextKey};
+    gymBookings[nextKey]={room,dur:60,isTail:true,headKey:slotKey};
+  } else {
+    gymBookings[slotKey]={room,dur:30};
   }
-  gymBookings[slotKey]={room,dur:gymDuration};
   svGym();renderGym();closeGymModal();showToast('Gym booking saved','s');
 }
 
@@ -2371,7 +2389,11 @@ function deleteGymBooking(){
   const slot=parseInt(document.getElementById('gm-time').value);
   const slotKey=`${dateKey}_${slot}`;
   const b=gymBookings[slotKey];
-  if(b&&b.dur===60){delete gymBookings[`${dateKey}_${slot+30}`];}
+  if(b){
+    // Delete linked slot too
+    if(b.tailKey) delete gymBookings[b.tailKey];
+    if(b.headKey) delete gymBookings[b.headKey];
+  }
   delete gymBookings[slotKey];
   svGym();renderGym();closeGymModal();showToast('Booking deleted','w');
 }
