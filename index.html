@@ -479,6 +479,86 @@ table.cls-tbl{width:100%;border-collapse:collapse;font-size:13px}
 .pwd-err{background:#fce8e8;color:var(--coral);border-radius:8px;padding:9px 14px;font-size:13px;margin-bottom:12px;display:none}
 .pwd-footer{font-size:11px;color:var(--muted2);margin-top:18px}
 
+
+/* ═══════════════════════════
+   ANALYTICS & AI RESPONSES
+═══════════════════════════ */
+.an-wrap{padding:16px 20px 40px}
+.an-hdr{background:linear-gradient(135deg,#1a3a6e,#2563aa);border-radius:var(--r);padding:16px 22px;margin-bottom:16px;display:flex;align-items:center;gap:14px;box-shadow:var(--sh)}
+.an-hdr-ico{width:44px;height:44px;background:rgba(255,255,255,.2);border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.an-hdr-ico i{font-size:22px;color:#fff}
+.an-hdr-t{font-family:var(--serif);font-size:19px;font-weight:600;color:#fff}
+.an-hdr-s{font-size:12px;color:rgba(255,255,255,.7);margin-top:3px}
+
+/* CHART */
+.an-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:16px;box-shadow:var(--sh)}
+.an-card h3{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.an-card h3 i{font-size:16px;color:var(--sea)}
+.chart-wrap{position:relative;height:220px;width:100%}
+canvas.an-chart{width:100%!important;height:220px!important}
+.an-legend{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap}
+.an-leg-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.an-leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* STATS GRID */
+.an-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.an-stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;box-shadow:var(--sh);text-align:center}
+.an-stat-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:700;margin-bottom:6px}
+.an-stat-val{font-size:28px;font-weight:700;font-family:var(--serif);line-height:1}
+.an-stat-sub{font-size:11px;color:var(--muted);margin-top:4px}
+
+/* TOP THEMES */
+.an-themes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.an-theme-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:14px;box-shadow:var(--sh)}
+.an-theme-card h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.an-theme-card h4.pos{color:var(--olive)}.an-theme-card h4.neg{color:var(--coral)}
+.an-theme-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border2);font-size:12px;color:var(--ink2)}
+.an-theme-item:last-child{border-bottom:none}
+.an-theme-bar{height:6px;border-radius:3px;flex-shrink:0;transition:width .4s}
+.an-theme-bar.pos{background:var(--olive)}.an-theme-bar.neg{background:var(--coral)}
+.an-theme-count{font-size:10px;color:var(--muted);margin-left:auto;flex-shrink:0;font-weight:700}
+
+/* AI RESPONSE */
+.ai-resp-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:var(--sh)}
+.ai-resp-card h3{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.ai-src-tabs{display:flex;gap:6px;margin-bottom:12px}
+.ai-src-tab{padding:6px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--sans)}
+.ai-src-tab.on{background:var(--sea);color:#fff;border-color:var(--sea)}
+.ai-rev-list{max-height:220px;overflow-y:auto;border:1px solid var(--border);border-radius:9px;margin-bottom:10px}
+.ai-rev-item{padding:10px 14px;border-bottom:1px solid var(--border2);cursor:pointer;transition:background .12s;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ai-rev-item:last-child{border-bottom:none}
+.ai-rev-item:hover{background:var(--sea-light)}
+.ai-rev-item.sel{background:var(--sea-light);border-left:3px solid var(--sea)}
+.ai-rev-period{font-size:13px;font-weight:600;color:var(--ink)}
+.ai-rev-score{font-size:13px;font-weight:700;color:var(--sea);font-family:var(--serif)}
+.ai-rev-count{font-size:11px;color:var(--muted)}
+.ai-gen-btn{padding:10px 20px;background:linear-gradient(135deg,var(--sea-dark),var(--sea));color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:7px;margin-bottom:12px}
+.ai-gen-btn:hover{opacity:.9}.ai-gen-btn:disabled{background:var(--muted2);cursor:not-allowed}
+.ai-resp-out{background:var(--sea-light);border:1px solid var(--sea-mid);border-radius:9px;padding:14px;font-size:13px;color:var(--ink2);line-height:1.7;white-space:pre-wrap;min-height:80px;display:none}
+.ai-resp-out.show{display:block}
+.ai-resp-acts{display:flex;gap:8px;margin-top:10px}
+.ai-copy-btn{padding:8px 16px;background:var(--olive);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:6px}
+.ai-regen-btn{padding:8px 14px;background:var(--white);color:var(--sea);border:1.5px solid var(--sea-mid);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:6px}
+.ai-style-sel{padding:7px 11px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--sans);font-size:12px;color:var(--ink);background:var(--bg);outline:none}
+.ai-style-sel:focus{border-color:var(--sea)}
+.an-empty{padding:40px;text-align:center;color:var(--muted2);font-size:13px}
+.an-empty i{font-size:36px;display:block;margin-bottom:10px;opacity:.3}
+
+
+/* BOOKING.COM REVIEWS */
+.bk-score-big{display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,#e8f0ff,#ddeeff);border-radius:11px;padding:14px 18px;margin-bottom:14px}
+.bk-score-num{font-family:var(--serif);font-size:48px;font-weight:700;color:#0069ff;line-height:1}
+.bk-score-bar{height:8px;border-radius:4px;background:#0069ff;transition:width .4s}
+.bk-dist-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px}
+.bk-dist-lbl{width:30px;color:var(--muted);font-weight:600;text-align:right;flex-shrink:0}
+.bk-dist-track{flex:1;height:8px;background:var(--border2);border-radius:4px;overflow:hidden}
+.bk-dist-fill{height:100%;background:#0069ff;border-radius:4px;transition:width .4s}
+.bk-dist-cnt{width:28px;font-weight:700;color:var(--ink2);font-size:11px;flex-shrink:0}
+.bk-top-guests{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.bk-guest-chip{background:var(--sea-light);border-radius:8px;padding:8px 12px;font-size:12px;display:flex;align-items:center;justify-content:space-between}
+.bk-guest-name{font-weight:600;color:var(--ink)}
+.bk-guest-score{font-weight:700;color:#0069ff;font-family:var(--serif);font-size:14px}
+
 @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 /* ═══ PRINT ═══ */
 @media print{
@@ -553,11 +633,12 @@ table.cls-tbl{width:100%;border-collapse:collapse;font-size:13px}
         <div class="dd-item pur" id="ddi-grooms" onclick="ddGo('grooms','Grooms Daily List')"><i class="ti ti-luggage"></i> Grooms Daily List</div>
         <div class="dd-divider"></div>
         <div class="dd-sec-lbl">Tools</div>
-        <div class="dd-item amb" id="ddi-import" onclick="ddGo('import','Import')"><i class="ti ti-file-import"></i> Import Reservations</div>
+        <div class="dd-item amb" id="ddi-import" onclick="ddGo('import','Booking.com')"><i class="ti ti-brand-booking"></i> Booking.com Reviews</div>
         <div style="height:1px;background:var(--border);margin:2px 0"></div>
         <div class="dd-sec-lbl">Reviews</div>
         <div class="dd-item" id="ddi-ta" onclick="ddGo('ta','TripAdvisor')" style="color:#2d9c68"><i class="ti ti-brand-tripadvisor" style="color:#2d9c68"></i> TripAdvisor</div>
         <div class="dd-item" id="ddi-goo" onclick="ddGo('goo','Google Reviews')" style="color:#4285f4"><i class="ti ti-brand-google" style="color:#4285f4"></i> Google Reviews</div>
+        <div class="dd-item" id="ddi-analytics" onclick="ddGo('analytics','Analytics & AI')"><i class="ti ti-chart-dots" style="color:#2563aa"></i> Analytics & AI Responses</div>
         <div class="dd-divider"></div>
         <div class="dd-sec-lbl">Fitness</div>
         <div class="dd-item" id="ddi-gym" onclick="ddGo('gym','Gym')"><i class="ti ti-barbell" style="color:#2563aa"></i> Gym</div>
@@ -579,9 +660,10 @@ table.cls-tbl{width:100%;border-collapse:collapse;font-size:13px}
   <div class="tab" id="nt-day3" onclick="goTab('day3')"><i class="ti ti-calendar-check"></i> Day 1 &amp; Day 3</div>
   <div class="tab" id="nt-report" onclick="goTab('report')"><i class="ti ti-chart-bar"></i> Report</div>
   <div class="tab pur-tab" id="nt-grooms" onclick="goTab('grooms')"><i class="ti ti-luggage"></i> Grooms Daily List</div>
-  <div class="tab amb-tab" id="nt-import" onclick="goTab('import')"><i class="ti ti-file-import"></i> Import</div>
+  <div class="tab amb-tab" id="nt-import" onclick="goTab('import')"><i class="ti ti-brand-booking"></i> Booking.com</div>
   <div class="tab" id="nt-ta" onclick="goTab('ta')" style="color:#2d9c68"><i class="ti ti-brand-tripadvisor"></i> TripAdvisor</div>
   <div class="tab" id="nt-goo" onclick="goTab('goo')" style="color:#4285f4"><i class="ti ti-brand-google"></i> Google Reviews</div>
+  <div class="tab" id="nt-analytics" onclick="goTab('analytics')" style="color:#2563aa"><i class="ti ti-chart-dots"></i> Analytics</div>
   <div class="tab" id="nt-gym" onclick="goTab('gym')" style="color:#2563aa"><i class="ti ti-barbell"></i> Gym</div>
   <div class="tab" id="nt-yoga" onclick="goTab('yoga')" style="color:#9c4dcc"><i class="ti ti-yin-yang"></i> Yoga</div>
   <div class="tab" id="nt-pilates" onclick="goTab('pilates')" style="color:#c0395a"><i class="ti ti-stretching"></i> Pilates</div>
@@ -759,57 +841,41 @@ table.cls-tbl{width:100%;border-collapse:collapse;font-size:13px}
   </div>
 </div>
 
-<!-- ─── IMPORT ─── -->
+<!-- ─── BOOKING.COM ─── -->
 <div id="tab-import" class="hidden">
-  <div class="imp-wrap">
-    <div class="imp-hdr">
-      <div class="imp-hdr-ico"><i class="ti ti-file-import"></i></div>
-      <div><div class="imp-hdr-title">Import Reservations</div><div class="imp-hdr-sub">Paste protel text or upload HTML &mdash; AI parses automatically</div></div>
+  <div class="rev-wrap">
+    <div class="rev-hdr" style="background:linear-gradient(135deg,#00358e,#0069ff)">
+      <div class="rev-hdr-ico"><i class="ti ti-brand-booking"></i></div>
+      <div><div class="rev-hdr-t">Booking.com Reviews</div><div class="rev-hdr-s">Αυτόματη ανάλυση από τα ratings των κρατήσεων</div></div>
     </div>
-    <div class="imp-grid">
-      <div class="imp-card">
-        <h3><i class="ti ti-clipboard-text"></i> Paste from protel</h3>
-        <p>Copy reservation lines from the protel report and paste here.</p>
-        <textarea class="imp-ta" id="imp-text" placeholder="SMITH  407  DBLS  21/5/26  28/5/26  2  BB  PREPAID  7  2835.00  6560099799..."></textarea>
-        <button class="imp-parse-btn" id="parseBtn" onclick="parseResText()"><i class="ti ti-sparkles"></i> Parse with AI</button>
-        <div class="imp-status" id="imp-status"></div>
+    <div class="sbar hidden" id="bk-stats-bar" style="border-radius:12px;margin-bottom:14px;border:1px solid var(--border);box-shadow:var(--sh)"></div>
+
+    <!-- PERIOD SELECTOR -->
+    <div class="rev-input-card">
+      <h3><i class="ti ti-calendar" style="color:#0069ff"></i> Επέλεξε Περίοδο</h3>
+      <div class="rev-period">
+        <label>Μήνας:</label>
+        <select id="bk-period-m" onchange="renderBKStats()">
+          <option value="all">Όλη η σεζόν</option>
+          <option value="05">Μάιος</option>
+          <option value="06">Ιούνιος</option>
+          <option value="07">Ιούλιος</option>
+          <option value="08">Αύγουστος</option>
+          <option value="09">Σεπτέμβριος</option>
+          <option value="10">Οκτώβριος</option>
+        </select>
+        <button class="rev-parse-btn" style="background:#0069ff;margin-top:0;padding:8px 18px" onclick="saveBKReview()">
+          <i class="ti ti-device-floppy"></i> Save to history
+        </button>
       </div>
-      <div class="imp-card">
-        <h3><i class="ti ti-file-upload"></i> Upload file</h3>
-        <p>Upload the protel HTML export. AI extracts all reservations.</p>
-        <div class="drop-zone" onclick="document.getElementById('resFileInp').click()" ondragover="event.preventDefault()" ondrop="handleResDrop(event)">
-          <i class="ti ti-cloud-upload"></i>
-          <div class="drop-lbl" id="dropLbl">Drop HTML or TXT here</div>
-          <div class="drop-sub">or click to browse</div>
-        </div>
-        <input type="file" id="resFileInp" class="file-inp-res" accept=".html,.htm,.txt" onchange="handleResFile(this)">
-        <div style="background:var(--sea-light);border-radius:8px;padding:11px;font-size:12px;color:var(--sea-dark);margin-top:10px;line-height:1.6">
-          <strong>Tip:</strong> In protel go to Reports &rarr; Elegchos Kratiseon, select range, export as HTML or copy-paste.
-        </div>
-      </div>
+      <!-- LIVE STATS FROM RESERVATIONS -->
+      <div id="bk-live-results"></div>
     </div>
-    <div class="prev-wrap hidden" id="prevWrap">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-        <i class="ti ti-table-check" style="color:var(--olive);font-size:16px"></i>
-        <span style="font-size:14px;font-weight:700;color:var(--ink)">Preview &mdash; <span id="prevTitle">0 found</span></span>
-      </div>
-      <div class="prev-stats" id="prevStats"></div>
-      <div style="overflow-x:auto">
-        <table class="prev-tbl">
-          <thead><tr>
-            <th><input type="checkbox" class="prev-chk" id="chkAll" onchange="toggleAll(this)" checked></th>
-            <th>Ref</th><th>Name</th><th>Room</th><th>Type</th><th>Arrival</th><th>Departure</th><th>Adults</th><th>Status</th>
-          </tr></thead>
-          <tbody id="prevTbody"></tbody>
-        </table>
-      </div>
-      <div class="imp-actions">
-        <button class="imp-import-btn" onclick="doImport()"><i class="ti ti-check"></i> Import selected</button>
-        <button class="imp-skip-btn" onclick="clearPreview()">Cancel</button>
-        <span class="sel-all" onclick="selectAll(true)">Select all</span>
-        <span class="sel-all" onclick="selectAll(false)" style="color:var(--coral)">Deselect all</span>
-        <span id="selCount" style="font-size:12px;color:var(--muted);margin-left:8px"></span>
-      </div>
+
+    <!-- HISTORY -->
+    <div class="rev-history">
+      <h3><i class="ti ti-history" style="color:#0069ff"></i> Review History</h3>
+      <div id="bk-history-list"><div class="rev-empty"><i class="ti ti-brand-booking"></i>Δεν υπάρχουν αποθηκευμένες περίοδοι ακόμα</div></div>
     </div>
   </div>
 </div>
@@ -1027,6 +1093,108 @@ table.cls-tbl{width:100%;border-collapse:collapse;font-size:13px}
   </div>
 </div>
 
+
+<!-- ─── ANALYTICS & AI RESPONSES ─── -->
+<div id="tab-analytics" class="hidden">
+  <div class="an-wrap">
+    <div class="an-hdr">
+      <div class="an-hdr-ico"><i class="ti ti-chart-dots"></i></div>
+      <div><div class="an-hdr-t">Analytics & AI Responses</div><div class="an-hdr-s">Σύγκριση περιόδων &middot; Trends &middot; AI απαντήσεις σε reviews</div></div>
+    </div>
+
+    <!-- STATS ROW -->
+    <div class="an-grid" id="an-stats-grid">
+      <div class="an-stat-card"><div class="an-stat-lbl">TA Periods</div><div class="an-stat-val" id="an-ta-periods" style="color:#2d9c68">-</div><div class="an-stat-sub">αποθηκευμένες</div></div>
+      <div class="an-stat-card"><div class="an-stat-lbl">TA Overall Avg</div><div class="an-stat-val" id="an-ta-avg" style="color:#2d9c68">-</div><div class="an-stat-sub">/ 5.0</div></div>
+      <div class="an-stat-card"><div class="an-stat-lbl">Google Periods</div><div class="an-stat-val" id="an-goo-periods" style="color:#4285f4">-</div><div class="an-stat-sub">αποθηκευμένες</div></div>
+      <div class="an-stat-card"><div class="an-stat-lbl">Google Overall Avg</div><div class="an-stat-val" id="an-goo-avg" style="color:#4285f4">-</div><div class="an-stat-sub">/ 5.0</div></div>
+    </div>
+
+    <!-- CHART -->
+    <div class="an-card">
+      <h3><i class="ti ti-chart-line"></i> Score Trend ανά περίοδο</h3>
+      <div class="chart-wrap">
+        <canvas id="anChart"></canvas>
+      </div>
+      <div class="an-legend">
+        <div class="an-leg-item"><div class="an-leg-dot" style="background:#2d9c68"></div> TripAdvisor</div>
+        <div class="an-leg-item"><div class="an-leg-dot" style="background:#4285f4"></div> Google Reviews</div>
+      </div>
+    </div>
+
+    <!-- TOP THEMES -->
+    <div class="an-themes" id="an-themes">
+      <div class="an-theme-card">
+        <h4 class="pos"><i class="ti ti-thumb-up"></i> Top Positives (όλη η σεζόν)</h4>
+        <div id="an-pos-list"><div class="an-empty"><i class="ti ti-chart-bar"></i>Δεν υπάρχουν δεδομένα ακόμα</div></div>
+      </div>
+      <div class="an-theme-card">
+        <h4 class="neg"><i class="ti ti-arrow-up-circle"></i> Top Improvements (όλη η σεζόν)</h4>
+        <div id="an-neg-list"><div class="an-empty"><i class="ti ti-chart-bar"></i>Δεν υπάρχουν δεδομένα ακόμα</div></div>
+      </div>
+    </div>
+
+    <!-- AI RESPONSE GENERATOR -->
+    <div class="ai-resp-card">
+      <h3><i class="ti ti-sparkles" style="color:var(--sea)"></i> AI Response Generator</h3>
+
+      <!-- MODE TABS -->
+      <div class="ai-src-tabs" style="margin-bottom:14px">
+        <button class="ai-src-tab on" id="ai-mode-json" onclick="setAIMode('json')"><i class="ti ti-file-text"></i> Paste Review JSON</button>
+        <button class="ai-src-tab" id="ai-mode-period" onclick="setAIMode('period')"><i class="ti ti-history"></i> From History</button>
+      </div>
+
+      <!-- JSON PASTE MODE -->
+      <div id="ai-json-mode">
+        <div style="background:#e8f5e9;border-radius:9px;padding:10px 14px;font-size:12px;color:#2e7d32;margin-bottom:10px;line-height:1.6">
+          <strong>Πώς λειτουργεί:</strong> Στείλε το review screenshot στο Claude chat &rarr; Εγώ σου δίνω JSON &rarr; Paste εδώ &rarr; Κλικ Generate!
+        </div>
+        <textarea class="rev-ta" id="ai-json-inp" style="min-height:100px;margin-bottom:10px;font-size:12px" 
+          placeholder='Paste review JSON από το Claude, π.χ.:&#10;{&#10;  "reviewer": "derek l",&#10;  "score": 4,&#10;  "platform": "TripAdvisor",&#10;  "text": "We love White Rocks...",&#10;  "date": "24 May 2026"&#10;}'></textarea>
+      </div>
+
+      <!-- HISTORY MODE -->
+      <div id="ai-period-mode" style="display:none">
+        <div class="ai-src-tabs" style="margin-bottom:8px">
+          <button class="ai-src-tab on" id="ai-tab-ta" onclick="setAISrc('ta')"><i class="ti ti-brand-tripadvisor"></i> TripAdvisor</button>
+          <button class="ai-src-tab" id="ai-tab-goo" onclick="setAISrc('goo')"><i class="ti ti-brand-google"></i> Google</button>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Επέλεξε περίοδο:</div>
+        <div class="ai-rev-list" id="ai-rev-list"></div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
+        <select class="ai-style-sel" id="ai-style">
+          <option value="professional">Επαγγελματικό & Ζεστό</option>
+          <option value="personal">Προσωπικό & Ευχαριστώ</option>
+          <option value="concise">Σύντομο & Ευγενικό</option>
+          <option value="detailed">Αναλυτικό με αντιμετώπιση παραπόνων</option>
+        </select>
+        <select class="ai-style-sel" id="ai-lang">
+          <option value="english">English</option>
+          <option value="greek">Ελληνικά</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="ai-gen-btn" id="ai-gen-btn" onclick="openInClaude()">
+          <i class="ti ti-brand-claude"></i> Open in Claude &rarr;
+        </button>
+        <button class="ai-regen-btn" onclick="copyPromptToClipboard()" style="padding:10px 16px;background:var(--white);color:var(--sea);border:1.5px solid var(--sea-mid);border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:6px">
+          <i class="ti ti-clipboard"></i> Copy prompt
+        </button>
+      </div>
+      <div style="background:#fff3e0;border-radius:9px;padding:10px 14px;font-size:12px;color:#b45309;margin-top:8px;line-height:1.5">
+        <i class="ti ti-info-circle"></i> Κλικ <strong>Open in Claude</strong> → ανοίγει νέο παράθυρο με το review έτοιμο → το AI γράφει απάντηση → copy-paste στο TripAdvisor/Google!
+      </div>
+      <div class="ai-resp-out" id="ai-resp-out"></div>
+      <div class="ai-resp-acts" id="ai-resp-acts" style="display:none">
+        <button class="ai-copy-btn" onclick="copyAIResponse()"><i class="ti ti-copy"></i> Copy</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 </div><!-- end .app -->
 
 <!-- ADD MODAL -->
@@ -1105,7 +1273,7 @@ function ddGo(tab,lbl){
 }
 
 function goTab(t){
-  ['res','rooms','day3','report','grooms','import','ta','goo','gym','yoga','pilates'].forEach(x=>{
+  ['res','rooms','day3','report','grooms','import','ta','goo','analytics','gym','yoga','pilates'].forEach(x=>{
     const el=document.getElementById('tab-'+x);
     const nt=document.getElementById('nt-'+x);
     if(el)el.classList.toggle('hidden',x!==t);
@@ -1117,7 +1285,9 @@ function goTab(t){
   if(t==='rooms')renderRA();
   if(t==='report')renderReport();
   if(t==='grooms')renderGrooms();
+  if(t==='import'){renderBKStats();renderBKHistory();}
   if(t==='gym')renderGym();
+  if(t==='analytics')renderAnalytics();
   if(t==='yoga'){initClsDates('yoga');renderCls('yoga');}
   if(t==='pilates'){initClsDates('pilates');renderCls('pilates');}
 }
@@ -1693,6 +1863,379 @@ function importReviewJSON(src, inp) {
 }
 
 
+
+
+/* ═══════════════════════════════
+   BOOKING.COM REVIEWS
+═══════════════════════════════ */
+let bkHistory = JSON.parse(localStorage.getItem('bk_reviews') || '[]');
+const svBK = () => {
+  try{localStorage.setItem('bk_reviews', JSON.stringify(bkHistory));}catch(e){}
+  if(typeof fbdb!=='undefined') fbdb.ref('bk_reviews').set(bkHistory);
+};
+
+function getBKRated(monthFilter){
+  return RES.filter(r => {
+    if(!r.rating || r.rating === 0) return false;
+    if(monthFilter && monthFilter !== 'all'){
+      const m = am(r);
+      return m === monthFilter;
+    }
+    return true;
+  });
+}
+
+function renderBKStats(){
+  const mFilter = document.getElementById('bk-period-m')?.value || 'all';
+  const rated = getBKRated(mFilter);
+  const el = document.getElementById('bk-live-results');
+  const statsEl = document.getElementById('bk-stats-bar');
+
+  if(!rated.length){
+    el.innerHTML = '<div class="rev-empty"><i class="ti ti-star"></i>Δεν υπάρχουν αξιολογήσεις για αυτή την περίοδο</div>';
+    if(statsEl) statsEl.classList.add('hidden');
+    return;
+  }
+
+  const avg = (rated.reduce((s,r)=>s+r.rating,0)/rated.length);
+  const avgOut10 = avg.toFixed(1);
+  const avgOut5 = (avg/2).toFixed(1);
+
+  // Distribution
+  const dist = {10:0,9:0,8:0,7:0,6:0,5:0,4:0,3:0,2:0,1:0};
+  rated.forEach(r=>{ dist[Math.round(r.rating)] = (dist[Math.round(r.rating)]||0)+1; });
+  const maxDist = Math.max(...Object.values(dist));
+
+  // Top rated guests
+  const topGuests = [...rated].sort((a,b)=>b.rating-a.rating).slice(0,6);
+
+  // Month name
+  const mNames = {'05':'Μάιος','06':'Ιούνιος','07':'Ιούλιος','08':'Αύγουστος','09':'Σεπτέμβριος','10':'Οκτώβριος','all':'Σεζόν 2026'};
+  const periodLbl = mNames[mFilter] || 'Σεζόν 2026';
+
+  // Stats bar
+  if(statsEl){
+    const allRated = getBKRated('all');
+    const allAvg = allRated.length ? (allRated.reduce((s,r)=>s+r.rating,0)/allRated.length).toFixed(1) : '--';
+    statsEl.innerHTML =
+      '<div class="stat"><div class="slbl2">Περίοδος</div><div class="sval" style="color:#0069ff">'+periodLbl+'</div></div>'+
+      '<div class="stat"><div class="slbl2">Μέσος όρος</div><div class="sval" style="color:#0069ff">'+avgOut10+'/10</div></div>'+
+      '<div class="stat"><div class="slbl2">Αξιολογήσεις</div><div class="sval">'+rated.length+'</div></div>'+
+      '<div class="stat"><div class="slbl2">Σεζόν avg</div><div class="sval star">'+allAvg+'/10</div></div>'+
+      '<div class="stat"><div class="slbl2">Σύνολο κρατήσεων</div><div class="sval">'+RES.length+'</div></div>';
+    statsEl.classList.remove('hidden');
+  }
+
+  // Distribution rows (10 down to 1, only scores that exist or top 5)
+  const distRows = [10,9,8,7,6,5,4,3,2,1].map(score=>{
+    const cnt = dist[score]||0;
+    if(!cnt) return '';
+    return `<div class="bk-dist-row">
+      <span class="bk-dist-lbl">${score}</span>
+      <div class="bk-dist-track"><div class="bk-dist-fill" style="width:${maxDist?Math.round(cnt/maxDist*100):0}%"></div></div>
+      <span class="bk-dist-cnt">${cnt}</span>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="bk-score-big">
+      <div>
+        <div class="bk-score-num">${avgOut10}</div>
+        <div style="font-size:12px;color:#0069ff;font-weight:600;margin-top:2px">${avgOut5}/5 · ${rated.length} reviews</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">${periodLbl}</div>
+      </div>
+      <div style="flex:1">
+        ${distRows}
+      </div>
+    </div>
+    <div style="margin-top:10px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:8px">Κορυφαίες αξιολογήσεις</div>
+      <div class="bk-top-guests">
+        ${topGuests.map(r=>`<div class="bk-guest-chip"><span class="bk-guest-name">${esc(r.name)}<small style="display:block;font-size:10px;color:var(--muted);font-weight:400">${r.room||'TBA'} · ${fd(r.arr)}</small></span><span class="bk-guest-score">${r.rating}</span></div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function saveBKReview(){
+  const mFilter = document.getElementById('bk-period-m')?.value || 'all';
+  const rated = getBKRated(mFilter);
+  if(!rated.length){showToast('Δεν υπάρχουν αξιολογήσεις','w');return;}
+  const avg = (rated.reduce((s,r)=>s+r.rating,0)/rated.length);
+  const mNames = {'05':'Μάιος 2026','06':'Ιούνιος 2026','07':'Ιούλιος 2026','08':'Αύγουστος 2026','09':'Σεπτέμβριος 2026','10':'Οκτώβριος 2026','all':'Σεζόν 2026'};
+  const period = mNames[mFilter] || 'Σεζόν 2026';
+  const entry = {period, score: parseFloat(avg.toFixed(2)), count: rated.length, date: new Date().toISOString(),
+    topGuests: rated.sort((a,b)=>b.rating-a.rating).slice(0,3).map(r=>({name:r.name,room:r.room,rating:r.rating}))};
+  bkHistory = bkHistory.filter(r=>r.period!==period);
+  bkHistory.unshift(entry);
+  svBK();
+  renderBKHistory();
+  showToast('Αποθηκεύτηκε!','s');
+}
+
+function renderBKHistory(){
+  const el = document.getElementById('bk-history-list');
+  if(!bkHistory.length){
+    el.innerHTML='<div class="rev-empty"><i class="ti ti-brand-booking"></i>Δεν υπάρχουν αποθηκευμένες περίοδοι ακόμα</div>';
+    return;
+  }
+  el.innerHTML = bkHistory.map((r,i)=>`
+    <div class="rev-hist-item">
+      <div>
+        <div class="rev-hist-period">${r.period}</div>
+        <div class="rev-hist-count">${r.count} αξιολογήσεις</div>
+      </div>
+      <div style="text-align:right">
+        <div class="rev-hist-score" style="color:#0069ff">${r.score.toFixed(1)}/10</div>
+        <div style="font-size:11px;color:var(--muted)">${(r.score/2).toFixed(1)}/5</div>
+      </div>
+    </div>`).join('');
+}
+
+// Load from Firebase
+if(typeof fbdb!=='undefined'){
+  fbdb.ref('bk_reviews').once('value').then(snap=>{
+    const d=snap.val();
+    if(d&&Array.isArray(d)){bkHistory=d;try{localStorage.setItem('bk_reviews',JSON.stringify(d));}catch(e){}renderBKHistory();}
+  });
+}
+renderBKHistory();
+
+/* ═══════════════════════════════
+   ANALYTICS & AI RESPONSES
+═══════════════════════════════ */
+let aiSrc = 'ta';
+let aiSelectedPeriod = null;
+let anChartInstance = null;
+let aiMode = 'json';
+
+function setAIMode(mode){
+  aiMode = mode;
+  document.getElementById('ai-mode-json').classList.toggle('on', mode==='json');
+  document.getElementById('ai-mode-period').classList.toggle('on', mode==='period');
+  document.getElementById('ai-json-mode').style.display = mode==='json'?'block':'none';
+  document.getElementById('ai-period-mode').style.display = mode==='period'?'block':'none';
+  document.getElementById('ai-resp-out').classList.remove('show');
+  document.getElementById('ai-resp-acts').style.display='none';
+}
+
+function setAISrc(src){
+  aiSrc = src;
+  aiSelectedPeriod = null;
+  document.getElementById('ai-tab-ta').classList.toggle('on', src==='ta');
+  document.getElementById('ai-tab-goo').classList.toggle('on', src==='goo');
+  document.getElementById('ai-resp-out').classList.remove('show');
+  document.getElementById('ai-resp-acts').style.display='none';
+  renderAIRevList();
+}
+
+function renderAIRevList(){
+  const history = aiSrc==='ta' ? taHistory : gooHistory;
+  const el = document.getElementById('ai-rev-list');
+  if(!history.length){
+    el.innerHTML='<div style="padding:20px;text-align:center;color:var(--muted2);font-size:12px">Δεν υπάρχουν αποθηκευμένα reviews</div>';
+    return;
+  }
+  el.innerHTML = history.map((r,i) => `
+    <div class="ai-rev-item${aiSelectedPeriod===i?' sel':''}" onclick="selectAIPeriod(${i})">
+      <div>
+        <div class="ai-rev-period">${r.period}</div>
+        <div class="ai-rev-count">${r.count} reviews</div>
+      </div>
+      <div class="ai-rev-score">${r.score.toFixed(1)}/5</div>
+    </div>`).join('');
+}
+
+function selectAIPeriod(idx){
+  aiSelectedPeriod = idx;
+  document.getElementById('ai-gen-btn').disabled = false;
+  document.getElementById('ai-resp-out').classList.remove('show');
+  document.getElementById('ai-resp-acts').style.display='none';
+  renderAIRevList();
+}
+
+function buildPrompt(){
+  const style = document.getElementById('ai-style').value;
+  const lang = document.getElementById('ai-lang').value;
+  const styleGuide = {
+    professional: 'Write a professional yet warm response. Thank the guests, highlight the positives mentioned, address improvements diplomatically.',
+    personal: 'Write a personal, heartfelt thank-you response. Mention specific staff or details from the review.',
+    concise: 'Write a short, polite and concise response in 2-3 sentences.',
+    detailed: 'Write a detailed response addressing both positives and each improvement point specifically.'
+  }[style];
+  const langStr = lang === 'greek' ? 'Greek (Modern Greek)' : 'English';
+
+  if(aiMode === 'json'){
+    const raw = document.getElementById('ai-json-inp').value.trim();
+    if(!raw){showToast('Paste ένα review JSON πρώτα','w');return null;}
+    let review;
+    try{ review = JSON.parse(raw); }
+    catch(e){ showToast('Μη έγκυρο JSON','w');return null;}
+    const platform = review.platform || 'TripAdvisor';
+    const reviewer = review.reviewer || review.name || 'Guest';
+    const score = review.score || review.rating || '5';
+    const text = review.text || review.review || review.content || '';
+    const date = review.date || '';
+    return `You are the Front Office Manager of White Rocks Hotel & Bungalows in Kefalonia, Greece.
+Write a ${platform} management response to the following individual guest review.
+Style: ${styleGuide}
+Language: ${langStr}
+
+Reviewer: ${reviewer}
+Score: ${score}/5
+Date: ${date}
+Review text: ${text}
+
+Write ONLY the response text, starting with "Dear ${reviewer}," — no quotes, no explanation. Sign off as "White Rocks Hotel & Bungalows Team".`;
+  } else {
+    if(aiSelectedPeriod === null){showToast('Επέλεξε μια περίοδο πρώτα','w');return null;}
+    const history = aiSrc==='ta' ? taHistory : gooHistory;
+    const r = history[aiSelectedPeriod];
+    const platform = aiSrc==='ta' ? 'TripAdvisor' : 'Google Reviews';
+    return `You are the Front Office Manager of White Rocks Hotel & Bungalows in Kefalonia, Greece.
+Write a ${platform} management response for the following review period summary.
+Style: ${styleGuide}
+Language: ${langStr}
+
+Review Period: ${r.period}
+Score: ${r.score}/5
+Number of reviews: ${r.count}
+Summary: ${r.summary}
+Key positives: ${(r.positives||[]).join('; ')}
+Points to improve: ${(r.improvements||[]).join('; ')}
+
+Write ONLY the response text, no quotes, no explanation. Sign off as "White Rocks Hotel & Bungalows Team".`;
+  }
+}
+
+function openInClaude(){
+  const prompt = buildPrompt();
+  if(!prompt) return;
+  const encoded = encodeURIComponent(prompt);
+  window.open('https://claude.ai/new?q=' + encoded, '_blank');
+}
+
+function copyPromptToClipboard(){
+  const prompt = buildPrompt();
+  if(!prompt) return;
+  navigator.clipboard.writeText(prompt).then(()=>showToast('Prompt copied! Paste it in Claude.ai','s'));
+}
+
+async function generateAIResponse(){
+  // kept for compatibility
+}
+
+function copyAIResponse(){
+  const text = document.getElementById('ai-resp-out').textContent;
+  navigator.clipboard.writeText(text).then(()=>showToast('Copied to clipboard!','s'));
+}
+
+function renderAnalytics(){
+  // Stats
+  const taAvg = taHistory.length ? (taHistory.reduce((s,r)=>s+r.score*r.count,0)/taHistory.reduce((s,r)=>s+r.count,0)).toFixed(2) : '-';
+  const gooAvg = gooHistory.length ? (gooHistory.reduce((s,r)=>s+r.score*r.count,0)/gooHistory.reduce((s,r)=>s+r.count,0)).toFixed(2) : '-';
+  document.getElementById('an-ta-periods').textContent = taHistory.length || '-';
+  document.getElementById('an-ta-avg').textContent = taAvg;
+  document.getElementById('an-goo-periods').textContent = gooHistory.length || '-';
+  document.getElementById('an-goo-avg').textContent = gooAvg;
+
+  // Chart
+  renderAnChart();
+
+  // Top themes
+  renderTopThemes();
+
+  // AI list
+  renderAIRevList();
+}
+
+function renderAnChart(){
+  const canvas = document.getElementById('anChart');
+  if(!canvas) return;
+
+  // Gather all periods from both sources
+  const allPeriods = [...new Set([...taHistory.map(r=>r.period), ...gooHistory.map(r=>r.period)])];
+  // Sort by date
+  const monthOrder = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  allPeriods.sort((a,b)=>{
+    const [am,ay] = a.split(' '); const [bm,by] = b.split(' ');
+    return (parseInt(ay)-parseInt(by))||monthOrder.indexOf(am)-monthOrder.indexOf(bm);
+  });
+
+  if(!allPeriods.length){
+    canvas.parentElement.innerHTML='<div class="an-empty"><i class="ti ti-chart-line"></i>Δεν υπάρχουν δεδομένα για γράφημα</div>';
+    return;
+  }
+
+  const taScores = allPeriods.map(p=>{ const r=taHistory.find(x=>x.period===p); return r?r.score:null; });
+  const gooScores = allPeriods.map(p=>{ const r=gooHistory.find(x=>x.period===p); return r?r.score:null; });
+
+  if(anChartInstance) anChartInstance.destroy();
+
+  const ctx = canvas.getContext('2d');
+  anChartInstance = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels: allPeriods,
+      datasets:[
+        {label:'TripAdvisor', data:taScores, borderColor:'#2d9c68', backgroundColor:'rgba(45,156,104,.1)', tension:.3, fill:true, spanGaps:true, pointRadius:5, pointBackgroundColor:'#2d9c68'},
+        {label:'Google', data:gooScores, borderColor:'#4285f4', backgroundColor:'rgba(66,133,244,.1)', tension:.3, fill:true, spanGaps:true, pointRadius:5, pointBackgroundColor:'#4285f4'}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+ctx.parsed.y.toFixed(1)+'/5'}}},
+      scales:{
+        y:{min:3.5, max:5.0, ticks:{callback:v=>v.toFixed(1)}, grid:{color:'rgba(0,0,0,.05)'}},
+        x:{grid:{color:'rgba(0,0,0,.04)'}}
+      }
+    }
+  });
+}
+
+function renderTopThemes(){
+  // Collect all positives and improvements across all history
+  const allPos = {}; const allNeg = {};
+  [...taHistory, ...gooHistory].forEach(r=>{
+    (r.positives||[]).forEach(p=>{
+      const key = p.toLowerCase().slice(0,40);
+      allPos[p] = (allPos[p]||0)+1;
+    });
+    (r.improvements||[]).forEach(p=>{
+      allNeg[p] = (allNeg[p]||0)+1;
+    });
+  });
+
+  const topPos = Object.entries(allPos).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const topNeg = Object.entries(allNeg).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const maxPos = topPos[0]?.[1]||1;
+  const maxNeg = topNeg[0]?.[1]||1;
+
+  const posList = document.getElementById('an-pos-list');
+  const negList = document.getElementById('an-neg-list');
+
+  if(!topPos.length){
+    posList.innerHTML='<div class="an-empty"><i class="ti ti-thumb-up"></i>Δεν υπάρχουν δεδομένα</div>';
+  } else {
+    posList.innerHTML = topPos.map(([text,count])=>`
+      <div class="an-theme-item">
+        <div class="an-theme-bar pos" style="width:${Math.round(count/maxPos*60)}px"></div>
+        <span style="flex:1;font-size:11px">${text.slice(0,60)}${text.length>60?'...':''}</span>
+        <span class="an-theme-count">${count}x</span>
+      </div>`).join('');
+  }
+
+  if(!topNeg.length){
+    negList.innerHTML='<div class="an-empty"><i class="ti ti-arrow-up-circle"></i>Δεν υπάρχουν δεδομένα</div>';
+  } else {
+    negList.innerHTML = topNeg.map(([text,count])=>`
+      <div class="an-theme-item">
+        <div class="an-theme-bar neg" style="width:${Math.round(count/maxNeg*60)}px"></div>
+        <span style="flex:1;font-size:11px">${text.slice(0,60)}${text.length>60?'...':''}</span>
+        <span class="an-theme-count">${count}x</span>
+      </div>`).join('');
+  }
+}
+
 /* ═══════════════════════════════
    GYM BOOKINGS
 ═══════════════════════════════ */
@@ -2063,6 +2606,9 @@ function togglePwdEye(){
 })();
 
 </script>
+
+<!-- CHART.JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
 <!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
