@@ -594,6 +594,67 @@ canvas.an-chart{width:100%!important;height:220px!important}
 .ms-stat{font-size:11px;color:#92400e;display:flex;align-items:center;gap:5px}
 .ms-stat strong{color:#b45309;font-size:13px}
 
+
+/* ═══════════════════════════
+   ALERTS / DAILY TASKS
+═══════════════════════════ */
+.al-wrap{padding:16px 20px 40px}
+.al-hdr{background:linear-gradient(135deg,#991b1b,#dc2626);border-radius:var(--r);padding:16px 22px;margin-bottom:16px;display:flex;align-items:center;gap:14px;box-shadow:var(--sh)}
+.al-hdr-ico{width:44px;height:44px;background:rgba(255,255,255,.2);border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.al-hdr-ico i{font-size:22px;color:#fff}
+.al-hdr-t{font-family:var(--serif);font-size:19px;font-weight:600;color:#fff}
+.al-hdr-s{font-size:12px;color:rgba(255,255,255,.7);margin-top:3px}
+
+/* ADD FORM */
+.al-add-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;margin-bottom:16px;box-shadow:var(--sh)}
+.al-add-card h3{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.al-form-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.al-form-group{display:flex;flex-direction:column;gap:4px}
+.al-form-group label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted)}
+.al-inp{padding:8px 11px;border:1.5px solid var(--border);border-radius:9px;font-family:var(--sans);font-size:13px;color:var(--ink);background:var(--bg);outline:none}
+.al-inp:focus{border-color:#dc2626;background:var(--white)}
+.al-pri-sel{padding:8px 11px;border:1.5px solid var(--border);border-radius:9px;font-family:var(--sans);font-size:13px;color:var(--ink);background:var(--bg);outline:none}
+.al-pri-sel:focus{border-color:#dc2626}
+.al-save-btn{padding:9px 20px;background:#dc2626;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:7px;white-space:nowrap}
+.al-save-btn:hover{background:#991b1b}
+
+/* DATE NAV */
+.al-nav{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:11px 16px;margin-bottom:14px;display:flex;gap:10px;align-items:center;box-shadow:var(--sh)}
+.al-nav-btn{width:32px;height:32px;background:var(--sea-light);border:none;border-radius:8px;cursor:pointer;color:var(--sea);display:flex;align-items:center;justify-content:center;font-size:15px}
+.al-nav-btn:hover{background:var(--sea);color:#fff}
+.al-date-lbl{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--ink);flex:1;text-align:center}
+.al-today-btn{padding:6px 14px;background:var(--sea);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans)}
+
+/* TASK CARDS */
+.al-list{display:flex;flex-direction:column;gap:8px}
+.al-task{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;gap:14px;box-shadow:var(--sh);transition:all .2s;border-left:4px solid var(--border)}
+.al-task.pri-high{border-left-color:#dc2626}
+.al-task.pri-mid{border-left-color:#f5a623}
+.al-task.pri-low{border-left-color:#4a7c59}
+.al-task.done{background:#f0fdf4;border-color:#bbf7d0;opacity:.75}
+.al-task.overdue{background:#fef2f2;border-color:#fecaca;animation:alertPulse 2s infinite}
+@keyframes alertPulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.3)}50%{box-shadow:0 0 0 6px rgba(220,38,38,.0)}}
+.al-chk{width:22px;height:22px;cursor:pointer;accent-color:#16a34a;flex-shrink:0}
+.al-task-time{font-size:15px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;min-width:50px}
+.al-task-time.overdue{color:#dc2626}
+.al-task-desc{flex:1;font-size:13px;color:var(--ink2);line-height:1.4}
+.al-task-desc.done{text-decoration:line-through;color:var(--muted)}
+.al-pri-badge{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;flex-shrink:0}
+.al-pri-badge.high{background:#fef2f2;color:#dc2626}
+.al-pri-badge.mid{background:#fef7e6;color:#b45309}
+.al-pri-badge.low{background:#f0fdf4;color:#16a34a}
+.al-task-who{font-size:11px;color:var(--muted);white-space:nowrap}
+.al-task-del{width:28px;height:28px;background:none;border:none;cursor:pointer;color:var(--muted);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.al-task-del:hover{background:#fef2f2;color:#dc2626}
+.al-empty{padding:40px;text-align:center;color:var(--muted2)}
+.al-empty i{font-size:36px;display:block;margin-bottom:10px;opacity:.3}
+.al-stats-row{display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.al-stat-pill{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:8px 14px;font-size:12px;display:flex;align-items:center;gap:6px;box-shadow:var(--sh)}
+
+/* TAB PULSE for overdue */
+@keyframes tabPulse{0%,100%{color:#dc2626}50%{color:#ff6b6b;text-shadow:0 0 8px rgba(220,38,38,.5)}}
+.tab-alert-pulse{animation:tabPulse 1.2s infinite!important;font-weight:700!important}
+
 @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 /* ═══ PRINT ═══ */
 @media print{
@@ -661,6 +722,7 @@ canvas.an-chart{width:100%!important;height:220px!important}
         <div class="dd-sec-lbl">Hotel</div>
         <div class="dd-item on" id="ddi-res" onclick="ddGo('res','Reservations')"><i class="ti ti-list-details"></i> Reservations</div>
         <div class="dd-item" id="ddi-rooms" onclick="ddGo('rooms','Room Assignment')"><i class="ti ti-door"></i> Room Assignment</div>
+        <div class="dd-item" id="ddi-alerts" onclick="ddGo('alerts','Alerts')"><i class="ti ti-bell-ringing" style="color:#dc2626"></i> Alerts</div>
         <div class="dd-item" id="ddi-day3" onclick="ddGo('day3','Day 1 &amp; Day 3')"><i class="ti ti-calendar-check"></i> Day 1 &amp; Day 3</div>
         <div class="dd-item" id="ddi-report" onclick="ddGo('report','Report')"><i class="ti ti-chart-bar"></i> Report</div>
         <div class="dd-divider"></div>
@@ -693,6 +755,7 @@ canvas.an-chart{width:100%!important;height:220px!important}
 <div class="tabs">
   <div class="tab on" id="nt-res" onclick="goTab('res')"><i class="ti ti-list-details"></i> Reservations</div>
   <div class="tab" id="nt-rooms" onclick="goTab('rooms')"><i class="ti ti-door"></i> Room Assignment</div>
+  <div class="tab" id="nt-alerts" onclick="goTab('alerts')"><i class="ti ti-bell-ringing"></i> Alerts</div>
   <div class="tab" id="nt-day3" onclick="goTab('day3')"><i class="ti ti-calendar-check"></i> Day 1 &amp; Day 3</div>
   <div class="tab" id="nt-report" onclick="goTab('report')"><i class="ti ti-chart-bar"></i> Report</div>
   <div class="tab pur-tab" id="nt-grooms" onclick="goTab('grooms')"><i class="ti ti-luggage"></i> Grooms Daily List</div>
@@ -1277,6 +1340,65 @@ canvas.an-chart{width:100%!important;height:220px!important}
   </div>
 </div>
 
+
+<!-- ─── ALERTS ─── -->
+<div id="tab-alerts" class="hidden">
+  <div class="al-wrap">
+    <div class="al-hdr">
+      <div class="al-hdr-ico"><i class="ti ti-bell-ringing"></i></div>
+      <div>
+        <div class="al-hdr-t">Daily Alerts & Tasks</div>
+        <div class="al-hdr-s">Πρόσθεσε tasks το βράδυ &bull; Το προσωπικό τα τικάρει την επόμενη μέρα</div>
+      </div>
+    </div>
+
+    <!-- ADD TASK FORM -->
+    <div class="al-add-card">
+      <h3><i class="ti ti-plus" style="color:#dc2626"></i> Add Task</h3>
+      <div class="al-form-row">
+        <div class="al-form-group">
+          <label>Date</label>
+          <input type="date" id="al-add-date" class="al-inp">
+        </div>
+        <div class="al-form-group">
+          <label>Time</label>
+          <input type="time" id="al-add-time" class="al-inp" style="width:110px">
+        </div>
+        <div class="al-form-group" style="flex:1;min-width:200px">
+          <label>Task Description</label>
+          <input id="al-add-desc" class="al-inp" placeholder="π.χ. SMITH/407 late checkout, λουλούδια για VIP...">
+        </div>
+        <div class="al-form-group">
+          <label>Priority</label>
+          <select id="al-add-pri" class="al-pri-sel">
+            <option value="high">🔴 Urgent</option>
+            <option value="mid" selected>🟡 Normal</option>
+            <option value="low">🟢 Low</option>
+          </select>
+        </div>
+        <button class="al-save-btn" onclick="addAlert()">
+          <i class="ti ti-bell-plus"></i> Add
+        </button>
+      </div>
+    </div>
+
+    <!-- DATE NAVIGATION -->
+    <div class="al-nav">
+      <button class="al-nav-btn" onclick="alNavDay(-1)"><i class="ti ti-chevron-left"></i></button>
+      <div class="al-date-lbl" id="al-date-lbl"></div>
+      <button class="al-nav-btn" onclick="alNavDay(1)"><i class="ti ti-chevron-right"></i></button>
+      <button class="al-today-btn" onclick="alSetToday()">Today</button>
+    </div>
+
+    <!-- STATS -->
+    <div class="al-stats-row" id="al-stats"></div>
+
+    <!-- TASK LIST -->
+    <div class="al-list" id="al-list"></div>
+
+  </div>
+</div>
+
 </div><!-- end .app -->
 
 <!-- ADD MODAL -->
@@ -1355,7 +1477,7 @@ function ddGo(tab,lbl){
 }
 
 function goTab(t){
-  ['res','rooms','day3','report','grooms','import','ta','goo','analytics','gym','yoga','pilates','massage'].forEach(x=>{
+  ['res','rooms','day3','report','grooms','import','ta','goo','analytics','gym','yoga','pilates','massage','alerts'].forEach(x=>{
     const el=document.getElementById('tab-'+x);
     const nt=document.getElementById('nt-'+x);
     if(el)el.classList.toggle('hidden',x!==t);
@@ -1373,6 +1495,7 @@ function goTab(t){
   if(t==='yoga'){initClsDates('yoga');renderCls('yoga');}
   if(t==='pilates'){initClsDates('pilates');renderCls('pilates');}
   if(t==='massage')renderMassage();
+  if(t==='alerts')renderAlerts();
 }
 
 function renderStats(){
@@ -2801,6 +2924,197 @@ if(typeof fbdb!=='undefined'){
     }
   });
 }
+
+
+/* ═══════════════════════════════
+   ALERTS & DAILY TASKS
+═══════════════════════════════ */
+let alertsData = JSON.parse(localStorage.getItem('alerts_data') || '{}');
+let alCurrentDate = new Date().toISOString().split('T')[0];
+
+function svAlerts(){
+  try{localStorage.setItem('alerts_data',JSON.stringify(alertsData));}catch(e){}
+  if(typeof fbdb!=='undefined') fbdb.ref('alerts_data').set(alertsData);
+}
+
+function alSetToday(){
+  alCurrentDate = new Date().toISOString().split('T')[0];
+  renderAlerts();
+}
+
+function alNavDay(dir){
+  const d = new Date(alCurrentDate);
+  d.setDate(d.getDate()+dir);
+  alCurrentDate = d.toISOString().split('T')[0];
+  renderAlerts();
+}
+
+function addAlert(){
+  const date = document.getElementById('al-add-date').value;
+  const time = document.getElementById('al-add-time').value;
+  const desc = document.getElementById('al-add-desc').value.trim();
+  const pri  = document.getElementById('al-add-pri').value;
+
+  if(!date||!time||!desc){showToast('Συμπλήρωσε όλα τα πεδία','w');return;}
+
+  if(!alertsData[date]) alertsData[date]=[];
+  alertsData[date].push({
+    id: Date.now().toString(),
+    time, desc, pri,
+    done: false,
+    doneBy: '',
+    doneAt: '',
+    createdAt: new Date().toISOString()
+  });
+  // Sort by time
+  alertsData[date].sort((a,b)=>a.time.localeCompare(b.time));
+  svAlerts();
+
+  // Navigate to that date
+  alCurrentDate = date;
+  renderAlerts();
+  document.getElementById('al-add-desc').value='';
+  showToast('Task added!','s');
+  checkOverdueTasks();
+}
+
+function toggleAlert(dateKey, id){
+  const tasks = alertsData[dateKey]||[];
+  const task = tasks.find(t=>t.id===id);
+  if(!task) return;
+  task.done = !task.done;
+  task.doneAt = task.done ? new Date().toLocaleTimeString('el-GR',{hour:'2-digit',minute:'2-digit'}) : '';
+  svAlerts();
+  renderAlerts();
+  checkOverdueTasks();
+  if(task.done) showToast('✓ Task completed!','s');
+}
+
+function deleteAlert(dateKey, id){
+  if(!confirm('Delete this task?')) return;
+  alertsData[dateKey] = (alertsData[dateKey]||[]).filter(t=>t.id!==id);
+  svAlerts();
+  renderAlerts();
+  checkOverdueTasks();
+  showToast('Deleted','w');
+}
+
+function renderAlerts(){
+  const DAY_GR=['Κυρ','Δευτ','Τρ','Τετ','Πέμ','Παρ','Σαβ'];
+  const MON_GR=['Ιαν','Φεβ','Μαρ','Απρ','Μαΐ','Ιουν','Ιουλ','Αυγ','Σεπ','Οκτ','Νοε','Δεκ'];
+  const d = new Date(alCurrentDate);
+  const isToday = alCurrentDate === new Date().toISOString().split('T')[0];
+  const isTomorrow = (() => { const t=new Date(); t.setDate(t.getDate()+1); return alCurrentDate===t.toISOString().split('T')[0]; })();
+
+  let dayLbl = DAY_GR[d.getDay()]+' '+d.getDate()+' '+MON_GR[d.getMonth()]+' '+d.getFullYear();
+  if(isToday) dayLbl = '📅 Σήμερα — '+dayLbl;
+  if(isTomorrow) dayLbl = '⏭ Αύριο — '+dayLbl;
+  document.getElementById('al-date-lbl').textContent = dayLbl;
+
+  // Set default date in add form
+  const addDateEl = document.getElementById('al-add-date');
+  if(addDateEl && !addDateEl.value){ 
+    const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
+    addDateEl.value = tomorrow.toISOString().split('T')[0];
+  }
+
+  const tasks = alertsData[alCurrentDate] || [];
+  const now = new Date();
+  const nowMins = now.getHours()*60+now.getMinutes();
+
+  // Stats
+  const total=tasks.length, done=tasks.filter(t=>t.done).length;
+  const overdue=tasks.filter(t=>{
+    if(t.done||!isToday) return false;
+    const [h,m]=t.time.split(':').map(Number);
+    return (h*60+m) < nowMins;
+  }).length;
+
+  document.getElementById('al-stats').innerHTML = total ? `
+    <div class="al-stat-pill"><i class="ti ti-list" style="color:var(--sea)"></i> Total: <strong>${total}</strong></div>
+    <div class="al-stat-pill"><i class="ti ti-check" style="color:#16a34a"></i> Done: <strong style="color:#16a34a">${done}</strong></div>
+    <div class="al-stat-pill"><i class="ti ti-clock" style="color:#f5a623"></i> Pending: <strong style="color:#f5a623">${total-done}</strong></div>
+    ${overdue?`<div class="al-stat-pill" style="background:#fef2f2;border-color:#fecaca"><i class="ti ti-alert-triangle" style="color:#dc2626"></i> Overdue: <strong style="color:#dc2626">${overdue}</strong></div>`:''}
+  ` : '';
+
+  const el = document.getElementById('al-list');
+  if(!tasks.length){
+    el.innerHTML=`<div class="al-empty"><i class="ti ti-bell-off"></i><div style="font-size:14px;font-weight:600;color:var(--muted)">Δεν υπάρχουν tasks για αυτή την ημέρα</div><div style="margin-top:4px">Πρόσθεσε tasks με τη φόρμα παραπάνω</div></div>`;
+    return;
+  }
+
+  el.innerHTML = tasks.map(task => {
+    const [h,m] = task.time.split(':').map(Number);
+    const taskMins = h*60+m;
+    const isOverdue = isToday && !task.done && taskMins < nowMins;
+    const priClass = {high:'high',mid:'mid',low:'low'}[task.pri]||'mid';
+    const priLabel = {high:'🔴 Urgent',mid:'🟡 Normal',low:'🟢 Low'}[task.pri]||'🟡 Normal';
+
+    return `<div class="al-task pri-${priClass}${task.done?' done':''}${isOverdue?' overdue':''}">
+      <input type="checkbox" class="al-chk" ${task.done?'checked':''} onchange="toggleAlert('${alCurrentDate}','${task.id}')">
+      <div class="al-task-time${isOverdue?' overdue':''}">${task.time}</div>
+      <div class="al-task-desc${task.done?' done':''}">${esc(task.desc)}</div>
+      <span class="al-pri-badge ${priClass}">${priLabel}</span>
+      ${task.done&&task.doneAt?`<span class="al-task-who">✓ ${task.doneAt}</span>`:''}
+      ${isOverdue?'<span style="font-size:11px;color:#dc2626;font-weight:700;animation:alertPulse 1s infinite">⚠ OVERDUE</span>':''}
+      <button class="al-task-del" onclick="deleteAlert('${alCurrentDate}','${task.id}')"><i class="ti ti-trash" style="font-size:13px"></i></button>
+    </div>`;
+  }).join('');
+}
+
+function checkOverdueTasks(){
+  // Pulse the Alerts tab if there are overdue tasks today
+  const today = new Date().toISOString().split('T')[0];
+  const tasks = alertsData[today]||[];
+  const now = new Date();
+  const nowMins = now.getHours()*60+now.getMinutes();
+  const hasOverdue = tasks.some(t=>{
+    if(t.done) return false;
+    const [h,m]=t.time.split(':').map(Number);
+    return (h*60+m) < nowMins;
+  });
+  const tabEl = document.getElementById('nt-alerts');
+  if(tabEl){
+    if(hasOverdue){
+      tabEl.classList.add('tab-alert-pulse');
+      tabEl.style.color='#dc2626';
+    } else {
+      tabEl.classList.remove('tab-alert-pulse');
+      tabEl.style.color='';
+    }
+  }
+}
+
+// Check overdue every minute
+setInterval(()=>{
+  checkOverdueTasks();
+  // Re-render if alerts tab is open
+  const alertTab = document.getElementById('tab-alerts');
+  if(alertTab && !alertTab.classList.contains('hidden')) renderAlerts();
+}, 60000);
+
+// Load from Firebase
+if(typeof fbdb!=='undefined'){
+  fbdb.ref('alerts_data').once('value').then(snap=>{
+    const d=snap.val();
+    if(d&&typeof d==='object'){
+      alertsData=d;
+      try{localStorage.setItem('alerts_data',JSON.stringify(d));}catch(e){}
+      checkOverdueTasks();
+    }
+  });
+  fbdb.ref('alerts_data').on('value',snap=>{
+    const d=snap.val();
+    if(d&&typeof d==='object'&&JSON.stringify(d)!==JSON.stringify(alertsData)){
+      alertsData=d;
+      const alTab=document.getElementById('tab-alerts');
+      if(alTab&&!alTab.classList.contains('hidden'))renderAlerts();
+      checkOverdueTasks();
+    }
+  });
+}
+// Initial check
+setTimeout(checkOverdueTasks, 2000);
 
 // Load fitness data from Firebase
 if(typeof fbdb!=='undefined'){
