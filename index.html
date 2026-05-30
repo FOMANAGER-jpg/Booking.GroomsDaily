@@ -1520,6 +1520,87 @@ canvas.an-chart{width:100%!important;height:220px!important}
   </div>
 </div>
 
+<!-- ── CAR ADD MODAL ── -->
+<div class="modal-bg" id="carModal">
+  <div class="modal" style="width:560px;max-width:96vw">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+      <div style="width:38px;height:38px;background:#e8f5ee;border-radius:10px;display:flex;align-items:center;justify-content:center">
+        <i class="ti ti-car" style="font-size:19px;color:#1a6644"></i>
+      </div>
+      <div style="font-family:var(--serif);font-size:18px;color:var(--ink);font-weight:600">New Car Booking</div>
+      <button onclick="carModalClose()" style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--muted);font-size:18px;width:28px;height:28px;display:flex;align-items:center;justify-content:center"><i class="ti ti-x"></i></button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <div><label style="display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Ref No</label>
+        <input class="tr-inp" style="width:100%" id="cm-ref" placeholder="Ref κράτησης"></div>
+      <div><label style="display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Room</label>
+        <input class="tr-inp" style="width:100%" id="cm-room" placeholder="407"></div>
+    </div>
+
+    <div style="margin-bottom:10px"><label style="display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Full Name</label>
+      <input class="tr-inp" style="width:100%" id="cm-name" placeholder="ΕΠΩΝΥΜΟ ΟΝΟΜΑ"></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <div><label style="display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Tour Operator</label>
+        <input class="tr-inp" style="width:100%" id="cm-to" placeholder="TUI, JET2..."></div>
+      <div><label style="display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Pick-up Time</label>
+        <input class="tr-inp" style="width:100%" id="cm-time" type="time"></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <div><label style="display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Day of Booking</label>
+        <input class="tr-inp" style="width:100%" id="cm-bookdate" type="date" onchange="carModalUpdatePrice()"></div>
+      <div><label style="display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Day of Rental</label>
+        <input class="tr-inp" style="width:100%" id="cm-rentaldate" type="date" onchange="carModalUpdatePrice()"></div>
+    </div>
+
+    <div style="margin-bottom:10px"><label style="display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Car Type</label>
+      <select class="tr-inp" style="width:100%" id="cm-type" onchange="carModalUpdatePrice()">
+        <option value="A-M">A Manual — KIA Picanto / Toyota Aygo / Hyundai i10</option>
+        <option value="A-A">A Automatic — Skoda Citigo / KIA Picanto Auto</option>
+        <option value="B-M">B Manual — Ford Fiesta / Seat Ibiza / Opel Corsa</option>
+        <option value="B1-M">B1 Manual — Toyota Aygo Convertible</option>
+        <option value="B-A">B Automatic — Seat Ibiza / Mazda 2 Auto</option>
+        <option value="C-M">C Manual — Ford Focus / Citroen C-Elysee</option>
+        <option value="C1-M">C1 Manual — Citroen C3 Aircross (SUV)</option>
+        <option value="D-M">D Manual — Fiat Doblo 7-Seater</option>
+        <option value="J-M">J Manual — Jeep Renegade / Nissan Qashqai</option>
+        <option value="J-A">J Automatic — Dacia Sandero Stepway Auto</option>
+        <option value="J-E">J Electric — Jeep Avenger Electric Auto</option>
+        <option value="T">T — Tesla Model 3 (On Request)</option>
+      </select>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;align-items:end">
+      <div><label style="display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Rental Days</label>
+        <input class="tr-inp" style="width:100%" id="cm-days" type="number" min="1" max="60" value="1" onchange="carModalUpdatePrice()"></div>
+      <div><label style="display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Status</label>
+        <select class="tr-inp" style="width:100%" id="cm-status">
+          <option value="waiting">⏳ Waiting</option>
+          <option value="confirmed">✓ Confirmed</option>
+          <option value="cancelled">✕ Cancelled</option>
+        </select></div>
+      <div style="display:flex;align-items:center;gap:8px;padding-bottom:2px">
+        <input type="checkbox" id="cm-ins" style="width:17px;height:17px;cursor:pointer;accent-color:#1a6644" onchange="carModalUpdatePrice()">
+        <label for="cm-ins" style="font-size:12px;cursor:pointer;color:var(--ink);font-weight:500">Full Insurance</label>
+      </div>
+    </div>
+
+    <!-- PRICE BOX -->
+    <div id="cm-pricebox" style="background:#e8f5ee;border:2px solid #a8d5b8;border-radius:10px;padding:12px 16px;text-align:center;margin-bottom:16px;min-height:52px">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:#0d4a2f;font-weight:700">Επέλεξε ημερομηνία και τύπο αυτοκινήτου</div>
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button onclick="carModalClose()" style="padding:10px 18px;background:var(--bg);color:var(--muted);border:1.5px solid var(--border);border-radius:9px;font-size:13px;cursor:pointer;font-family:var(--sans)">Cancel</button>
+      <button onclick="carModalSave()" style="padding:10px 22px;background:#1a6644;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:7px">
+        <i class="ti ti-check"></i> Add
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- ADD MODAL -->
 <div class="modal-bg" id="ov">
 <div class="modal">
@@ -3292,7 +3373,6 @@ if(typeof fbdb!=='undefined'){
   fbdb.ref('cls_data').once('value').then(snap=>{const d=snap.val();if(d&&typeof d==='object'){clsData=d;try{localStorage.setItem('cls_data',JSON.stringify(d));}catch(e){};}});
 }
 
-
 /* ═══════════════════════════════
    ACE RENT A CAR — EXPERIENCES
 ═══════════════════════════════ */
@@ -3509,6 +3589,75 @@ function renderCarSum(){
       +'</div></div>';
   });
   grid.innerHTML=any?html:'<div style="font-size:12px;color:var(--muted2);padding:6px">No data yet</div>';
+}
+
+
+/* ── CAR ADD MODAL ── */
+function carAdd(){
+  // Open modal instead of adding directly
+  document.getElementById('carModal').classList.add('open');
+  // Reset form
+  document.getElementById('cm-ref').value='';
+  document.getElementById('cm-name').value='';
+  document.getElementById('cm-to').value='';
+  document.getElementById('cm-room').value='';
+  document.getElementById('cm-bookdate').value=new Date().toISOString().split('T')[0];
+  document.getElementById('cm-rentaldate').value='';
+  document.getElementById('cm-time').value='';
+  document.getElementById('cm-type').value='A-M';
+  document.getElementById('cm-days').value=1;
+  document.getElementById('cm-ins').checked=false;
+  document.getElementById('cm-status').value='waiting';
+  carModalUpdatePrice();
+}
+
+function carModalUpdatePrice(){
+  const type=document.getElementById('cm-type').value;
+  const days=parseInt(document.getElementById('cm-days').value)||1;
+  const rentalDate=document.getElementById('cm-rentaldate').value||document.getElementById('cm-bookdate').value;
+  const ins=document.getElementById('cm-ins').checked;
+  const base=carBasePrice(type,days,rentalDate);
+  const insAmt=ins?carInsPrice(type,days):0;
+  const total=base!=null?base+insAmt:null;
+  const sl=carSeasonLbl(rentalDate);
+  const el=document.getElementById('cm-pricebox');
+  if(!el)return;
+  if(type==='T'){el.innerHTML='<div class="cpl">Price</div><div class="cpv" style="font-size:16px">On Request</div>';return;}
+  if(base==null){el.innerHTML='<div class="cpl">'+sl+'</div><div style="font-size:13px;color:var(--muted)">N/A for '+days+' days</div>';return;}
+  el.innerHTML='<div class="cpl">'+sl+'</div>'
+    +'<div class="cpv">€'+base+'</div>'
+    +(ins&&insAmt?'<div class="cpi">+ €'+insAmt+' insurance</div>':'')
+    +(ins&&total?'<div class="cpt">Total: €'+total+'</div>':'');
+}
+
+function carModalSave(){
+  const type=document.getElementById('cm-type').value;
+  const days=Math.max(1,parseInt(document.getElementById('cm-days').value)||1);
+  const rentalDate=document.getElementById('cm-rentaldate').value;
+  const bookDate=document.getElementById('cm-bookdate').value;
+  const ins=document.getElementById('cm-ins').checked;
+  const base=carBasePrice(type,days,rentalDate||bookDate);
+  const insAmt=ins?carInsPrice(type,days):0;
+  CARS.unshift({
+    id:Date.now()+'',
+    ref:document.getElementById('cm-ref').value.trim(),
+    name:document.getElementById('cm-name').value.trim().toUpperCase(),
+    to:document.getElementById('cm-to').value.trim(),
+    room:document.getElementById('cm-room').value.trim(),
+    bookDate,rentalDate,
+    rentalTime:document.getElementById('cm-time').value,
+    carType:type,days,insurance:ins,
+    status:document.getElementById('cm-status').value,
+    base,insAmt,total:base!=null?base+insAmt:null
+  });
+  svCars();carOpenEP=null;
+  document.getElementById('carModal').classList.remove('open');
+  renderCars();
+  showToast('Car booking added!','s');
+}
+
+function carModalClose(){
+  document.getElementById('carModal').classList.remove('open');
 }
 
 /* ═══════════════════════
