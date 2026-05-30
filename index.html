@@ -720,8 +720,7 @@ canvas.an-chart{width:100%!important;height:220px!important}
       </button>
       <div class="dd-menu" id="ddMenu">
         <div class="dd-sec-lbl">Hotel</div>
-        <div class="dd-item on" id="ddi-res" onclick="ddGo('res','Reservations')"><i class="ti ti-list-details"></i> Reservations</div>
-        <div class="dd-item" id="ddi-rooms" onclick="ddGo('rooms','Room Assignment')"><i class="ti ti-door"></i> Room Assignment</div>
+        <div class="dd-item on" id="ddi-res" onclick="ddGo('res','Reservations')"><i class="ti ti-list-details"></i> Reservations</div>       
         <div class="dd-item" id="ddi-alerts" onclick="ddGo('alerts','Alerts')"><i class="ti ti-bell-ringing" style="color:#dc2626"></i> Alerts</div>
         <div class="dd-item" id="ddi-day3" onclick="ddGo('day3','Day 1 &amp; Day 3')"><i class="ti ti-calendar-check"></i> Day 1 &amp; Day 3</div>
         <div class="dd-item" id="ddi-report" onclick="ddGo('report','Report')"><i class="ti ti-chart-bar"></i> Report</div>
@@ -753,8 +752,7 @@ canvas.an-chart{width:100%!important;height:220px!important}
 
 <!-- ─── TABS ─── -->
 <div class="tabs">
-  <div class="tab on" id="nt-res" onclick="goTab('res')"><i class="ti ti-list-details"></i> Reservations</div>
-  <div class="tab" id="nt-rooms" onclick="goTab('rooms')"><i class="ti ti-door"></i> Room Assignment</div>
+  <div class="tab on" id="nt-res" onclick="goTab('res')"><i class="ti ti-list-details"></i> Reservations</div> 
   <div class="tab" id="nt-alerts" onclick="goTab('alerts')"><i class="ti ti-bell-ringing"></i> Alerts</div>
   <div class="tab" id="nt-day3" onclick="goTab('day3')"><i class="ti ti-calendar-check"></i> Day 1 &amp; Day 3</div>
   <div class="tab" id="nt-report" onclick="goTab('report')"><i class="ti ti-chart-bar"></i> Report</div>
@@ -767,6 +765,7 @@ canvas.an-chart{width:100%!important;height:220px!important}
   <div class="tab" id="nt-yoga" onclick="goTab('yoga')" style="color:#9c4dcc"><i class="ti ti-yin-yang"></i> Yoga</div>
   <div class="tab" id="nt-pilates" onclick="goTab('pilates')" style="color:#c0395a"><i class="ti ti-stretching"></i> Pilates</div>
   <div class="tab" id="nt-massage" onclick="goTab('massage')" style="color:#b45309"><i class="ti ti-heart-handshake"></i> Massage</div>
+  <div class="tab exp-tab" id="nt-experiences" onclick="goTab('experiences')"><i class="ti ti-map-pin"></i> Experiences</div>
 </div>
 
 <div class="sbar" id="sbar"></div>
@@ -1477,7 +1476,7 @@ function ddGo(tab,lbl){
 }
 
 function goTab(t){
-  ['res','rooms','day3','report','grooms','import','ta','goo','analytics','gym','yoga','pilates','massage','alerts'].forEach(x=>{
+  ['res','day3','report','grooms','import','ta','goo','analytics','gym','yoga','pilates','massage','alerts','experiences'].forEach(x=>{
     const el=document.getElementById('tab-'+x);
     const nt=document.getElementById('nt-'+x);
     if(el)el.classList.toggle('hidden',x!==t);
