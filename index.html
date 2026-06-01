@@ -1813,10 +1813,22 @@ function carBasePrice(id,days,d){
   return null;
 }
 function carInsPrice(id,days){return(ACE_INS[id]||0)*days;}
+const CAR_EXTRAS = {
+  gps:  {label:'GPS',        price:5,  unit:'per day'},
+  baby: {label:'Baby/Booster Seat', price:3,  unit:'per day'},
+};
+function carExtrasTotal(c){
+  const days=c.days||1;
+  let t=0;
+  if(c.extGps)  t+=(CAR_EXTRAS.gps.price*days);
+  if(c.extBaby) t+=(CAR_EXTRAS.baby.price*days);
+  return t;
+}
 function carCalc(c){
   const base=c.priceOverride!=null?c.priceOverride:carBasePrice(c.carType,c.days,c.rentalDate||c.bookDate);
   const ins=c.insurance?carInsPrice(c.carType,c.days):0;
-  return{base,ins,total:base!=null?base+ins:null};
+  const extras=carExtrasTotal(c);
+  return{base,ins,extras,total:base!=null?base+ins+extras:null};
 }
 function carPriceOverride(i,val){const v=val===''?null:parseFloat(val);CARS[i].priceOverride=v;svCars();renderCars();}
 function carClearOverride(i){CARS[i].priceOverride=null;delete CARS[i].priceOverride;svCars();renderCars();showToast('Price reset to auto','s');}
@@ -3185,7 +3197,10 @@ function renderCars(){
         <input type="checkbox"${c.insurance?' checked':''} style="width:15px;height:15px;cursor:pointer;accent-color:#1a6644" onchange="carUpd(${i},'insurance',this.checked)" title="Full Insurance">
         ${c.insurance&&ins?'<div style="font-size:9px;color:#1a6644;font-weight:700;margin-top:1px">EUR'+ins+'</div>':''}
       </td>
-      <td style="padding:7px 9px;text-align:right;font-weight:700;font-size:14px;color:#0d4a2f;font-family:var(--serif)">${total!=null?'EUR'+total:c.carType==='T'?'On Req':'-'}</td>
+      <td style="padding:7px 9px;text-align:right;font-weight:700;font-size:14px;color:#0d4a2f;font-family:var(--serif)">
+        ${total!=null?'EUR'+total:c.carType==='T'?'On Req':'-'}
+        ${(c.extGps||c.extBaby)?'<div style="font-size:9px;color:#1a6644;font-family:var(--sans);font-weight:600;margin-top:2px">'+(c.extGps?'+ GPS':'')+(c.extGps&&c.extBaby?' + ':c.extBaby?'+ ':'')+(c.extBaby?'Baby seat':'')+'</div>':''}
+      </td>
       <td style="padding:4px 7px;text-align:center">
         <button class="car-badge ${c.status}" onclick="carCycleStatus(${i})" title="Click to change">
           ${SIC[c.status]||SIC.waiting} ${SLB[c.status]||'Waiting'}
@@ -3208,7 +3223,8 @@ function renderCars(){
       const{base:bp,ins:ip,total:tp}=carCalc(c);
       const hasOverride=c.priceOverride!=null;
       const displayBase=hasOverride?c.priceOverride:bp;
-      const displayTotal=displayBase!=null?displayBase+(c.insurance&&ip?ip:0):null;
+      const extras=carExtrasTotal(c);
+      const displayTotal=displayBase!=null?displayBase+(c.insurance&&ip?ip:0)+extras:null;
       html+=`<tr class="car-ep"><td colspan="15" onclick="event.stopPropagation()">
         <div style="display:grid;grid-template-columns:repeat(4,1fr) 200px;gap:12px;align-items:start;margin-bottom:12px">
           <div class="car-epg"><label>Car Type</label>
@@ -3223,7 +3239,7 @@ function renderCars(){
           <div class="car-epg"><label>Day of Rental</label>
             <input type="date" value="${c.rentalDate||''}" onchange="carUpd(${i},'rentalDate',this.value)">
           </div>
-          <div class="car-pbox">
+          <div class="car-pbox" style="min-width:180px">
             <div class="cpl">${sl}</div>
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
               <span style="font-size:11px;color:#0d4a2f;font-weight:700">EUR</span>
@@ -3232,7 +3248,9 @@ function renderCars(){
             </div>
             ${hasOverride?'<div style="font-size:10px;color:#b45309;margin-bottom:2px">! Custom price</div>':''}
             ${c.insurance&&ip?'<div class="cpi">+ EUR'+ip+' insurance</div>':''}
-            ${c.insurance&&displayTotal!=null?'<div class="cpt">Total: EUR'+displayTotal+'</div>':''}
+            ${c.extGps?'<div class="cpi">+ EUR'+(5*(c.days||1))+' GPS (EUR5 x'+c.days+'d)</div>':''}
+            ${c.extBaby?'<div class="cpi">+ EUR'+(3*(c.days||1))+' Baby seat (EUR3 x'+c.days+'d)</div>':''}
+            ${displayTotal!=null?'<div class="cpt">Total: EUR'+displayTotal+'</div>':''}
           </div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;align-items:end">
@@ -3250,7 +3268,20 @@ function renderCars(){
               </label>
             </div>
           </div>
-          <div class="car-epg" style="grid-column:3/6">
+          <div class="car-epg" style="grid-column:3/5">
+            <label>Available Extras (upon request)</label>
+            <div style="display:flex;flex-direction:column;gap:6px;margin-top:6px">
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:500;color:var(--ink)">
+                <input type="checkbox" id="cargps${i}"${c.extGps?' checked':''} style="width:16px;height:16px;cursor:pointer;accent-color:#1a6644" onchange="carUpd(${i},'extGps',this.checked)">
+                GPS &mdash; EUR5/day${c.extGps?' <strong style="color:#1a6644;margin-left:4px">+EUR'+(5*(c.days||1))+'</strong>':''}
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:500;color:var(--ink)">
+                <input type="checkbox" id="carbaby${i}"${c.extBaby?' checked':''} style="width:16px;height:16px;cursor:pointer;accent-color:#1a6644" onchange="carUpd(${i},'extBaby',this.checked)">
+                Baby/Booster Seat &mdash; EUR3/day${c.extBaby?' <strong style="color:#1a6644;margin-left:4px">+EUR'+(3*(c.days||1))+'</strong>':''}
+              </label>
+            </div>
+          </div>
+          <div class="car-epg" style="grid-column:5/6">
             <label>Status</label>
             <div class="car-sbtns">
               <button class="car-sbtn${c.status==='confirmed'?' sc':''}" onclick="carSetStatus(${i},'confirmed')">&#10003; Confirmed</button>
