@@ -35,7 +35,10 @@
 .car-tbl-wrap{background:var(--white);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--sh);overflow:hidden;overflow-x:auto;margin-bottom:14px}
 table.car-tbl{width:100%;border-collapse:collapse;font-size:12px;min-width:1000px}
 .car-tbl thead{background:linear-gradient(180deg,#f0fff4,#e0f7e9);border-bottom:2px solid #a8d5b8}
-.car-tbl th{padding:9px 11px;text-align:left;font-size:9px;color:#0d4a2f;font-weight:700;letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;border-right:1px solid #a8d5b8}
+.car-tbl th{padding:9px 11px;text-align:left;font-size:9px;color:#0d4a2f;font-weight:700;letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;border-right:1px solid #a8d5b8;position:relative;user-select:none}
+.col-resizer{position:absolute;right:0;top:0;bottom:0;width:6px;cursor:col-resize;z-index:10;background:transparent;transition:background .15s}
+.col-resizer:hover,.col-resizer.dragging{background:rgba(26,102,68,.35)}
+table.car-tbl{table-layout:fixed;width:100%;border-collapse:collapse;font-size:12px;min-width:600px}
 .car-tbl th:last-child{border-right:none}
 .car-tbl tbody tr{border-bottom:1px solid var(--border2);transition:background .12s}
 .car-tbl tbody tr:hover{background:#f0fff4}
@@ -1393,10 +1396,12 @@ canvas.an-chart{width:100%!important;height:220px!important}
         <table class="car-tbl">
           <thead><tr>
             <th style="width:28px">#</th><th style="width:95px">Ref No</th><th style="min-width:130px">Full Name</th>
-            <th style="width:52px">Room</th><th style="width:105px">Day of Booking</th>
+            <th style="width:52px">Room</th><th style="width:60px">T.O.</th><th style="width:40px">Pax</th>
+            <th style="width:105px">Day of Booking</th>
             <th style="width:105px">Transfer Date</th><th style="width:80px">Time</th>
-            <th style="min-width:180px">Route</th>
-            <th style="width:90px">Cost</th><th style="width:105px">Status</th><th style="width:58px"></th>
+            <th style="min-width:160px">Route</th>
+            <th style="min-width:140px">Company / Car</th>
+            <th style="width:90px">Cost &#8364;</th><th style="width:105px">Status</th><th style="width:58px"></th>
           </tr></thead>
           <tbody id="transfersTbody"></tbody>
         </table>
@@ -1856,6 +1861,66 @@ function expGoTab(tab,el){
 
 /* -- Generic data store -- */
 let GEN_DATA={excursions:[],moto:[],flowers:[],boats:[],transfers:[],vantours:[]};
+let GEN_OPEN={};  // {tab_i: true} for expanded rows
+function genToggleRow(tab,i){
+  const key=tab+'_'+i;
+  GEN_OPEN[key]=!GEN_OPEN[key];
+  renderGenTab(tab);
+}
+function genIsOpen(tab,i){return !!GEN_OPEN[tab+'_'+i];}
+
+/* Build expand button for any gen tab row */
+function genExpandBtn(tab,i,col){
+  const open=genIsOpen(tab,i);
+  const bg=open?col:'var(--bg)';
+  const fg=open?'#fff':'var(--muted)';
+  const bc=open?col:'var(--border)';
+  const dir=open?'up':'down';
+  return '<button onclick="event.stopPropagation();genToggleRow(\u0027'+tab+'\u0027,'+i+')" style="width:22px;height:22px;background:'+bg+';color:'+fg+';border:1.5px solid '+bc+';border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0"><i class=\"ti ti-chevron-'+dir+'\" style=\"font-size:11px\"></i></button>';
+}
+/* Build ep field (label + input) */
+function epField(label,col,content){
+  return '<div class="car-epg"><label style="color:'+col+'">'+label+'</label>'+content+'</div>';
+}
+function epInp(tab,i,field,val,ph,extra){
+  const e=extra||'';
+  return `<input value="${esc(val||'')}" placeholder="${ph||''}" ${e} onchange="GEN_DATA['${tab}'][${i}]['${field}']=this.value;svGen('${tab}')">`;
+}
+function epDate(tab,i,field,val){
+  return `<input type="date" value="${val||''}" onchange="GEN_DATA['${tab}'][${i}]['${field}']=this.value;svGen('${tab}')">`;
+}
+function epTime(tab,i,field,val){
+  return `<input type="time" value="${val||''}" onchange="GEN_DATA['${tab}'][${i}]['${field}']=this.value;svGen('${tab}')">`;
+}
+function epNum(tab,i,field,val,ph){
+  return `<input type="number" min="0" value="${val||''}" placeholder="${ph||'0'}" onchange="GEN_DATA['${tab}'][${i}]['${field}']=parseFloat(this.value)||0;svGen('${tab}')">`;
+}
+function epStatus(tab,i,status,col){
+  const sc=status==='confirmed'?' sc':'';
+  const sw=status==='waiting'?' sw':'';
+  const sx=status==='cancelled'?' sx':'';
+  return `<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px">
+    <button class="car-sbtn${sc}" onclick="GEN_DATA['${tab}'][${i}].status='confirmed';svGen('${tab}');renderGenTab('${tab}')" style="font-size:11px;padding:5px 8px">&#10003; Confirmed</button>
+    <button class="car-sbtn${sw}" onclick="GEN_DATA['${tab}'][${i}].status='waiting';svGen('${tab}');renderGenTab('${tab}')" style="font-size:11px;padding:5px 8px">&#9203; Waiting</button>
+    <button class="car-sbtn${sx}" onclick="GEN_DATA['${tab}'][${i}].status='cancelled';svGen('${tab}');renderGenTab('${tab}')" style="font-size:11px;padding:5px 8px">&#10007; Cancelled</button>
+  </div>`;
+}
+function epBaseFields(tab,i,r,col){
+  return '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:8px">'
+    +epField('Ref No',col,epInp(tab,i,'ref',r.ref,'Ref#'))
+    +epField('Full Name',col,`<input value="${esc(r.name||'')}" placeholder="SURNAME NAME" onchange="GEN_DATA['${tab}'][${i}].name=this.value.toUpperCase();this.value=GEN_DATA['${tab}'][${i}].name;svGen('${tab}')">`)
+    +epField('Room',col,epInp(tab,i,'room',r.room,'407'))
+    +epField('Status',col,epStatus(tab,i,r.status,col))
+    +'</div>';
+}
+function epBaseFields(tab,i,r,col){
+  return '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:8px">'
+    +epField('Ref No',col,epInp(tab,i,'ref',r.ref,'Ref#'))
+    +epField('Full Name',col,`<input value="${esc(r.name||'')}" placeholder="SURNAME NAME" onchange="GEN_DATA['${tab}'][${i}].name=this.value.toUpperCase();this.value=GEN_DATA['${tab}'][${i}].name;svGen('${tab}')">`)
+    +epField('Room',col,epInp(tab,i,'room',r.room,'407'))
+    +epField('Status',col,epStatus(tab,i,r.status,col))
+    +'</div>';
+}
 const _genSaveTOs={};
 function svGen(tab){
   try{localStorage.setItem('gen_'+tab,JSON.stringify(GEN_DATA[tab]));}catch(e){}
@@ -1925,9 +1990,17 @@ function renderGenTab(tab){
       const excSel='<td><select class="car-ci" style="min-width:180px" onchange="GEN_DATA[\'excursions\']['+i+'].excursion=this.value;excRowAutoFill('+i+');svGen(\'excursions\')">'+EXC_CATALOG.map(e=>'<option value="'+e.name+'"'+(r.excursion===e.name?' selected':'')+'>'+e.name+'</option>').join('')+'</select>'+(excCat&&excCat.dayNames?'<div style="font-size:9px;color:var(--muted);margin-top:2px">'+excCat.dayNames.join(' \xB7 ')+'</div>':'')+'</td>';
       const paxCells='<td>'+inpNum(i,'pax',r.pax,'46px',`excRowAutoFill(${i})`)+'</td><td>'+inpNum(i,'childPax',r.childPax||0,'46px',`excRowAutoFill(${i})`)+'</td>';
       const pickupCell='<td><input class="car-ci" type="time" value="'+(r.time||'')+'" style="font-size:11px;padding:5px 6px;color:'+(r.time?'#1a6ca8':'var(--muted)')+'" onchange="GEN_DATA[\'excursions\']['+i+'].time=this.value;GEN_DATA[\'excursions\']['+i+'].timeManual=!!this.value;svGen(\'excursions\')"></td>';
-      html+='<tr class="'+rc+'">'+baseFields+dateCell+excSel+paxCells+pickupCell+costCell+actions+'</tr>';
+      const isOpenE=genIsOpen('excursions',i);
+      const actE='<td style="padding:4px 7px"><div style="display:flex;gap:3px">'+genExpandBtn('excursions',i,'#1a6ca8')+'<button onclick="event.stopPropagation();genDel(\'excursions\','+i+')" style="width:26px;height:26px;background:#fce8e8;border:none;border-radius:6px;cursor:pointer;color:var(--coral);display:flex;align-items:center;justify-content:center"><i class="ti ti-trash" style="font-size:12px"></i></button></div></td>';
+      html+='<tr class="'+rc+(isOpenE?' car-ep-open':'')+'" onclick="genToggleRow(\'excursions\','+i+')">'+baseFields+dateCell+excSel+paxCells+pickupCell+costCell+'<td style="padding:4px 7px">'+sb(r,i)+'</td>'+actE+'</tr>';
+      if(isOpenE){html+='<tr class="car-ep" style="background:#ebf5ff"><td colspan="20" onclick="event.stopPropagation()">'+epBaseFields('excursions',i,r,'#1a6ca8')+'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">'+epField('Date','#1a6ca8',epDate('excursions',i,'date',r.date))+epField('Excursion','#1a6ca8','<select style="width:100%;padding:5px 8px;border:1.5px solid #c5dff2;border-radius:8px;font-family:var(--sans);font-size:12px;outline:none" onchange="GEN_DATA[\'excursions\']['+i+'].excursion=this.value;excRowAutoFill('+i+');svGen(\'excursions\')">'+EXC_CATALOG.map(e=>'<option value="'+e.name+'"'+(r.excursion===e.name?' selected':'')+'>'+e.name+'</option>').join('')+'</select>')+epField('Adults','#1a6ca8',epNum('excursions',i,'pax',r.pax,1))+epField('Children','#1a6ca8',epNum('excursions',i,'childPax',r.childPax||0,0))+epField('Pick-up Time','#1a6ca8',epTime('excursions',i,'time',r.time))+epField('Day of Booking','#1a6ca8',epDate('excursions',i,'bookDate',r.bookDate))+epField('Notes','#1a6ca8',epInp('excursions',i,'notes',r.notes,'Special requests...'))+epField('Cost €','#1a6ca8',epNum('excursions',i,'cost',r.cost,0))+'</div></td></tr>';}
     }
-    else if(tab==='moto'){html+='<tr class="'+rc+'">'+baseFields+'<td>'+inpDate(i,'rentalDate',r.rentalDate)+'</td><td>'+inpTime(i,'time',r.time)+'</td><td>'+inp(i,'vehicle',r.vehicle,'Vehicle type')+'</td><td>'+inpNum(i,'days',r.days,'46px')+'</td><td style="padding:7px 9px;text-align:right;font-weight:700;color:'+col+'">'+(r.cost?'EUR'+r.cost:'')+'</td>'+actions+'</tr>';}
+    else if(tab==='moto'){
+      const isOpenM=genIsOpen('moto',i);
+      const actM='<td style="padding:4px 7px"><div style="display:flex;gap:3px">'+genExpandBtn('moto',i,'#5c3d8f')+'<button onclick="event.stopPropagation();genDel(\'moto\','+i+')" style="width:26px;height:26px;background:#fce8e8;border:none;border-radius:6px;cursor:pointer;color:var(--coral);display:flex;align-items:center;justify-content:center"><i class="ti ti-trash" style="font-size:12px"></i></button></div></td>';
+      html+='<tr class="'+rc+(isOpenM?' car-ep-open':'')+'" onclick="genToggleRow(\'moto\','+i+')">'+baseFields+'<td>'+inpDate(i,'rentalDate',r.rentalDate)+'</td><td>'+inpTime(i,'time',r.time)+'</td><td>'+inp(i,'vehicle',r.vehicle,'Vehicle type')+'</td><td>'+inpNum(i,'days',r.days,'46px')+'</td><td style="padding:7px 9px;text-align:right;font-weight:700;color:'+col+'">'+(r.cost?'€'+r.cost:'')+'</td><td style="padding:4px 7px">'+sb(r,i)+'</td>'+actM+'</tr>';
+      if(isOpenM){html+='<tr class="car-ep" style="background:#f5f0fc"><td colspan="20" onclick="event.stopPropagation()">'+epBaseFields('moto',i,r,'#5c3d8f')+'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">'+epField('Vehicle Type','#5c3d8f',epInp('moto',i,'vehicle',r.vehicle,'e.g. Scooter 125cc'))+epField('Days','#5c3d8f',epNum('moto',i,'days',r.days,1))+epField('Rental Date','#5c3d8f',epDate('moto',i,'rentalDate',r.rentalDate))+epField('Time','#5c3d8f',epTime('moto',i,'time',r.time))+epField('Day of Booking','#5c3d8f',epDate('moto',i,'bookDate',r.bookDate))+epField('Notes','#5c3d8f',epInp('moto',i,'notes',r.notes,'Special requests...'))+epField('Cost €','#5c3d8f',epNum('moto',i,'cost',r.cost,0))+'</div></td></tr>';}
+    }
     else if(tab==='flowers'){
       const flItem=flowersGetByName(r.arrangement);
       const autoBosoni=flItem?flItem.bosoni:null;
@@ -1938,7 +2011,10 @@ function renderGenTab(tab){
       const arrSel='<td><select class="car-ci" style="min-width:170px" onchange="GEN_DATA[\'flowers\']['+i+'].arrangement=this.value;GEN_DATA[\'flowers\']['+i+'].bosoniOverride=null;GEN_DATA[\'flowers\']['+i+'].grossOverride=null;const fl=flowersGetByName(this.value);if(fl){GEN_DATA[\'flowers\']['+i+'].bosoniPrice=fl.bosoni;GEN_DATA[\'flowers\']['+i+'].grossPrice=fl.gross;}svGen(\'flowers\');renderGenTab(\'flowers\')"><option value="">Select...</option>'+FLOWERS_CATALOG.map(f=>'<option value="'+f.name+'"'+(r.arrangement===f.name?' selected':'')+'>'+f.name+'</option>').join('')+'</select></td>';
       const bosoniCell='<td style="padding:4px 7px;text-align:right"><input type="number" min="0" value="'+(displayBosoni||'')+'" style="width:65px;padding:4px 7px;border:1.5px solid '+(bHasOv?'#b45309':'#fbcfe8')+';border-radius:7px;font-size:12px;font-weight:700;color:'+(bHasOv?'#b45309':'#be185d')+';text-align:right;outline:none;background:'+(bHasOv?'#fef7e6':'#fff')+'" oninput="GEN_DATA[\'flowers\']['+i+'].bosoniOverride=this.value?parseFloat(this.value):null;svGen(\'flowers\')"></td>';
       const grossCell='<td style="padding:4px 7px;text-align:right"><input type="number" min="0" value="'+(displayGross||'')+'" style="width:65px;padding:4px 7px;border:1.5px solid '+(gHasOv?'#b45309':'#a8d5b8')+';border-radius:7px;font-size:12px;font-weight:700;color:'+(gHasOv?'#b45309':'#1a6644')+';text-align:right;outline:none;background:'+(gHasOv?'#fef7e6':'#fff')+'" oninput="GEN_DATA[\'flowers\']['+i+'].grossOverride=this.value?parseFloat(this.value):null;svGen(\'flowers\')"></td>';
-      html+='<tr class="'+rc+'">'+baseFields+'<td>'+inpDate(i,'delivDate',r.delivDate)+'</td><td>'+inpTime(i,'delivTime',r.delivTime)+'</td>'+arrSel+bosoniCell+grossCell+actions+'</tr>';
+      const isOpenF=genIsOpen('flowers',i);
+      const actF='<td style="padding:4px 7px"><div style="display:flex;gap:3px">'+genExpandBtn('flowers',i,'#be185d')+'<button onclick="event.stopPropagation();genDel(\'flowers\','+i+')" style="width:26px;height:26px;background:#fce8e8;border:none;border-radius:6px;cursor:pointer;color:var(--coral);display:flex;align-items:center;justify-content:center"><i class="ti ti-trash" style="font-size:12px"></i></button></div></td>';
+      html+='<tr class="'+rc+(isOpenF?' car-ep-open':'')+'" onclick="genToggleRow(\'flowers\','+i+')">'+baseFields+'<td>'+inpDate(i,'delivDate',r.delivDate)+'</td><td>'+inpTime(i,'delivTime',r.delivTime)+'</td>'+arrSel+bosoniCell+grossCell+'<td style="padding:4px 7px">'+sb(r,i)+'</td>'+actF+'</tr>';
+      if(isOpenF){html+='<tr class="car-ep" style="background:#fff0f7"><td colspan="20" onclick="event.stopPropagation()">'+epBaseFields('flowers',i,r,'#be185d')+'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px"><div style="grid-column:1/3">'+epField('Arrangement','#be185d','<select style="width:100%;padding:5px 8px;border:1.5px solid #fbcfe8;border-radius:8px;font-family:var(--sans);font-size:12px;outline:none" onchange="GEN_DATA[\'flowers\']['+i+'].arrangement=this.value;const fl=flowersGetByName(this.value);if(fl&&!GEN_DATA[\'flowers\']['+i+'].bosoniOverride){GEN_DATA[\'flowers\']['+i+'].bosoniPrice=fl.bosoni;}if(fl&&!GEN_DATA[\'flowers\']['+i+'].grossOverride){GEN_DATA[\'flowers\']['+i+'].grossPrice=fl.gross;}svGen(\'flowers\');renderGenTab(\'flowers\')">'+FLOWERS_CATALOG.map(f=>'<option value="'+f.name+'"'+(r.arrangement===f.name?' selected':'')+'>'+f.name+'</option>').join('')+'</select>')+'</div>'+epField('Delivery Date','#be185d',epDate('flowers',i,'delivDate',r.delivDate))+epField('Delivery Time','#be185d',epTime('flowers',i,'delivTime',r.delivTime))+epField('Bosoni € (cost)','#be185d',epNum('flowers',i,'bosoniPrice',r.bosoniPrice,0))+epField('Gross € (guest)','#1a6644',epNum('flowers',i,'grossPrice',r.grossPrice,0))+epField('Day of Booking','#be185d',epDate('flowers',i,'bookDate',r.bookDate))+epField('Notes','#be185d',epInp('flowers',i,'notes',r.notes,'e.g. leave at room door'))+'</div></td></tr>';}
     }
     else if(tab==='boats'){
       const co=BOAT_COMPANIES.find(c=>c.id===r.company);
@@ -1956,9 +2032,41 @@ function renderGenTab(tab){
       const tripOpts=trips.map(t=>'<option value="'+t.id+'"'+(r.trip===t.id?' selected':'')+'>'+t.name+(t.onRequest?' *on request':'')+'</option>').join('');
       const tripSel='<td><div>'+vesselSelect+'<select class="car-ci" style="min-width:200px" onchange="boatRowTripChange('+i+',this.value,this.options[this.selectedIndex].text)"><option value="">Select...</option>'+tripOpts+'</select></div></td>';
       const costCell='<td style="padding:4px 7px;text-align:right"><input type="number" min="0" value="'+(displayCost||'')+'" placeholder="'+(autoCost||'?')+'" style="width:80px;padding:4px 7px;border:1.5px solid '+(hasOv?'#b45309':'#a5f3fc')+';border-radius:7px;font-size:13px;font-weight:700;color:'+(hasOv?'#b45309':'#0e7490')+';font-family:var(--serif);background:'+(hasOv?'#fef7e6':'#fff')+';text-align:right;outline:none" oninput="boatRowCostOverride('+i+',this.value)"><div style="font-size:9px;color:'+(hasOv?'#b45309':'var(--muted2)')+';text-align:right;margin-top:1px">'+(hasOv?'\u26a0 custom':autoCost?'auto \u20ac'+autoCost:'')+'</div></td>';
-      html+='<tr class="'+rc+'">'+baseFields+'<td>'+inpDate(i,'date',r.date)+'</td><td>'+inpTime(i,'time',r.time)+'</td>'+coSel+tripSel+'<td>'+inpNum(i,'pax',r.pax,'50px')+'</td>'+costCell+actions+'</tr>';
+      const isOpenB=genIsOpen('boats',i);
+      const actB='<td style="padding:4px 7px"><div style="display:flex;gap:3px">'+genExpandBtn('boats',i,'#0e7490')+'<button onclick="event.stopPropagation();genDel(\'boats\','+i+')" style="width:26px;height:26px;background:#fce8e8;border:none;border-radius:6px;cursor:pointer;color:var(--coral);display:flex;align-items:center;justify-content:center"><i class="ti ti-trash" style="font-size:12px"></i></button></div></td>';
+      html+='<tr class="'+rc+(isOpenB?' car-ep-open':'')+'" onclick="genToggleRow(\'boats\','+i+')">'+baseFields+'<td>'+inpDate(i,'date',r.date)+'</td><td>'+inpTime(i,'time',r.time)+'</td>'+coSel+tripSel+'<td>'+inpNum(i,'pax',r.pax,'50px')+'</td>'+costCell+'<td style="padding:4px 7px">'+sb(r,i)+'</td>'+actB+'</tr>';
+      if(isOpenB){html+='<tr class="car-ep" style="background:#e0f7fa"><td colspan="20" onclick="event.stopPropagation()">'+epBaseFields('boats',i,r,'#0e7490')+'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">'+epField('Date','#0e7490',epDate('boats',i,'date',r.date))+epField('Time','#0e7490',epTime('boats',i,'time',r.time))+epField('Pax','#0e7490',epNum('boats',i,'pax',r.pax,1))+epField('Season','#0e7490','<select style="width:100%;padding:5px 8px;border:1.5px solid #a5f3fc;border-radius:8px;font-family:var(--sans);font-size:12px;outline:none" onchange="GEN_DATA[\'boats\']['+i+'].season=this.value;svGen(\'boats\')"><option value="ls"'+(r.season!=='hs'?' selected':'')+'>Low (May-Jun, Oct)</option><option value="hs"'+(r.season==='hs'?' selected':'')+'>High (Jul-Sep)</option></select>')+epField('Day of Booking','#0e7490',epDate('boats',i,'bookDate',r.bookDate))+epField('Notes','#0e7490',epInp('boats',i,'notes',r.notes,'Special requests...'))+epField('Cost €','#0e7490',epNum('boats',i,'cost',r.cost,0))+'</div></td></tr>';}
     }
-    else if(tab==='transfers'){html+='<tr class="'+rc+'">'+baseFields+'<td>'+inpDate(i,'date',r.date)+'</td><td>'+inpTime(i,'time',r.time)+'</td><td>'+inp(i,'route',r.route,'e.g. Hotel -> Airport')+'</td><td style="padding:7px 9px;text-align:right;font-weight:700;color:'+col+'">'+(r.cost?'€'+r.cost:'')+'</td>'+actions+'</tr>';}
+    else if(tab==='transfers'){
+      const isOpen=genIsOpen('transfers',i);
+      // Custom baseFields for transfers: #, Ref, Name, Room (NO bookDate - we add it in correct order)
+      const trBaseFields='<td style="padding:7px 9px;color:var(--muted2);font-size:11px;text-align:center">'+n+'</td><td>'+inp(i,'ref',r.ref,'Ref#')+'</td><td>'+inp(i,'name',r.name,'FULL NAME','font-weight:600')+'</td><td>'+inp(i,'room',r.room,'309','text-align:center;font-weight:700;color:'+col)+'</td>';
+      const trTo='<td>'+inp(i,'to',r.to,'TUI...')+'</td>';
+      const trPax='<td>'+inpNum(i,'pax',r.pax||1,'40px')+'</td>';
+      const trBookDate='<td>'+inpDate(i,'bookDate',r.bookDate)+'</td>';
+      const trCompany='<td>'+inp(i,'company',r.company,'Taxi/Van...')+'</td>';
+      const expandBtn='<button onclick="genToggleRow(\'transfers\','+i+')" style="width:22px;height:22px;background:'+(isOpen?'#92400e':'var(--bg)')+';color:'+(isOpen?'#fff':'var(--muted)')+';border:1.5px solid '+(isOpen?'#92400e':'var(--border)')+';border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0" title="Expand"><i class="ti ti-chevron-'+(isOpen?'up':'down')+'" style="font-size:11px"></i></button>';
+      const actionsWithExpand='<td style="padding:4px 7px"><div style="display:flex;gap:3px">'+expandBtn+'<button onclick="genDel(\'transfers\','+i+')" style="width:26px;height:26px;background:#fce8e8;border:none;border-radius:6px;cursor:pointer;color:var(--coral);display:flex;align-items:center;justify-content:center"><i class="ti ti-trash" style="font-size:12px"></i></button></div></td>';
+      const rowCls=rc+(isOpen?' car-ep-open':'');
+      html+='<tr class="'+rowCls+'" style="cursor:pointer" onclick="genToggleRow(\'transfers\','+i+')">'+trBaseFields+trTo+trPax+trBookDate+'<td>'+inpDate(i,'date',r.date)+'</td><td>'+inpTime(i,'time',r.time)+'</td><td>'+inp(i,'route',r.route,'e.g. Hotel to Airport')+'</td>'+trCompany+'<td style="padding:7px 9px;text-align:right;font-weight:700;color:'+col+'">'+(r.cost?'\u20ac'+r.cost:'')+'</td><td style="padding:4px 7px">'+sb(r,i)+'</td>'+actionsWithExpand+'</tr>';
+      if(isOpen){
+        html+='<tr class="car-ep" style="background:#fef9f0"><td colspan="20" onclick="event.stopPropagation()"><div style="display:grid;grid-template-columns:repeat(4,1fr) 1fr;gap:12px;padding:4px 0 8px;align-items:end">';
+        html+='<div class="car-epg" style="--epg-color:#92400e"><label style="color:#92400e">Ref No</label><input value="'+esc(r.ref||'')+'" placeholder="Ref" onchange="GEN_DATA[\'transfers\']['+i+'].ref=this.value;svGen(\'transfers\')"></div>';
+        html+='<div class="car-epg" style="--epg-color:#92400e"><label style="color:#92400e">Full Name</label><input value="'+esc(r.name||'')+'" placeholder="SURNAME NAME" onchange="GEN_DATA[\'transfers\']['+i+'].name=this.value.toUpperCase();this.value=GEN_DATA[\'transfers\']['+i+'].name;svGen(\'transfers\')"></div>';
+        html+='<div class="car-epg"><label style="color:#92400e">Room</label><input value="'+esc(r.room||'')+'" placeholder="407" onchange="GEN_DATA[\'transfers\']['+i+'].room=this.value;svGen(\'transfers\')"></div>';
+        html+='<div class="car-epg"><label style="color:#92400e">T.O.</label><input value="'+esc(r.to||'')+'" placeholder="TUI, JET2..." onchange="GEN_DATA[\'transfers\']['+i+'].to=this.value;svGen(\'transfers\')"></div>';
+        html+='<div class="car-epg"><label style="color:#92400e">Pax</label><input type="number" min="1" value="'+(r.pax||1)+'" style="width:60px" onchange="GEN_DATA[\'transfers\']['+i+'].pax=parseInt(this.value)||1;svGen(\'transfers\')"></div>';
+        html+='<div class="car-epg"><label style="color:#92400e">Day of Booking</label><input type="date" value="'+(r.bookDate||'')+'" onchange="GEN_DATA[\'transfers\']['+i+'].bookDate=this.value;svGen(\'transfers\')"></div>';
+        html+='<div class="car-epg"><label style="color:#92400e">Transfer Date</label><input type="date" value="'+(r.date||'')+'" onchange="GEN_DATA[\'transfers\']['+i+'].date=this.value;svGen(\'transfers\')"></div>';
+        html+='<div class="car-epg"><label style="color:#92400e">Time</label><input type="time" value="'+(r.time||'')+'" onchange="GEN_DATA[\'transfers\']['+i+'].time=this.value;svGen(\'transfers\')"></div>';
+        html+='<div class="car-epg" style="grid-column:1/3"><label style="color:#92400e">Route</label><input value="'+esc(r.route||'')+'" placeholder="Hotel to Airport" onchange="GEN_DATA[\'transfers\']['+i+'].route=this.value;svGen(\'transfers\')"></div>';
+        html+='<div class="car-epg" style="grid-column:3/5"><label style="color:#92400e">Company / Car Type</label><input value="'+esc(r.company||'')+'" placeholder="e.g. Taxi, Mini Van, Bus..." onchange="GEN_DATA[\'transfers\']['+i+'].company=this.value;svGen(\'transfers\')"></div>';
+        html+='<div class="car-epg" style="grid-column:1/3"><label style="color:#92400e">Notes (flight no. / arrival time etc.)</label><input value="'+esc(r.notes||'')+'" placeholder="e.g. FR1234 arriving 14:30, 2 large suitcases" onchange="GEN_DATA[\'transfers\']['+i+'].notes=this.value;svGen(\'transfers\')"></div>';
+        html+='<div class="car-epg"><label style="color:#92400e">Cost &euro;</label><input type="number" min="0" value="'+(r.cost||'')+'" placeholder="0" onchange="GEN_DATA[\'transfers\']['+i+'].cost=parseFloat(this.value)||0;svGen(\'transfers\')"></div>';
+        html+='<div class="car-epg"><label style="color:#92400e">Status</label><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px"><button class="car-sbtn'+(r.status==='confirmed'?' sc':'')+'" onclick="GEN_DATA[\'transfers\']['+i+'].status=\'confirmed\';svGen(\'transfers\');renderGenTab(\'transfers\')" style="font-size:11px;padding:5px 8px">&#10003; Confirmed</button><button class="car-sbtn'+(r.status==='waiting'?' sw':'')+'" onclick="GEN_DATA[\'transfers\']['+i+'].status=\'waiting\';svGen(\'transfers\');renderGenTab(\'transfers\')" style="font-size:11px;padding:5px 8px">&#9203; Waiting</button><button class="car-sbtn'+(r.status==='cancelled'?' sx':'')+'" onclick="GEN_DATA[\'transfers\']['+i+'].status=\'cancelled\';svGen(\'transfers\');renderGenTab(\'transfers\')" style="font-size:11px;padding:5px 8px">&#10007; Cancelled</button></div></div>';
+        html+='</div></td></tr>';
+      }
+    }
     else if(tab==='vantours'){
       const vt=vanTourGetByName(r.tour);
       const autoCost=vt?vanTourAutoPrice(r.tour,r.pax<=2?2:r.pax<=4?4:6,r.tourType||'standard'):null;
@@ -1968,7 +2076,10 @@ function renderGenTab(tab){
       const typeSel='<td><select class="car-ci" style="width:100px" onchange="vanRowTypeChange('+i+',this.value)">'+(vt&&vt.hasExclusive?'<option value="standard"'+(r.tourType!=='exclusive'?' selected':'')+'>Standard</option><option value="exclusive"'+(r.tourType==='exclusive'?' selected':'')+'>Exclusive</option>':'<option value="standard" selected>Standard</option>')+'</select></td>';
       const paxCell='<td>'+inpNum(i,'pax',r.pax,'50px')+'</td>';
       const costCell='<td style="padding:4px 7px;text-align:right"><input type="number" min="0" value="'+(displayCost||'')+'" placeholder="'+(autoCost||'?')+'" style="width:75px;padding:4px 7px;border:1.5px solid '+(hasOv?'#b45309':'#e2c97e')+';border-radius:7px;font-size:13px;font-weight:700;color:'+(hasOv?'#b45309':'#7c5e2e')+';font-family:var(--serif);background:'+(hasOv?'#fef7e6':'#fff')+';text-align:right;outline:none" oninput="vanRowCostOverride('+i+',this.value)"><div style="font-size:9px;color:'+(hasOv?'#b45309':'var(--muted2)')+';text-align:right;margin-top:1px">'+(hasOv?'⚠ custom':autoCost?'auto €'+autoCost:'')+'</div></td>';
-      html+='<tr class="'+rc+'">'+baseFields+'<td>'+inpDate(i,'date',r.date)+'</td><td>'+inpTime(i,'time',r.time)+'</td>'+tourSel+paxCell+typeSel+costCell+actions+'</tr>';
+      const isOpenV=genIsOpen('vantours',i);
+      const actV='<td style="padding:4px 7px"><div style="display:flex;gap:3px">'+genExpandBtn('vantours',i,'#7c5e2e')+'<button onclick="event.stopPropagation();genDel(\'vantours\','+i+')" style="width:26px;height:26px;background:#fce8e8;border:none;border-radius:6px;cursor:pointer;color:var(--coral);display:flex;align-items:center;justify-content:center"><i class="ti ti-trash" style="font-size:12px"></i></button></div></td>';
+      html+='<tr class="'+rc+(isOpenV?' car-ep-open':'')+'" onclick="genToggleRow(\'vantours\','+i+')">'+baseFields+'<td>'+inpDate(i,'date',r.date)+'</td><td>'+inpTime(i,'time',r.time)+'</td>'+tourSel+paxCell+typeSel+costCell+'<td style="padding:4px 7px">'+sb(r,i)+'</td>'+actV+'</tr>';
+      if(isOpenV){html+='<tr class="car-ep" style="background:#fef9e7"><td colspan="20" onclick="event.stopPropagation()">'+epBaseFields('vantours',i,r,'#7c5e2e')+'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px"><div style="grid-column:1/3">'+epField('Tour','#7c5e2e','<select style="width:100%;padding:5px 8px;border:1.5px solid #e2c97e;border-radius:8px;font-family:var(--sans);font-size:12px;outline:none" onchange="vanRowTourChange('+i+',this.value)">'+VAN_TOURS.map(t=>'<option value="'+t.name+'"'+(r.tour===t.name?' selected':'')+'>'+t.name+'</option>').join('')+'</select>')+'</div>'+epField('Tour Date','#7c5e2e',epDate('vantours',i,'date',r.date))+epField('Pick-up Time','#7c5e2e',epTime('vantours',i,'time',r.time))+epField('Pax','#7c5e2e',epNum('vantours',i,'pax',r.pax,2))+epField('Type','#7c5e2e','<select style="width:100%;padding:5px 8px;border:1.5px solid #e2c97e;border-radius:8px;font-family:var(--sans);font-size:12px;outline:none" onchange="vanRowTypeChange('+i+',this.value)"><option value="standard"'+(r.tourType!=='exclusive'?' selected':'')+'>Standard</option><option value="exclusive"'+(r.tourType==='exclusive'?' selected':'')+'>Exclusive</option></select>')+epField('Day of Booking','#7c5e2e',epDate('vantours',i,'bookDate',r.bookDate))+epField('Notes','#7c5e2e',epInp('vantours',i,'notes',r.notes,'Special requests...'))+epField('Cost €','#7c5e2e',epNum('vantours',i,'cost',r.cost,0))+'</div></td></tr>';}
     }
   });
   tbody.innerHTML=html;
@@ -2394,10 +2505,14 @@ const GEN_FIELDS={
     {id:'ref',label:'Ref No',type:'text',ph:'Ref'},
     {id:'name',label:'Full Name',type:'text',ph:'SURNAME NAME',upper:true},
     {id:'room',label:'Room',type:'text',ph:'407'},
+    {id:'to',label:'T.O.',type:'text',ph:'TUI, JET2...'},
+    {id:'pax',label:'Pax',type:'number',ph:'2'},
     {id:'bookDate',label:'Day of Booking',type:'date'},
     {id:'date',label:'Transfer Date',type:'date'},
     {id:'time',label:'Time',type:'time'},
     {id:'route',label:'Route',type:'text',ph:'Hotel to Airport'},
+    {id:'company',label:'Company / Car Type',type:'text',ph:'e.g. Taxi, Mini Van...'},
+    {id:'notes',label:'Notes (flight no. etc.)',type:'text',ph:'e.g. FR1234, 14:30 arr.'},
     {id:'cost',label:'Cost (euros)',type:'number',ph:'0'},
     {id:'status',label:'Status',type:'status'}
   ],
@@ -4732,6 +4847,153 @@ fbdb.ref('tsm_layout').on('value',snap=>{
     setSyncStatus('ok','Layout synced ☁ '+new Date().toLocaleTimeString());
   }
 });
+
+/* ================================================
+   COLUMN RESIZER — works on all .car-tbl tables
+   ================================================ */
+(function initColResize(){
+  const STORE_KEY = 'colWidths_v2';
+  let savedWidths = {};
+  try { savedWidths = JSON.parse(localStorage.getItem(STORE_KEY)||'{}'); } catch(e){}
+
+  function saveWidths(tableId, widths){
+    savedWidths[tableId] = widths;
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(savedWidths)); } catch(e){}
+    // sync to firebase if available
+    if(typeof fbdb !== 'undefined'){
+      clearTimeout(window._colResizeSaveTO);
+      window._colResizeSaveTO = setTimeout(()=>{
+        fbdb.ref('col_widths').set(savedWidths);
+      }, 800);
+    }
+  }
+
+  function applyWidths(table, widths){
+    if(!widths) return;
+    const ths = table.querySelectorAll('thead th');
+    ths.forEach((th, idx) => {
+      if(widths[idx] != null){
+        th.style.width = widths[idx] + 'px';
+        th.style.minWidth = widths[idx] + 'px';
+      }
+    });
+  }
+
+  function addResizers(table){
+    const tableId = table.closest('[id]')?.id || table.id || 'tbl_'+Math.random().toString(36).slice(2,7);
+    if(!table.id) table.id = tableId;
+    const ths = table.querySelectorAll('thead th');
+
+    // Apply saved widths
+    if(savedWidths[tableId]) applyWidths(table, savedWidths[tableId]);
+
+    ths.forEach((th, idx) => {
+      // Skip last column
+      if(idx === ths.length - 1) return;
+      // Skip if already has resizer
+      if(th.querySelector('.col-resizer')) return;
+
+      const resizer = document.createElement('div');
+      resizer.className = 'col-resizer';
+      resizer.title = 'Drag to resize column';
+      th.appendChild(resizer);
+
+      let startX, startW, nextTh, nextStartW;
+
+      resizer.addEventListener('mousedown', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        startX = e.clientX;
+        startW = th.offsetWidth;
+        nextTh = ths[idx + 1];
+        nextStartW = nextTh ? nextTh.offsetWidth : null;
+        resizer.classList.add('dragging');
+        document.body.style.cursor = 'col-resize';
+        document.body.style.userSelect = 'none';
+
+        function onMove(e){
+          const diff = e.clientX - startX;
+          const newW = Math.max(40, startW + diff);
+          th.style.width = newW + 'px';
+          th.style.minWidth = newW + 'px';
+        }
+
+        function onUp(){
+          resizer.classList.remove('dragging');
+          document.body.style.cursor = '';
+          document.body.style.userSelect = '';
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('mouseup', onUp);
+          // Save widths
+          const allWidths = {};
+          ths.forEach((t, i) => { allWidths[i] = t.offsetWidth; });
+          saveWidths(table.id, allWidths);
+        }
+
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+      });
+
+      // Double-click to reset column width
+      resizer.addEventListener('dblclick', e => {
+        e.stopPropagation();
+        th.style.width = '';
+        th.style.minWidth = '';
+        // Update saved
+        const allWidths = {};
+        ths.forEach((t, i) => { allWidths[i] = t.offsetWidth; });
+        saveWidths(table.id, allWidths);
+      });
+    });
+  }
+
+  // Init on existing tables + observe DOM for new tables
+  function initAll(){
+    document.querySelectorAll('table.car-tbl').forEach(addResizers);
+  }
+
+  // Run on load
+  document.addEventListener('DOMContentLoaded', initAll);
+  if(document.readyState !== 'loading') initAll();
+
+  // MutationObserver to catch dynamically rendered tables
+  const obs = new MutationObserver(() => {
+    document.querySelectorAll('table.car-tbl:not([data-resizable])').forEach(t => {
+      t.setAttribute('data-resizable','1');
+      addResizers(t);
+    });
+  });
+  obs.observe(document.body, {childList:true, subtree:true});
+
+  // Re-init when tab changes (tables re-render)
+  window.addEventListener('click', e => {
+    if(e.target.closest('.tab,.exp-subtab')) setTimeout(initAll, 120);
+  });
+
+  // Load from Firebase on init
+  if(typeof fbdb !== 'undefined'){
+    fbdb.ref('col_widths').once('value').then(snap => {
+      const d = snap.val();
+      if(d && typeof d === 'object'){
+        savedWidths = {...savedWidths, ...d};
+        try { localStorage.setItem(STORE_KEY, JSON.stringify(savedWidths)); } catch(e){}
+        initAll();
+      }
+    });
+  }
+
+  // Expose for manual reset
+  window.resetColWidths = function(){
+    savedWidths = {};
+    localStorage.removeItem(STORE_KEY);
+    if(typeof fbdb !== 'undefined') fbdb.ref('col_widths').remove();
+    document.querySelectorAll('table.car-tbl thead th').forEach(th => {
+      th.style.width = '';
+      th.style.minWidth = '';
+    });
+    showToast('Column widths reset', 'w');
+  };
+})();
 </script>
 </body>
 </html>
