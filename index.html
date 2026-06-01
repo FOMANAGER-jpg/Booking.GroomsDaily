@@ -1231,6 +1231,7 @@ canvas.an-chart{width:100%!important;height:220px!important}
       <button class="exp-subtab" id="expsub-flowers" onclick="expGoTab('flowers',this)"><i class="ti ti-plant-2"></i> Flowers</button>
       <button class="exp-subtab" id="expsub-boats" onclick="expGoTab('boats',this)"><i class="ti ti-sailboat"></i> Boats &amp; Cruises</button>
       <button class="exp-subtab" id="expsub-transfers" onclick="expGoTab('transfers',this)"><i class="ti ti-bus"></i> Transfers</button>
+      <button class="exp-subtab" id="expsub-vantours" onclick="expGoTab('vantours',this)" style="color:#7c5e2e"><i class="ti ti-steering-wheel"></i> Van Tours</button>
     </div>
 
     <!-- ── CARS PANEL ── -->
@@ -1294,9 +1295,10 @@ canvas.an-chart{width:100%!important;height:220px!important}
           <thead><tr>
             <th style="width:28px">#</th><th style="width:95px">Ref No</th><th style="min-width:130px">Full Name</th>
             <th style="width:52px">Room</th><th style="width:105px">Day of Booking</th>
-            <th style="width:105px">Date</th><th style="width:80px">Pick-up Time</th>
-            <th style="min-width:160px">Excursion</th><th style="width:80px">Pax</th>
-            <th style="width:90px">Cost</th><th style="width:105px">Status</th><th style="width:58px"></th>
+            <th style="width:105px">Date</th>
+            <th style="min-width:180px">Excursion</th><th style="width:50px">Adults</th><th style="width:50px">Child</th>
+            <th style="width:80px">Pick-up</th>
+            <th style="width:95px">Cost €</th><th style="width:105px">Status</th><th style="width:58px"></th>
           </tr></thead>
           <tbody id="excursionsTbody"></tbody>
         </table>
@@ -1367,9 +1369,10 @@ canvas.an-chart{width:100%!important;height:220px!important}
           <thead><tr>
             <th style="width:28px">#</th><th style="width:95px">Ref No</th><th style="min-width:130px">Full Name</th>
             <th style="width:52px">Room</th><th style="width:105px">Day of Booking</th>
-            <th style="width:105px">Date</th><th style="width:80px">Pick-up Time</th>
-            <th style="min-width:160px">Trip / Cruise</th><th style="width:80px">Pax</th>
-            <th style="width:90px">Cost</th><th style="width:105px">Status</th><th style="width:58px"></th>
+            <th style="width:105px">Date</th><th style="width:80px">Time</th>
+            <th style="width:130px">Company</th>
+            <th style="min-width:200px">Boat / Trip</th><th style="width:55px">Pax</th>
+            <th style="width:100px">Cost &#8364;</th><th style="width:105px">Status</th><th style="width:58px"></th>
           </tr></thead>
           <tbody id="boatsTbody"></tbody>
         </table>
@@ -1399,6 +1402,31 @@ canvas.an-chart{width:100%!important;height:220px!important}
         </table>
       </div>
       <div id="transfers-sum" style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;box-shadow:var(--sh);margin-top:14px"></div>
+    </div>
+
+    <!-- ── VAN TOURS PANEL ── -->
+    <div id="exppanel-vantours" class="hidden">
+      <div class="car-toolbar">
+        <button class="car-add-btn" style="background:#7c5e2e" onclick="genAdd('vantours')"><i class="ti ti-plus"></i> Add Van Tour Booking</button>
+        <button class="car-print-btn" style="color:#7c5e2e;border-color:#e2c97e" onclick="expPrintTable('vantours')"><i class="ti ti-printer"></i> Print</button>
+        <div style="display:flex;gap:4px;flex-wrap:wrap" id="vantours-mfilter"></div>
+        <span id="vantours-cnt" style="font-size:12px;color:var(--muted);margin-left:auto"></span>
+        <button onclick="expShowPriceList('vantours')" style="display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);color:#7c5e2e;border:1.5px solid #e2c97e;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--sans)"><i class="ti ti-list-check"></i> Tour Catalogue</button>
+      </div>
+      <div class="car-tbl-wrap">
+        <table class="car-tbl">
+          <thead><tr>
+            <th style="width:28px">#</th><th style="width:95px">Ref No</th><th style="min-width:140px">Full Name</th>
+            <th style="width:52px">Room</th><th style="width:105px">Day of Booking</th>
+            <th style="width:105px">Tour Date</th><th style="width:80px">Time</th>
+            <th style="min-width:200px">Tour</th>
+            <th style="width:60px">Pax</th><th style="width:90px">Type</th>
+            <th style="width:100px">Cost &#8364;</th><th style="width:105px">Status</th><th style="width:58px"></th>
+          </tr></thead>
+          <tbody id="vantoursTbody"></tbody>
+        </table>
+      </div>
+      <div id="vantours-sum" style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;box-shadow:var(--sh);margin-top:14px"></div>
     </div>
 
   </div>
@@ -1740,9 +1768,11 @@ canvas.an-chart{width:100%!important;height:220px!important}
 <div id="rev-print-area"></div>
 
 <script>
-/* ═══════════════════════════════
-   ACE RENT A CAR — EXPERIENCES
-═══════════════════════════════ */
+const DAY_NAMES_FULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+/* ===========================
+   ACE RENT A CAR - EXPERIENCES
+=========================== */
 const ACE_CARS=[
   {id:'A-M',  s:'A Manual',    l:'KIA Picanto / Toyota Aygo / Hyundai i10'},
   {id:'A-A',  s:'A Automatic', l:'Skoda Citigo / KIA Picanto Auto'},
@@ -1774,7 +1804,7 @@ const ACE_PRICES={
 const ACE_INS={'A-M':10,'A-A':10,'B-M':10,'B1-M':10,'B-A':13,'C-M':13,'C1-M':15,'D-M':15,'J-M':20,'J-A':20,'J-E':20,'T':25};
 
 function carSeason(d){if(!d)return'low';const m=new Date(d).getMonth()+1;if(m===8)return'peak';if(m===7)return'high';if(m===6||m===9)return'mid';return'low';}
-function carSeasonLbl(d){return{low:'Low Season (Apr–May, Oct)',mid:'Middle Season (Jun, Sep)',high:'High Season (Jul)',peak:'Peak Season (Aug)'}[carSeason(d)];}
+function carSeasonLbl(d){return{low:'Low Season (Apr-May, Oct)',mid:'Middle Season (Jun, Sep)',high:'High Season (Jul)',peak:'Peak Season (Aug)'}[carSeason(d)];}
 function carBasePrice(id,days,d){
   if(id==='T')return null;
   const s=(ACE_PRICES[id]||{})[carSeason(d)];if(!s)return null;
@@ -1792,13 +1822,13 @@ function carPriceOverride(i,val){const v=val===''?null:parseFloat(val);CARS[i].p
 function carClearOverride(i){CARS[i].priceOverride=null;delete CARS[i].priceOverride;svCars();renderCars();showToast('Price reset to auto','s');}
 function carGetMonth(c){const d=new Date(c.rentalDate||c.bookDate||'');return isNaN(d)?'':String(d.getMonth()+1).padStart(2,'0');}
 
-/* ═══════════════════════════════════
-   EXPERIENCES — GENERIC TABS ENGINE
-═══════════════════════════════════ */
-const EXP_TABS=['cars','excursions','moto','flowers','boats','transfers'];
-const EXP_COLORS={cars:'#1a6644',excursions:'#1a6ca8',moto:'#5c3d8f',flowers:'#be185d',boats:'#0e7490',transfers:'#92400e'};
-const EXP_ICONS={cars:'ti-car',excursions:'ti-binoculars',moto:'ti-motorbike',flowers:'ti-plant-2',boats:'ti-sailboat',transfers:'ti-bus'};
-const EXP_LABELS={cars:'Car Rentals',excursions:'Excursions',moto:'Moto & Bikes',flowers:'Flowers',boats:'Boats & Cruises',transfers:'Transfers'};
+/* ===============================
+   EXPERIENCES - GENERIC TABS ENGINE
+=============================== */
+const EXP_TABS=['cars','excursions','moto','flowers','boats','transfers','vantours'];
+const EXP_COLORS={cars:'#1a6644',excursions:'#1a6ca8',moto:'#5c3d8f',flowers:'#be185d',boats:'#0e7490',transfers:'#92400e',vantours:'#7c5e2e'};
+const EXP_ICONS={cars:'ti-car',excursions:'ti-binoculars',moto:'ti-motorbike',flowers:'ti-plant-2',boats:'ti-sailboat',transfers:'ti-bus',vantours:'ti-steering-wheel'};
+const EXP_LABELS={cars:'Car Rentals',excursions:'Excursions',moto:'Moto & Bikes',flowers:'Flowers',boats:'Boats & Cruises',transfers:'Transfers',vantours:'Van Tours'};
 
 let expCurrentTab='cars';
 
@@ -1812,8 +1842,8 @@ function expGoTab(tab,el){
   else{renderGenTab(tab);renderGenSum(tab);}
 }
 
-/* ── Generic data store ── */
-let GEN_DATA={excursions:[],moto:[],flowers:[],boats:[],transfers:[]};
+/* -- Generic data store -- */
+let GEN_DATA={excursions:[],moto:[],flowers:[],boats:[],transfers:[],vantours:[]};
 const _genSaveTOs={};
 function svGen(tab){
   try{localStorage.setItem('gen_'+tab,JSON.stringify(GEN_DATA[tab]));}catch(e){}
@@ -1821,14 +1851,14 @@ function svGen(tab){
     clearTimeout(_genSaveTOs[tab]);
     _genSaveTOs[tab]=setTimeout(()=>{
       fbdb.ref('gen_'+tab).set(GEN_DATA[tab])
-        .then(()=>setSyncStatus('ok','Saved ☁ '+new Date().toLocaleTimeString()))
+        .then(()=>setSyncStatus('ok','Saved (cloud) '+new Date().toLocaleTimeString()))
         .catch(e=>setSyncStatus('error','Error: '+e.message));
     },600);
   }
 }
 function genGetMonth(row){const d=new Date(row.bookDate||row.date||row.delivDate||row.rentalDate||'');return isNaN(d)?'':String(d.getMonth()+1).padStart(2,'0');}
 
-/* ── Month filter pills ── */
+/* -- Month filter pills -- */
 const MONTH_NAMES_G={all:'All','05':'May','06':'Jun','07':'Jul','08':'Aug','09':'Sep','10':'Oct'};
 function genInitFilter(tab){
   const wrap=document.getElementById(tab+'-mfilter');if(!wrap||wrap.childElementCount)return;
@@ -1859,7 +1889,7 @@ function renderGenTab(tab){
   const inp=(i2,field,val,ph,extra)=>'<input class="car-ci" style="'+(extra||'')+'" value="'+esc(val||'')+'" placeholder="'+(ph||'')+'" onchange="GEN_DATA[\''+tab+'\']['+i2+'][\''+field+'\']=this.value;svGen(\''+tab+'\')">';
   const inpDate=(i2,field,val)=>'<input class="car-ci" type="date" value="'+(val||'')+'" style="font-size:11px;padding:5px 6px" onchange="GEN_DATA[\''+tab+'\']['+i2+'][\''+field+'\']=this.value;svGen(\''+tab+'\')">';
   const inpTime=(i2,field,val)=>'<input class="car-ci" type="time" value="'+(val||'')+'" style="font-size:11px;padding:5px 6px" onchange="GEN_DATA[\''+tab+'\']['+i2+'][\''+field+'\']=this.value;svGen(\''+tab+'\')">';
-  const inpNum=(i2,field,val,w)=>'<input class="car-ci" type="number" min="0" value="'+(val||'')+'" style="text-align:center;font-weight:700;'+(w?'width:'+w+';':'')+'" onchange="GEN_DATA[\''+tab+'\']['+i2+'][\''+field+'\']=parseFloat(this.value)||0;svGen(\''+tab+'\')">';
+  const inpNum=(i2,field,val,w,extraCb)=>'<input class="car-ci" type="number" min="0" value="'+(val||'')+'" style="text-align:center;font-weight:700;'+(w?'width:'+w+';':'')+'" onchange="GEN_DATA[\''+tab+'\']['+i2+'][\''+field+'\']=parseFloat(this.value)||0;svGen(\''+tab+'\')'+(extraCb?';'+extraCb:'')+'">';
   const del=(i2)=>'<button onclick="genDel(\''+tab+'\','+i2+')" style="width:26px;height:26px;background:#fce8e8;border:none;border-radius:6px;cursor:pointer;color:var(--coral);display:flex;align-items:center;justify-content:center"><i class="ti ti-trash" style="font-size:12px"></i></button>';
   const sb=(r,i2)=>'<button class="'+( GEN_STATUS_CLS[r.status]||'car-badge waiting')+'" onclick="genCycleStatus(\''+tab+'\','+i2+')">'+(GEN_STATUS_ICO[r.status]||GEN_STATUS_ICO.waiting)+' '+(GEN_STATUS_LBL[r.status]||'Waiting')+'</button>';
 
@@ -1870,11 +1900,64 @@ function renderGenTab(tab){
     const n=fn+1;
     const actions='<td style="padding:4px 7px">'+sb(r,i)+'</td><td style="padding:4px 7px"><div style="display:flex;gap:3px">'+del(i)+'</div></td>';
     const baseFields='<td style="padding:7px 9px;color:var(--muted2);font-size:11px;text-align:center">'+n+'</td><td>'+inp(i,'ref',r.ref,'Ref#')+'</td><td>'+inp(i,'name',r.name,'FULL NAME','font-weight:600')+'</td><td>'+inp(i,'room',r.room,'309','text-align:center;font-weight:700;color:'+col)+'</td><td>'+inpDate(i,'bookDate',r.bookDate)+'</td>';
-    if(tab==='excursions'){html+='<tr class="'+rc+'">'+baseFields+'<td>'+inpDate(i,'date',r.date)+'</td><td>'+inpTime(i,'time',r.time)+'</td><td>'+inp(i,'excursion',r.excursion,'Excursion name')+'</td><td>'+inpNum(i,'pax',r.pax,'50px')+'</td><td style="padding:7px 9px;text-align:right;font-weight:700;color:'+col+'">'+(r.cost?'€'+r.cost:'')+'</td>'+actions+'</tr>';}
-    else if(tab==='moto'){html+='<tr class="'+rc+'">'+baseFields+'<td>'+inpDate(i,'rentalDate',r.rentalDate)+'</td><td>'+inpTime(i,'time',r.time)+'</td><td>'+inp(i,'vehicle',r.vehicle,'Vehicle type')+'</td><td>'+inpNum(i,'days',r.days,'46px')+'</td><td style="padding:7px 9px;text-align:right;font-weight:700;color:'+col+'">'+(r.cost?'€'+r.cost:'')+'</td>'+actions+'</tr>';}
-    else if(tab==='flowers'){html+='<tr class="'+rc+'">'+baseFields+'<td>'+inpDate(i,'delivDate',r.delivDate)+'</td><td>'+inpTime(i,'delivTime',r.delivTime)+'</td><td>'+inp(i,'arrangement',r.arrangement,'Arrangement')+'</td><td style="padding:7px 9px;text-align:right;font-weight:700;color:#be185d">'+(r.bosoniPrice?'€'+r.bosoniPrice:'')+'</td><td style="padding:7px 9px;text-align:right;font-weight:700;color:#0d4a2f">'+(r.grossPrice?'€'+r.grossPrice:'')+'</td>'+actions+'</tr>';}
-    else if(tab==='boats'){html+='<tr class="'+rc+'">'+baseFields+'<td>'+inpDate(i,'date',r.date)+'</td><td>'+inpTime(i,'time',r.time)+'</td><td>'+inp(i,'trip',r.trip,'Trip / Cruise')+'</td><td>'+inpNum(i,'pax',r.pax,'50px')+'</td><td style="padding:7px 9px;text-align:right;font-weight:700;color:'+col+'">'+(r.cost?'€'+r.cost:'')+'</td>'+actions+'</tr>';}
-    else if(tab==='transfers'){html+='<tr class="'+rc+'">'+baseFields+'<td>'+inpDate(i,'date',r.date)+'</td><td>'+inpTime(i,'time',r.time)+'</td><td>'+inp(i,'route',r.route,'e.g. Hotel → Airport')+'</td><td style="padding:7px 9px;text-align:right;font-weight:700;color:'+col+'">'+(r.cost?'€'+r.cost:'')+'</td>'+actions+'</tr>';}
+    if(tab==='excursions'){
+      const excCat=excGetByName(r.excursion);
+      const autoCost=excCat&&excCat.priceAdult?excAutoPrice(r.excursion,r.pax,r.childPax):null;
+      const hasOverride=r.costOverride!=null;
+      const displayCost=hasOverride?r.costOverride:(r.cost||autoCost||null);
+      const avail=r.excursion&&r.date?excIsAvailable(r.excursion,r.date):{ok:true};
+      const selDay=r.date&&!avail.ok?DAY_NAMES_FULL[new Date(r.date).getDay()]:'';
+      const dateAvailHtml=!avail.ok?'<div style="font-size:9px;color:#dc2626;margin-top:2px;line-height:1.3">\u26a0 '+selDay+' N/A<br><span style="color:#1a6ca8">'+(excCat&&excCat.dayNames?excCat.dayNames.join(', '):'')+'</span></div>':'';
+      const dateCell='<td><input class="car-ci" type="date" value="'+(r.date||'')+'" style="font-size:11px;padding:5px 6px;border-color:'+(avail.ok?'var(--border)':'#fca5a5')+';background:'+(avail.ok?'':'#fef2f2')+'" onchange="GEN_DATA[\'excursions\']['+i+'].date=this.value;excRowDateCheck('+i+');svGen(\'excursions\')">'+dateAvailHtml+'</td>';
+      const costCell='<td style="padding:4px 7px;text-align:right"><input type="number" min="0" value="'+(displayCost||'')+'" placeholder="'+(autoCost||'?')+'" style="width:72px;padding:4px 7px;border:1.5px solid '+(hasOverride?'#b45309':'#c5dff2')+';border-radius:7px;font-size:13px;font-weight:700;color:'+(hasOverride?'#b45309':'#1a6ca8')+';font-family:var(--serif);background:'+(hasOverride?'#fef7e6':'#fff')+';text-align:right;outline:none" oninput="excRowCostOverride(\''+tab+'\','+i+',this.value)"><div style="font-size:9px;color:'+(hasOverride?'#b45309':'var(--muted2)')+';text-align:right;margin-top:1px">'+(hasOverride?'\u26a0 custom':autoCost?'auto \u20ac'+autoCost:'')+'</div></td>';
+      const excSel='<td><select class="car-ci" style="min-width:180px" onchange="GEN_DATA[\'excursions\']['+i+'].excursion=this.value;excRowAutoFill('+i+');svGen(\'excursions\')">'+EXC_CATALOG.map(e=>'<option value="'+e.name+'"'+(r.excursion===e.name?' selected':'')+'>'+e.name+'</option>').join('')+'</select>'+(excCat&&excCat.dayNames?'<div style="font-size:9px;color:var(--muted);margin-top:2px">'+excCat.dayNames.join(' \xB7 ')+'</div>':'')+'</td>';
+      const paxCells='<td>'+inpNum(i,'pax',r.pax,'46px',`excRowAutoFill(${i})`)+'</td><td>'+inpNum(i,'childPax',r.childPax||0,'46px',`excRowAutoFill(${i})`)+'</td>';
+      const pickupCell='<td><input class="car-ci" type="time" value="'+(r.time||'')+'" style="font-size:11px;padding:5px 6px;color:'+(r.time?'#1a6ca8':'var(--muted)')+'" onchange="GEN_DATA[\'excursions\']['+i+'].time=this.value;GEN_DATA[\'excursions\']['+i+'].timeManual=!!this.value;svGen(\'excursions\')"></td>';
+      html+='<tr class="'+rc+'">'+baseFields+dateCell+excSel+paxCells+pickupCell+costCell+actions+'</tr>';
+    }
+    else if(tab==='moto'){html+='<tr class="'+rc+'">'+baseFields+'<td>'+inpDate(i,'rentalDate',r.rentalDate)+'</td><td>'+inpTime(i,'time',r.time)+'</td><td>'+inp(i,'vehicle',r.vehicle,'Vehicle type')+'</td><td>'+inpNum(i,'days',r.days,'46px')+'</td><td style="padding:7px 9px;text-align:right;font-weight:700;color:'+col+'">'+(r.cost?'EUR'+r.cost:'')+'</td>'+actions+'</tr>';}
+    else if(tab==='flowers'){
+      const flItem=flowersGetByName(r.arrangement);
+      const autoBosoni=flItem?flItem.bosoni:null;
+      const autoGross=flItem?flItem.gross:null;
+      const bHasOv=r.bosoniOverride!=null; const gHasOv=r.grossOverride!=null;
+      const displayBosoni=bHasOv?r.bosoniOverride:(r.bosoniPrice||autoBosoni||null);
+      const displayGross=gHasOv?r.grossOverride:(r.grossPrice||autoGross||null);
+      const arrSel='<td><select class="car-ci" style="min-width:170px" onchange="GEN_DATA[\'flowers\']['+i+'].arrangement=this.value;GEN_DATA[\'flowers\']['+i+'].bosoniOverride=null;GEN_DATA[\'flowers\']['+i+'].grossOverride=null;const fl=flowersGetByName(this.value);if(fl){GEN_DATA[\'flowers\']['+i+'].bosoniPrice=fl.bosoni;GEN_DATA[\'flowers\']['+i+'].grossPrice=fl.gross;}svGen(\'flowers\');renderGenTab(\'flowers\')"><option value="">Select...</option>'+FLOWERS_CATALOG.map(f=>'<option value="'+f.name+'"'+(r.arrangement===f.name?' selected':'')+'>'+f.name+'</option>').join('')+'</select></td>';
+      const bosoniCell='<td style="padding:4px 7px;text-align:right"><input type="number" min="0" value="'+(displayBosoni||'')+'" style="width:65px;padding:4px 7px;border:1.5px solid '+(bHasOv?'#b45309':'#fbcfe8')+';border-radius:7px;font-size:12px;font-weight:700;color:'+(bHasOv?'#b45309':'#be185d')+';text-align:right;outline:none;background:'+(bHasOv?'#fef7e6':'#fff')+'" oninput="GEN_DATA[\'flowers\']['+i+'].bosoniOverride=this.value?parseFloat(this.value):null;svGen(\'flowers\')"></td>';
+      const grossCell='<td style="padding:4px 7px;text-align:right"><input type="number" min="0" value="'+(displayGross||'')+'" style="width:65px;padding:4px 7px;border:1.5px solid '+(gHasOv?'#b45309':'#a8d5b8')+';border-radius:7px;font-size:12px;font-weight:700;color:'+(gHasOv?'#b45309':'#1a6644')+';text-align:right;outline:none;background:'+(gHasOv?'#fef7e6':'#fff')+'" oninput="GEN_DATA[\'flowers\']['+i+'].grossOverride=this.value?parseFloat(this.value):null;svGen(\'flowers\')"></td>';
+      html+='<tr class="'+rc+'">'+baseFields+'<td>'+inpDate(i,'delivDate',r.delivDate)+'</td><td>'+inpTime(i,'delivTime',r.delivTime)+'</td>'+arrSel+bosoniCell+grossCell+actions+'</tr>';
+    }
+    else if(tab==='boats'){
+      const co=BOAT_COMPANIES.find(c=>c.id===r.company);
+      const autoCost=boatAutoPrice(r.company,r.vessel,r.trip,r.pax,r.season||'ls');
+      const hasOv=r.costOverride!=null;
+      const displayCost=hasOv?r.costOverride:(r.cost||autoCost||null);
+      // Company select
+      const coSel='<td><select class="car-ci" style="min-width:140px" onchange="boatRowCompanyChange('+i+',this.value)">'+BOAT_COMPANIES.map(c=>'<option value="'+c.id+'"'+(r.company===c.id?' selected':'')+'>'+c.name+'</option>').join('')+'</select></td>';
+      // Vessel + trip combined cell
+      const trips=boatGetTrips(r.company,r.vessel||'');
+      let vesselSelect='';
+      if(r.company==='mak'){
+        vesselSelect='<select class="car-ci" style="min-width:160px;margin-bottom:4px" onchange="boatRowVesselChange('+i+',this.value)">'+MAK_CATALOG.vessels.map(v=>'<option value="'+v.id+'"'+(r.vessel===v.id?' selected':'')+'>'+v.name+'</option>').join('')+'</select><br>';
+      }
+      const tripOpts=trips.map(t=>'<option value="'+t.id+'"'+(r.trip===t.id?' selected':'')+'>'+t.name+(t.onRequest?' *on request':'')+'</option>').join('');
+      const tripSel='<td><div>'+vesselSelect+'<select class="car-ci" style="min-width:200px" onchange="boatRowTripChange('+i+',this.value,this.options[this.selectedIndex].text)"><option value="">Select...</option>'+tripOpts+'</select></div></td>';
+      const costCell='<td style="padding:4px 7px;text-align:right"><input type="number" min="0" value="'+(displayCost||'')+'" placeholder="'+(autoCost||'?')+'" style="width:80px;padding:4px 7px;border:1.5px solid '+(hasOv?'#b45309':'#a5f3fc')+';border-radius:7px;font-size:13px;font-weight:700;color:'+(hasOv?'#b45309':'#0e7490')+';font-family:var(--serif);background:'+(hasOv?'#fef7e6':'#fff')+';text-align:right;outline:none" oninput="boatRowCostOverride('+i+',this.value)"><div style="font-size:9px;color:'+(hasOv?'#b45309':'var(--muted2)')+';text-align:right;margin-top:1px">'+(hasOv?'\u26a0 custom':autoCost?'auto \u20ac'+autoCost:'')+'</div></td>';
+      html+='<tr class="'+rc+'">'+baseFields+'<td>'+inpDate(i,'date',r.date)+'</td><td>'+inpTime(i,'time',r.time)+'</td>'+coSel+tripSel+'<td>'+inpNum(i,'pax',r.pax,'50px')+'</td>'+costCell+actions+'</tr>';
+    }
+    else if(tab==='transfers'){html+='<tr class="'+rc+'">'+baseFields+'<td>'+inpDate(i,'date',r.date)+'</td><td>'+inpTime(i,'time',r.time)+'</td><td>'+inp(i,'route',r.route,'e.g. Hotel -> Airport')+'</td><td style="padding:7px 9px;text-align:right;font-weight:700;color:'+col+'">'+(r.cost?'€'+r.cost:'')+'</td>'+actions+'</tr>';}
+    else if(tab==='vantours'){
+      const vt=vanTourGetByName(r.tour);
+      const autoCost=vt?vanTourAutoPrice(r.tour,r.pax<=2?2:r.pax<=4?4:6,r.tourType||'standard'):null;
+      const hasOv=r.costOverride!=null;
+      const displayCost=hasOv?r.costOverride:(r.cost||autoCost||null);
+      const tourSel='<td><select class="car-ci" style="min-width:220px" onchange="vanRowTourChange('+i+',this.value)">'+VAN_TOURS.map(t=>'<option value="'+t.name+'"'+(r.tour===t.name?' selected':'')+'>'+t.name+'</option>').join('')+'</select>'+(vt?'<div style="font-size:9px;color:var(--muted);margin-top:2px">'+vt.duration+'</div>':'')+'</td>';
+      const typeSel='<td><select class="car-ci" style="width:100px" onchange="vanRowTypeChange('+i+',this.value)">'+(vt&&vt.hasExclusive?'<option value="standard"'+(r.tourType!=='exclusive'?' selected':'')+'>Standard</option><option value="exclusive"'+(r.tourType==='exclusive'?' selected':'')+'>Exclusive</option>':'<option value="standard" selected>Standard</option>')+'</select></td>';
+      const paxCell='<td>'+inpNum(i,'pax',r.pax,'50px')+'</td>';
+      const costCell='<td style="padding:4px 7px;text-align:right"><input type="number" min="0" value="'+(displayCost||'')+'" placeholder="'+(autoCost||'?')+'" style="width:75px;padding:4px 7px;border:1.5px solid '+(hasOv?'#b45309':'#e2c97e')+';border-radius:7px;font-size:13px;font-weight:700;color:'+(hasOv?'#b45309':'#7c5e2e')+';font-family:var(--serif);background:'+(hasOv?'#fef7e6':'#fff')+';text-align:right;outline:none" oninput="vanRowCostOverride('+i+',this.value)"><div style="font-size:9px;color:'+(hasOv?'#b45309':'var(--muted2)')+';text-align:right;margin-top:1px">'+(hasOv?'⚠ custom':autoCost?'auto €'+autoCost:'')+'</div></td>';
+      html+='<tr class="'+rc+'">'+baseFields+'<td>'+inpDate(i,'date',r.date)+'</td><td>'+inpTime(i,'time',r.time)+'</td>'+tourSel+paxCell+typeSel+costCell+actions+'</tr>';
+    }
   });
   tbody.innerHTML=html;
   renderGenSum(tab);
@@ -1900,6 +1983,349 @@ function renderGenSum(tab){
 
 function genDel(tab,i){if(!confirm('Delete this booking?'))return;GEN_DATA[tab].splice(i,1);svGen(tab);renderGenTab(tab);showToast('Deleted','w');}
 
+/* -- Excursion catalogue - ATS Kefalonia 2026 -- */
+/* Pick-up times from official timetable for WHITE ROCKS car park */
+/* days: JS getDay() values - 0=Sun,1=Mon,2=Tue,3=Wed,4=Thu,5=Fri,6=Sat */
+const EXC_CATALOG = [
+  {
+    id:'sea_sun',
+    name:'Sea & Sun Cruise',
+    priceAdult:75, priceChild:55,
+    pickupWR:'09:00',
+    days:[1,4],  // Mon, Thu
+    dayNames:['Monday','Thursday'],
+    departure:'Boat departs Arg/li 09:30',
+    notes:'White Rocks pick-up 09:00 * Boat departs Arg/li 09:30'
+  },
+  {
+    id:'kef_disc',
+    name:'Kefalonia Discovery',
+    priceAdult:50, priceChild:25,
+    pickupWR:'09:45',
+    days:[2,4,6],  // Tue, Thu, Sat
+    dayNames:['Tuesday','Thursday','Saturday'],
+    departure:'Boat departs Sami 09:15',
+    notes:'White Rocks pick-up 09:45 * Boat departs Sami 09:15'
+  },
+  {
+    id:'ithaka',
+    name:'Ithaka Cruise',
+    priceAdult:60, priceChild:30,
+    pickupWR:'07:50',
+    days:[5],  // Fri
+    dayNames:['Friday'],
+    departure:'Boat departs Sami 09:30',
+    notes:'White Rocks pick-up 07:50 * Boat departs Sami 09:30'
+  },
+  {
+    id:'venetian',
+    name:'Venetian Voyage',
+    priceAdult:60, priceChild:30,
+    pickupWR:'08:20',
+    days:[0],  // Sun
+    dayNames:['Sunday'],
+    departure:'Boat departs Arg/li 18:00',
+    notes:'White Rocks pick-up 08:50 * Boat departs Arg/li 18:00 * Aug 16th special'
+  },
+  {
+    id:'arg_eve',
+    name:'Argostoli Evening Cruise',
+    priceAdult:38, priceChild:19,
+    pickupWR:'',
+    days:[1],  // Mon
+    dayNames:['Monday'],
+    departure:'Departs Arg/li 22:00',
+    notes:'Evening cruise - own way or taxi to port * Departs 22:00'
+  },
+  {
+    id:'priv_disc',
+    name:'Private Discover Kefalonia',
+    priceAdult:0, priceChild:0,
+    pickupWR:'',
+    days:[1,3,5],  // Mon, Wed, Fri
+    dayNames:['Monday','Wednesday','Friday'],
+    departure:'On request',
+    notes:'Private - up to 7 pax * Mon/Wed/Fri on request'
+  },
+  {
+    id:'priv_assos',
+    name:'Private Assos & Fiskardo',
+    priceAdult:0, priceChild:0,
+    pickupWR:'',
+    days:[1,3,5],  // Mon, Wed, Fri
+    dayNames:['Monday','Wednesday','Friday'],
+    departure:'On request',
+    notes:'Private - up to 7 pax * Mon/Wed/Fri on request'
+  },
+];
+
+/* Check if excursion runs on a given date */
+function excIsAvailable(excId, dateStr){
+  const exc = EXC_CATALOG.find(e=>e.id===excId||e.name===excId);
+  if(!exc) return {ok:true};
+  if(!dateStr) return {ok:true};
+  const d = new Date(dateStr);
+  if(isNaN(d)) return {ok:true};
+  const dow = d.getDay();
+  if(exc.days.includes(dow)) return {ok:true, pickup:exc.pickupWR, exc};
+  return {ok:false, exc, dow};
+}
+
+/* Get pick-up time for excursion on a date (considering overrides in PLM) */
+function excGetPickup(excName, dateStr){
+  // Check PLM override first
+  const plmItem = (PLM_DATA.excursions?.items||[]).find(i=>i.name===excName);
+  if(plmItem?.pickupOverride) return plmItem.pickupOverride;
+  const exc = EXC_CATALOG.find(e=>e.name===excName);
+  return exc?.pickupWR||'';
+}
+function excGetByName(name){return EXC_CATALOG.find(e=>e.name===name)||null;}
+
+/* ============================
+   VAN TOURS CATALOG - Seven Islands Ways 2026
+   VAT included. Prices per group (not per person).
+   ============================ */
+const VAN_TOURS = [
+  {
+    id:'t1', name:'TOUR_1 Oasis Tour', duration:'6 hours',
+    route:['Castle of Saint George','Monastery of Agios Gerasimos','Melissani Lake','Drogarati Cave','Wine tasting at Gentilini'],
+    prices:{standard:{2:630,4:740,6:970}, exclusive:{2:680,4:885,6:1130}},
+    hasExclusive:true,
+    notes:'VAT included. All tours start from agency.'
+  },
+  {
+    id:'t2', name:'TOUR_2 Azure Treasure', duration:'6.5 hours',
+    route:['Castle of Saint George','Drogarati Cave','Melissani Lake','Lunch at Alexandros restaurant','Myrtos View Point'],
+    prices:{standard:{2:570,4:680,6:800}},
+    hasExclusive:false,
+    notes:'VAT included.'
+  },
+  {
+    id:'t3', name:'TOUR_3 Kefalonia Gems', duration:'7 hours',
+    route:['Monastery of Agios Gerasimos','Wine tasting at Robola','Drogarati Cave','Melissani Lake','Lunch at Alexandros','Myrtos View Point'],
+    prices:{standard:{2:570,4:630,6:740}},
+    hasExclusive:false,
+    notes:'VAT included.'
+  },
+  {
+    id:'t4', name:'TOUR_4 Odyssey Horizon', duration:'6 hours',
+    route:['Drogarati Cave','Melissani Lake','Lunch at Greek Tavern','Sea bathing at Antisamos (1.5h)','Antisamos view point'],
+    prices:{standard:{2:630,4:740,6:850}},
+    hasExclusive:false,
+    notes:'VAT included.'
+  },
+  {
+    id:'t5', name:'TOUR_5 Blue Serenity', duration:'6 hours',
+    route:['Drogarati Cave','Melissani Lake','Sea Bathing at Myrtos Beach (1.5h)','Lunch at Alexandros','Myrtos View Point'],
+    prices:{standard:{2:510,4:630,6:740}},
+    hasExclusive:false,
+    notes:'VAT included.'
+  },
+  {
+    id:'t6', name:'TOUR_6 Coastal Charm', duration:'6 hours',
+    route:['Monastery of Agios Gerasimos','Tour at Assos Village (1.5h)','Lunch at Alexandros','Myrtos View Point'],
+    prices:{standard:{2:510,4:630,6:740}},
+    hasExclusive:false,
+    notes:'VAT included.'
+  },
+  {
+    id:'t7', name:'TOUR_7 Fiskardo Sunset', duration:'6 hours',
+    route:['Evening tour at Fiskardo Village','Gastronomic dinner','Sunset stroll'],
+    prices:{standard:{2:680,4:800,6:900}},
+    hasExclusive:false,
+    notes:'Evening tour. VAT included.'
+  },
+  {
+    id:'t8', name:'TOUR_8 Lixouri Experience', duration:'7 hours',
+    route:['Lixouri (ferry)','Sea bathing at Petani','Lunch at Erasmia restaurant','Platia Ammos','Monastery of Kipouria','Wine tasting at Haritatos','Lighthouse of Gero Gombo'],
+    prices:{standard:{2:630,4:740,6:900}},
+    hasExclusive:false,
+    notes:'Ferry included. VAT included.'
+  },
+  {
+    id:'t9', name:'TOUR_9 Lixouri Whisper', duration:'9 hours',
+    route:['Lixouri (ferry)','Petani','Platia Ammos','Monastery of Kipouria','Wine tasting at Haritatos','Lighthouse of Gero Gombo'],
+    prices:{standard:{2:510,4:630,6:740}},
+    hasExclusive:false,
+    notes:'Ferry included. VAT included.'
+  },
+  {
+    id:'t10', name:'TOUR_10 Tour It Your Way!', duration:'Custom',
+    route:['Custom itinerary tailored to your preferences'],
+    prices:{standard:{2:0,4:0,6:0}},
+    hasExclusive:false,
+    notes:'Price upon request. Duration upon request.'
+  },
+];
+
+function vanTourGetById(id){return VAN_TOURS.find(t=>t.id===id)||null;}
+function vanTourGetByName(name){return VAN_TOURS.find(t=>t.name===name)||null;}
+
+/* ================================================
+   BOATS & CRUISES CATALOG 2026
+   ================================================ */
+
+const BOAT_COMPANIES = [
+  {id:'mak',    name:'Argostoli Boat Hire (MAK Yachting)', color:'#0e4a6e', tel:'0030 6978 203510'},
+  {id:'ego',    name:'Ego Cruises (Catamaran)',             color:'#0e7490', tel:''},
+  {id:'siw',    name:'Seven Islands Ways (RIB Tours)',      color:'#7c5e2e', tel:''},
+];
+
+/* ---- MAK Yachting — Speedboats & RIBs ---- */
+const MAK_CATALOG = {
+  vessels: [
+    {id:'mars',    name:'Speedboat "MARS" (Cat.1 — Ocean Master 630WA)', cap:7},
+    {id:'zeys',    name:'Speedboat "ZEYS" (Cat.2 — Karnic SL651)',       cap:7},
+    {id:'katerina',name:'RIB "KATERINA" (Cat.3 — Fost Obsession 740)',   cap:9},
+    {id:'zakar',   name:'RIB "ZAKAR" (Cat.3 — Marvel 960)',              cap:9},
+    {id:'hire1',   name:'Boat Hire — Compass 165cc (up to 6 pax)',       cap:6},
+    {id:'hire2',   name:'Boat Hire — Compass 160e (up to 6 pax)',        cap:6},
+    {id:'hire3',   name:'Boat Hire — Compass 150cc (up to 5 pax)',       cap:5},
+  ],
+  cruises: {
+    mars: [
+      {id:'m1',  name:'Cruise 1: Argostoli-White Rocks-Vardiani-Xi-Argostoli',          hours:'4h',  price:510},
+      {id:'m2',  name:'Cruise 2: Argostoli-White Rocks-Vardiani-Xi-Vatsa(lunch)-Argostoli', hours:'6h', price:620},
+      {id:'ms1', name:'Sunset S1: Argostoli-White Rocks-Vardiani-Argostoli',            hours:'2h',  price:380},
+      {id:'ms2', name:'Sunset S2: Argostoli-Avithos-Vardiani-Argostoli',               hours:'3h',  price:430},
+    ],
+    zeys: [
+      {id:'z1',  name:'Cruise 1: Argostoli-White Rocks-Vardiani-Xi-Argostoli',         hours:'3h',  price:600},
+      {id:'z2',  name:'Cruise 2: Argostoli-White Rocks-Vardiani-Xi-Vatsa(lunch)-Argostoli', hours:'6h', price:730},
+      {id:'z3',  name:'Cruise 3: Argostoli-Platia Ammos-Vardiani-White Rocks-Argostoli', hours:'5h', price:710},
+      {id:'z4',  name:'Cruise 4: Argostoli-Liakas-Pessada-Karavados(lunch)-Paradisi-Argostoli', hours:'6h', price:780},
+      {id:'zs1', name:'Sunset S1: Argostoli-White Rocks-Vardiani-Argostoli',           hours:'2h',  price:400},
+      {id:'zs2', name:'Sunset S2: Argostoli-Avithos-Vardiani-Argostoli',              hours:'3h',  price:500},
+    ],
+    katerina: [
+      {id:'k1',  name:'Cruise 1: Argostoli-White Rocks-Vardiani-Xi-Argostoli',         hours:'3h',  price:660},
+      {id:'k2',  name:'Cruise 2: Argostoli-White Rocks-Vardiani-Xi-Vatsa(lunch)-Argostoli', hours:'6h', price:760},
+      {id:'k3',  name:'Cruise 3: Argostoli-Platia Ammos-Vardiani-White Rocks-Argostoli', hours:'5h', price:790},
+      {id:'k4',  name:'Cruise 4: Argostoli-White Rocks-Liakas-Pessada-Karavados(lunch)-Paradisi-Argostoli', hours:'6h', price:880},
+      {id:'ks1', name:'Sunset S1: Argostoli-White Rocks-Vardiani-Argostoli',           hours:'2h',  price:440},
+      {id:'ks2', name:'Sunset S2: Argostoli-Avithos-Vardiani-Argostoli',              hours:'3h',  price:560},
+    ],
+    zakar: [
+      {id:'za1', name:'Cruise 1: Argostoli-White Rocks-Vardiani-Xi-Argostoli',         hours:'3h',  price:720},
+      {id:'za2', name:'Cruise 2: Argostoli-White Rocks-Vardiani-Xi-Vatsa(lunch)-Argostoli', hours:'6h', price:890},
+      {id:'za3', name:'Cruise 3: Argostoli-Platia Ammos-Vardiani-White Rocks-Argostoli', hours:'5h', price:840},
+      {id:'za4', name:'Cruise 4: Argostoli-White Rocks-Liakas-Pessada-Karavados(lunch)-Paradisi-Argostoli', hours:'6h', price:980},
+      {id:'za5', name:'Cruise 5: Zante-Navagio-Blue Caves',                            hours:'TBD', price:0,   onRequest:true},
+      {id:'za6', name:'Cruise 6: Myrtos Bay-swimming stops-taverna lunch',             hours:'TBD', price:0,   onRequest:true},
+      {id:'zas1',name:'Sunset S1: Argostoli-White Rocks-Vardiani-Argostoli',           hours:'2h',  price:500},
+      {id:'zas2',name:'Sunset S2: Argostoli-Avithos-Vardiani-Argostoli',              hours:'3h',  price:630},
+    ],
+    hire1: [
+      {id:'h1j', name:'Full Day Jun/Sep (09:00-16:00) - Fuel extra', hours:'full day', price:175},
+      {id:'h1jh',name:'Full Day Jul/Aug (09:00-16:00) - Fuel extra', hours:'full day', price:210},
+    ],
+    hire2: [
+      {id:'h2j', name:'Full Day Jun/Sep (09:00-16:00) - Fuel extra', hours:'full day', price:175},
+      {id:'h2jh',name:'Full Day Jul/Aug (09:00-16:00) - Fuel extra', hours:'full day', price:210},
+    ],
+    hire3: [
+      {id:'h3j', name:'Full Day Jun/Sep (09:00-16:00) - Fuel extra', hours:'full day', price:155},
+      {id:'h3jh',name:'Full Day Jul/Aug (09:00-16:00) - Fuel extra', hours:'full day', price:180},
+    ],
+  }
+};
+
+/* ---- Ego Cruises (Catamaran) ---- */
+const EGO_CATALOG = [
+  {id:'eg1', name:'Full Day — Daily 8h (10:00-18:00, up to 18 pax)',         price:160, priceType:'per_person', privateCost:2400, notes:'Incl: lunch, wine, SUP, snorkeling, fuel, port fees. Dep: Sami Port.'},
+  {id:'eg2', name:'Half Day — Daily 5h (10:00-15:00, up to 18 pax)',         price:130, priceType:'per_person', privateCost:1500, notes:'Incl: lunch, wine, SUP, snorkeling, fuel, port fees. Dep: Sami Port.'},
+  {id:'eg3', name:'Sunset Cruise — Daily 3h (18:00-21:00, up to 18 pax)',    price:100, priceType:'per_person', privateCost:900,  notes:'Incl: snacks, wine, SUP, snorkeling, fuel. Dep: Sami Port.'},
+];
+
+/* ---- Seven Islands Ways (RIB Tours) ---- */
+const SIW_CATALOG = [
+  // From Argostoli (Ionian Blue 1&3) — 10am-5pm
+  {id:'si1a', name:'TOUR 1: Turquoise Fantasy (Arg.) — Platia Ammos-Fteri-Cave-Myrtos', dep:'Argostoli', hours:'7h', priceLS:1400, priceHS:1500},
+  {id:'si2a', name:'TOUR 2: Ionian Red Carpet (Arg.) — White Rocks-Vardiani-Xi Beach',   dep:'Argostoli', hours:'7h', priceLS:650,  priceHS:650},
+  {id:'si3a', name:'TOUR 3: West Coast Pearls (Arg.) — Platia Ammos-Petani-Halkies',    dep:'Argostoli', hours:'7h', priceLS:900,  priceHS:900},
+  {id:'si4a', name:'TOUR 4: South Beach Pisanello (Arg.) — Lourdas-Pessada',            dep:'Argostoli', hours:'7h', priceLS:800,  priceHS:800},
+  {id:'si5a', name:'TOUR 5: Shipwreck Apocalypse (Arg.) — Zakynthos Navagio-Blue Caves',dep:'Argostoli', hours:'7h', priceLS:1400, priceHS:1500},
+  {id:'si6a', name:'TOUR 6: Old Venetian Route (Arg.) — Assos-Fiskardo (Emblisi-Foki)', dep:'Argostoli', hours:'7h', priceLS:1600, priceHS:1600},
+  {id:'si7a', name:'TOUR 7: In Footsteps of Odysseus (Arg.) — Platia Ammos-Ithaca-Gidaki-Kaminia', dep:'Argostoli', hours:'7h', priceLS:1800, priceHS:1800},
+  {id:'si_sun',name:'Sunset Tour (Arg.) — Gerogombos Lighthouse-Vardiani 17:00-21:30',  dep:'Argostoli', hours:'4.5h', priceLS:400, priceHS:400},
+  // From Argostoli (Ionian Blue 4 — larger RIB)
+  {id:'si1b', name:'TOUR 1: Turquoise Fantasy (Arg. Blue4) — Platia Ammos-Fteri-Myrtos',dep:'Argostoli (Blue 4)', hours:'7h', priceLS:1800, priceHS:1800},
+  {id:'si2b', name:'TOUR 2: Ionian Red Carpet (Arg. Blue4) — White Rocks-Vardiani-Xi',  dep:'Argostoli (Blue 4)', hours:'7h', priceLS:1300, priceHS:1300},
+  {id:'si3b', name:'TOUR 3: West Coast Pearls (Arg. Blue4) — Platia Ammos-Petani',     dep:'Argostoli (Blue 4)', hours:'7h', priceLS:1300, priceHS:1300},
+  {id:'si4b', name:'TOUR 4: South Beach Pisanello (Arg. Blue4) — Lourdas-Pessada',     dep:'Argostoli (Blue 4)', hours:'7h', priceLS:1300, priceHS:1300},
+  {id:'si5b', name:'TOUR 5: Shipwreck Apocalypse (Arg. Blue4) — Zakynthos',            dep:'Argostoli (Blue 4)', hours:'7h', priceLS:1800, priceHS:1800},
+  {id:'si6b', name:'TOUR 6: Old Venetian Route (Arg. Blue4) — Assos-Fiskardo',         dep:'Argostoli (Blue 4)', hours:'7h', priceLS:1900, priceHS:1900},
+  {id:'si7b', name:'TOUR 7: Footsteps of Odysseus (Arg. Blue4) — Ithaca-Gidaki',       dep:'Argostoli (Blue 4)', hours:'7h', priceLS:2100, priceHS:2100},
+  // From Sami (Ionian Blue 2)
+  {id:'si8',  name:'TOUR 8: Hidden Ionian Diamond (Sami) — Lefkada-Cave Papanikoli-Meganisi-Gidaki', dep:'Sami', hours:'7h', priceLS:1600, priceHS:1600},
+  {id:'si9',  name:'TOUR 9: Ithaka Circle (Sami) — Ithaca beaches-Fiskardo (Emplisi-Foki)', dep:'Sami', hours:'7h', priceLS:1400, priceHS:1400},
+  {id:'si10', name:'TOUR 10: Blue Horizons (Sami) — Afales-Fiskardo-Foki-Agia Sofia',  dep:'Sami', hours:'7h', priceLS:1100, priceHS:1100},
+  {id:'si11', name:'TOUR 11: Scorpios (Sami) — Atokos-Meganisi-Scorpios-Papanikoli-Afales', dep:'Sami', hours:'7h', priceLS:1700, priceHS:1700},
+  {id:'si12', name:'TOUR 12: Atokos (Sami) — Antri-Atokos-Gidaki-Vathi lunch',         dep:'Sami', hours:'7h', priceLS:1400, priceHS:1400},
+  {id:'si13', name:'TOUR 13: Azure Shores (Sami) — Afales-Fteri-Myrtos-Assos',         dep:'Sami', hours:'7h', priceLS:1400, priceHS:1500},
+  {id:'si14', name:'TOUR 14: Create Your Own Tour (custom)',                             dep:'Custom', hours:'custom', priceLS:0, priceHS:0, onRequest:true},
+];
+
+function boatGetCompany(companyId){ return BOAT_COMPANIES.find(c=>c.id===companyId)||null; }
+function boatGetTrips(companyId, vesselId){
+  if(companyId==='mak') return MAK_CATALOG.cruises[vesselId]||[];
+  if(companyId==='ego') return EGO_CATALOG;
+  if(companyId==='siw') return SIW_CATALOG;
+  return [];
+}
+function boatAutoPrice(companyId, vesselId, tripId, pax, season){
+  if(companyId==='mak'){
+    const trips=MAK_CATALOG.cruises[vesselId]||[];
+    const t=trips.find(x=>x.id===tripId);
+    if(!t||t.onRequest) return null;
+    return t.price;
+  }
+  if(companyId==='ego'){
+    const t=EGO_CATALOG.find(x=>x.id===tripId);
+    if(!t) return null;
+    if(t.priceType==='per_person') return t.price*(pax||1);
+    return t.privateCost||null;
+  }
+  if(companyId==='siw'){
+    const t=SIW_CATALOG.find(x=>x.id===tripId);
+    if(!t||t.onRequest) return null;
+    const isHS = season==='hs';
+    return isHS ? t.priceHS : t.priceLS;
+  }
+  return null;
+}
+
+function vanTourAutoPrice(tourName, pax, tourType){
+  const t = vanTourGetByName(tourName);
+  if(!t) return null;
+  const paxKey = pax<=2?2:pax<=4?4:6;
+  const tierKey = tourType==='exclusive'?'exclusive':'standard';
+  const tier = t.prices[tierKey]||t.prices.standard;
+  return tier?tier[paxKey]||null:null;
+}
+
+/* ============================
+   FLOWERS / BALLOONS CATALOG - Ballons & Petals / Bosonis 2026
+   ============================ */
+const FLOWERS_CATALOG = [
+  {id:'f1', name:'Happy Birthday Balloon Set',       bosoni:50, gross:80,  notes:'1 HB helium + 5 colored helium balloons'},
+  {id:'f2', name:'Rose Petals - Small Bag (5 roses)',bosoni:15, gross:30,  notes:'Small bag of rose petals'},
+  {id:'f3', name:'Rose Petals - Medium Bag',         bosoni:25, gross:50,  notes:'Medium bag of rose petals'},
+  {id:'f4', name:'Seasonal Bouquet',                 bosoni:35, gross:60,  notes:'Seasonal floral bouquet'},
+  {id:'f5', name:'Normal Balloon (x1)',              bosoni:1,  gross:3,   notes:'Standard balloon'},
+  {id:'f6', name:'Helium Balloon (x1)',              bosoni:4,  gross:8,   notes:'Single helium balloon'},
+  {id:'f7', name:'HB Helium Balloon',                bosoni:12, gross:24,  notes:'Happy Birthday helium balloon, starting price'},
+  {id:'f8', name:'Custom Arrangement',               bosoni:0,  gross:0,   notes:'Custom - edit price manually'},
+];
+function flowersGetByName(name){return FLOWERS_CATALOG.find(f=>f.name===name)||null;}
+function excAutoPrice(name,pax,childPax){
+  const e=excGetByName(name);
+  if(!e||!e.priceAdult)return null;
+  const adults=(pax||1)-(childPax||0);
+  const children=childPax||0;
+  return adults*e.priceAdult + children*e.priceChild;
+}
+
 const GEN_FIELDS={
   excursions:[
     {id:'ref',label:'Ref No',type:'text',ph:'Ref'},
@@ -1907,10 +2333,11 @@ const GEN_FIELDS={
     {id:'room',label:'Room',type:'text',ph:'407'},
     {id:'bookDate',label:'Day of Booking',type:'date'},
     {id:'date',label:'Date of Excursion',type:'date'},
-    {id:'time',label:'Pick-up Time',type:'time'},
-    {id:'excursion',label:'Excursion',type:'text',ph:'Excursion name'},
-    {id:'pax',label:'Pax',type:'number',ph:'2'},
-    {id:'cost',label:'Cost (euros)',type:'number',ph:'0'},
+    {id:'excursion',label:'Excursion',type:'excursion_select'},
+    {id:'pax',label:'Adults',type:'number',ph:'2'},
+    {id:'childPax',label:'Children',type:'number',ph:'0'},
+    {id:'time',label:'Pick-up Time (White Rocks)',type:'time'},
+    {id:'cost',label:'Total Cost EUR (auto)',type:'cost_auto'},
     {id:'status',label:'Status',type:'status'}
   ],
   moto:[
@@ -1932,9 +2359,10 @@ const GEN_FIELDS={
     {id:'bookDate',label:'Day of Booking',type:'date'},
     {id:'delivDate',label:'Delivery Date',type:'date'},
     {id:'delivTime',label:'Delivery Time',type:'time'},
-    {id:'arrangement',label:'Arrangement',type:'text',ph:'e.g. Bouquet, Roses...'},
-    {id:'bosoniPrice',label:'Bosoni Price (euros)',type:'number',ph:'0'},
-    {id:'grossPrice',label:'Gross Price (euros)',type:'number',ph:'0'},
+    {id:'arrangement',label:'Arrangement / Item',type:'flowers_select'},
+    {id:'bosoniPrice',label:'Bosoni Price (auto)',type:'cost_auto_bosoni'},
+    {id:'grossPrice',label:'Gross Price (auto)',type:'cost_auto_gross'},
+    {id:'notes',label:'Notes',type:'text',ph:'Special requests...'},
     {id:'status',label:'Status',type:'status'}
   ],
   boats:[
@@ -1943,10 +2371,11 @@ const GEN_FIELDS={
     {id:'room',label:'Room',type:'text',ph:'407'},
     {id:'bookDate',label:'Day of Booking',type:'date'},
     {id:'date',label:'Date',type:'date'},
-    {id:'time',label:'Pick-up Time',type:'time'},
-    {id:'trip',label:'Trip / Cruise',type:'text',ph:'e.g. Sunset Cruise'},
+    {id:'time',label:'Time',type:'time'},
+    {id:'company',label:'Company',type:'boat_company'},
+    {id:'trip',label:'Boat / Trip',type:'boat_trip'},
     {id:'pax',label:'Pax',type:'number',ph:'2'},
-    {id:'cost',label:'Cost (euros)',type:'number',ph:'0'},
+    {id:'cost',label:'Cost (auto)',type:'cost_auto_boat'},
     {id:'status',label:'Status',type:'status'}
   ],
   transfers:[
@@ -1958,6 +2387,19 @@ const GEN_FIELDS={
     {id:'time',label:'Time',type:'time'},
     {id:'route',label:'Route',type:'text',ph:'Hotel to Airport'},
     {id:'cost',label:'Cost (euros)',type:'number',ph:'0'},
+    {id:'status',label:'Status',type:'status'}
+  ],
+  vantours:[
+    {id:'ref',label:'Ref No',type:'text',ph:'Ref'},
+    {id:'name',label:'Full Name',type:'text',ph:'SURNAME NAME',upper:true},
+    {id:'room',label:'Room',type:'text',ph:'407'},
+    {id:'bookDate',label:'Day of Booking',type:'date'},
+    {id:'date',label:'Tour Date',type:'date'},
+    {id:'time',label:'Pick-up Time',type:'time'},
+    {id:'tour',label:'Tour',type:'vantour_select'},
+    {id:'pax',label:'Pax (2/4/6)',type:'number',ph:'2'},
+    {id:'tourType',label:'Type',type:'vantour_type'},
+    {id:'cost',label:'Cost (auto)',type:'cost_auto_van'},
     {id:'status',label:'Status',type:'status'}
   ]
 };
@@ -1976,8 +2418,36 @@ function genAdd(tab){
     const lbl2='<label style="display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">'+f.label+'</label>';
     if(f.type==='status'){
       html+='<div>'+lbl2+'<select class="tr-inp" style="width:100%" id="gm-'+f.id+'"><option value="waiting">Waiting</option><option value="confirmed">Confirmed</option><option value="cancelled">Cancelled</option></select></div>';
+    } else if(f.type==='excursion_select'){
+      const opts=EXC_CATALOG.map(e=>'<option value="'+e.name+'">'+e.name+'</option>').join('');
+      html+='<div style="grid-column:1/-1">'+lbl2+'<select class="tr-inp" style="width:100%" id="gm-excursion" onchange="excOnSelect()"><option value="">- Select excursion -</option>'+opts+'</select><div id="gm-exc-info" style="font-size:11px;color:#1a6ca8;margin-top:4px;font-style:italic"></div></div>';
+    } else if(f.type==='cost_auto'){
+      html+='<div>'+lbl2+'<div style="display:flex;align-items:center;gap:6px"><input class="tr-inp" style="width:100%" id="gm-cost" type="number" min="0" placeholder="Auto" oninput="excCostOverride()"><span id="gm-cost-auto-badge" style="display:none;font-size:10px;color:#1a6ca8;white-space:nowrap;background:#e8f1fa;padding:2px 7px;border-radius:6px">auto</span></div><div id="gm-cost-info" style="font-size:10px;color:var(--muted);margin-top:3px"></div></div>';
+    } else if(f.type==='flowers_select'){
+      const fopts=FLOWERS_CATALOG.map(e=>'<option value="'+e.name+'">'+e.name+'</option>').join('');
+      html+='<div style="grid-column:1/-1">'+lbl2+'<select class="tr-inp" style="width:100%" id="gm-arrangement" onchange="flowersOnSelect()"><option value="">-- Select item --</option>'+fopts+'</select><div id="gm-flowers-info" style="font-size:11px;color:#be185d;margin-top:4px;font-style:italic"></div></div>';
+    } else if(f.type==='cost_auto_bosoni'){
+      html+='<div>'+lbl2+'<div style="display:flex;align-items:center;gap:6px"><input class="tr-inp" style="width:100%" id="gm-bosoniPrice" type="number" min="0" placeholder="Auto"><span id="gm-bosoni-badge" style="display:none;font-size:10px;color:#be185d;white-space:nowrap;background:#fde;padding:2px 7px;border-radius:6px">auto</span></div></div>';
+    } else if(f.type==='cost_auto_gross'){
+      html+='<div>'+lbl2+'<div style="display:flex;align-items:center;gap:6px"><input class="tr-inp" style="width:100%" id="gm-grossPrice" type="number" min="0" placeholder="Auto"><span id="gm-gross-badge" style="display:none;font-size:10px;color:#0d4a2f;white-space:nowrap;background:#e8f5ee;padding:2px 7px;border-radius:6px">auto</span></div><div id="gm-gross-info" style="font-size:10px;color:var(--muted);margin-top:3px"></div></div>';
+    } else if(f.type==='vantour_select'){
+      const vopts=VAN_TOURS.map(t=>'<option value="'+t.name+'">'+t.name+' ('+t.duration+')</option>').join('');
+      html+='<div style="grid-column:1/-1">'+lbl2+'<select class="tr-inp" style="width:100%" id="gm-tour" onchange="vanTourOnSelect()"><option value="">-- Select tour --</option>'+vopts+'</select><div id="gm-van-info" style="font-size:11px;color:#7c5e2e;margin-top:6px;padding:8px 12px;background:#fef3c7;border-radius:8px;display:none;line-height:1.6"></div></div>';
+    } else if(f.type==='vantour_type'){
+      html+='<div>'+lbl2+'<select class="tr-inp" style="width:100%" id="gm-tourType" onchange="vanTourOnSelect()"><option value="standard">Standard</option><option value="exclusive">Exclusive (+)</option></select></div>';
+    } else if(f.type==='boat_company'){
+      const coOpts=BOAT_COMPANIES.map(c=>'<option value="'+c.id+'">'+c.name+'</option>').join('');
+      html+='<div style="grid-column:1/-1">'+lbl2+'<select class="tr-inp" style="width:100%" id="gm-company" onchange="boatCompanyChange()"><option value="">-- Select company --</option>'+coOpts+'</select></div>';
+    } else if(f.type==='boat_trip'){
+      html+='<div style="grid-column:1/-1" id="gm-trip-wrap"><label style="display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">'+f.label+'</label><div id="gm-vessel-row" style="display:flex;gap:8px;margin-bottom:8px"><select class="tr-inp" style="flex:1" id="gm-vessel" onchange="boatVesselChange()"><option value="">-- Select vessel / type --</option></select></div><select class="tr-inp" style="width:100%" id="gm-trip" onchange="boatTripChange()"><option value="">-- Select cruise / trip --</option></select><div id="gm-boat-info" style="font-size:11px;color:#0e7490;margin-top:6px;padding:8px 12px;background:#e0f7fa;border-radius:8px;display:none;line-height:1.5"></div><div id="gm-season-row" style="display:none;margin-top:6px"><label style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px">Season (for pricing)</label><div style="display:flex;gap:8px;margin-top:4px"><label style="cursor:pointer;font-size:13px"><input type="radio" name="gm-season" value="ls" checked> Low (May-Jun, Oct)</label><label style="cursor:pointer;font-size:13px"><input type="radio" name="gm-season" value="hs"> High (Jul-Sep)</label></div></div></div>';
+    } else if(f.type==='cost_auto_boat'){
+      html+='<div>'+lbl2+'<div style="display:flex;align-items:center;gap:6px"><input class="tr-inp" style="width:100%" id="gm-cost" type="number" min="0" placeholder="Auto"><span id="gm-boat-cost-badge" style="display:none;font-size:10px;color:#0e7490;white-space:nowrap;background:#e0f7fa;padding:2px 7px;border-radius:6px">auto</span></div><div id="gm-boat-cost-info" style="font-size:10px;color:var(--muted);margin-top:3px"></div></div>';
+    } else if(f.type==='cost_auto_van'){
+      html+='<div>'+lbl2+'<div style="display:flex;align-items:center;gap:6px"><input class="tr-inp" style="width:100%" id="gm-cost" type="number" min="0" placeholder="Auto"><span id="gm-van-cost-badge" style="display:none;font-size:10px;color:#7c5e2e;white-space:nowrap;background:#fef3c7;padding:2px 7px;border-radius:6px">auto</span></div><div id="gm-van-cost-info" style="font-size:10px;color:var(--muted);margin-top:3px"></div></div>';
     } else {
-      html+='<div>'+lbl2+'<input class="tr-inp" style="width:100%" id="gm-'+f.id+'" type="'+(f.type||'text')+'" placeholder="'+(f.ph||'')+'"'+(f.type==='number'?' min="0"':'')+'></div>';
+      const extraOnChange = (tab==='excursions' && (f.id==='date'||f.id==='pax'||f.id==='childPax')) ? ' onchange="excUpdateModal()"' : '';
+      const extraOnChangeTime = (tab==='excursions' && f.id==='time') ? ' onchange="this.dataset.manuallySet=this.value?\'1\':\'\'"' : '';
+      html+='<div>'+lbl2+'<input class="tr-inp" style="width:100%" id="gm-'+f.id+'" type="'+(f.type||'text')+'" placeholder="'+(f.ph||'')+'"'+(f.type==='number'?' min="0"':'')+extraOnChange+extraOnChangeTime+'></div>';
     }
   });
   if(fields.length%2!==0)html+='<div></div>';
@@ -1992,24 +2462,375 @@ function genModalSave(){
   const tab=genModalTab;const fields=GEN_FIELDS[tab]||[];
   const row={status:'waiting',id:Date.now()+''};
   fields.forEach(f=>{
+    if(['excursion_select','cost_auto','flowers_select','cost_auto_bosoni','cost_auto_gross','vantour_select','vantour_type','cost_auto_van','boat_company','boat_trip','cost_auto_boat'].includes(f.type))return; // handled separately
     const el=document.getElementById('gm-'+f.id);if(!el)return;
     let v=el.value;
     if(f.upper)v=v.toUpperCase();
     if(f.type==='number')v=v?parseFloat(v)||0:'';
     row[f.id]=v;
   });
-  if(!row.name&&!row.ref){showToast('Please fill in at least Name or Ref','w');return;}
+  if(tab==='boats'){
+    const coEl=document.getElementById('gm-company');
+    const vesEl=document.getElementById('gm-vessel');
+    const tripEl=document.getElementById('gm-trip');
+    const costEl=document.getElementById('gm-cost');
+    const seasEl=document.querySelector('input[name="gm-season"]:checked');
+    row.company=coEl?coEl.value:'';
+    row.vessel=vesEl?vesEl.value:'';
+    row.trip=tripEl?tripEl.value:'';
+    row.tripName=tripEl?tripEl.options[tripEl.selectedIndex]?.text||'':'';
+    row.season=seasEl?seasEl.value:'ls';
+    const autoCost=boatAutoPrice(row.company,row.vessel,row.trip,row.pax,row.season);
+    row.cost=costEl&&costEl.value?parseFloat(costEl.value)||0:(autoCost||0);
+  }
+  if(tab==='flowers'){
+    const arrEl=document.getElementById('gm-arrangement');
+    const bosEl=document.getElementById('gm-bosoniPrice');
+    const groEl=document.getElementById('gm-grossPrice');
+    row.arrangement=arrEl?arrEl.value:'';
+    row.bosoniPrice=bosEl?parseFloat(bosEl.value)||0:0;
+    row.grossPrice=groEl?parseFloat(groEl.value)||0:0;
+  }
+  if(tab==='vantours'){
+    const tourEl=document.getElementById('gm-tour');
+    const typeEl=document.getElementById('gm-tourType');
+    const costEl=document.getElementById('gm-cost');
+    const timeEl=document.getElementById('gm-time');
+    row.tour=tourEl?tourEl.value:'';
+    row.tourType=typeEl?typeEl.value:'standard';
+    const autoCost=vanTourAutoPrice(row.tour,row.pax,row.tourType);
+    row.cost=costEl&&costEl.value?parseFloat(costEl.value)||0:(autoCost||0);
+    row.time=timeEl?timeEl.value:'';
+  }
+  if(tab==='excursions'){
+    const excEl=document.getElementById('gm-excursion');
+    const costEl=document.getElementById('gm-cost');
+    const timeEl=document.getElementById('gm-time');
+    row.excursion=excEl?excEl.value:'';
+    // Auto-fill pick-up if empty
+    if(timeEl&&!timeEl.value&&row.excursion){
+      const cat=excGetByName(row.excursion);
+      if(cat&&cat.pickupWR)timeEl.value=cat.pickupWR;
+      row.time=timeEl?timeEl.value:'';
+    }
+    // Cost: use entered value, or auto-calculate
+    const enteredCost=costEl?parseFloat(costEl.value)||0:0;
+    const autoCost=excAutoPrice(row.excursion,row.pax,row.childPax);
+    row.cost=enteredCost||(autoCost||0);
+    row.costOverride=enteredCost&&enteredCost!==(autoCost||0)?enteredCost:null;
+  }
+  if(!row.name&&!row.ref&&!row.tour&&!row.arrangement){showToast('Please fill in at least Name or Ref','w');return;}
   GEN_DATA[tab].unshift(row);svGen(tab);genModalClose();renderGenTab(tab);showToast('Booking added!','s');
 }
 
-/* ── Price List ── */
+/* Auto-fill pick-up time, price and validate date when excursion/date changes */
+
+function excOnSelect(){ excUpdateModal(); }
+function excOnDateChange(){ excUpdateModal(); }
+
+function excUpdateModal(){
+  const sel = document.getElementById('gm-excursion');
+  const dateEl = document.getElementById('gm-date');
+  const timeEl = document.getElementById('gm-time');
+  const costEl = document.getElementById('gm-cost');
+  const infoEl = document.getElementById('gm-exc-info');
+  const costInfo = document.getElementById('gm-cost-info');
+  const badge = document.getElementById('gm-cost-auto-badge');
+  if(!sel) return;
+
+  const exc = excGetByName(sel.value);
+  if(!exc){ if(infoEl) infoEl.innerHTML = ''; return; }
+
+  const dateStr = dateEl?.value||'';
+  const avail = excIsAvailable(exc.name, dateStr);
+
+  // Availability message
+  let infoHtml = '';
+  if(!avail.ok){
+    const selectedDay = dateStr ? DAY_NAMES_FULL[new Date(dateStr).getDay()] : '';
+    infoHtml = '<span style="color:#dc2626;font-weight:700">!️ '+selectedDay+' is not available for this excursion.</span>'
+      + '<br><span style="color:#1a6ca8">Available: <strong>'+exc.dayNames.join(', ')+'</strong></span>';
+  } else {
+    infoHtml = '<span style="color:#1a6644">OK Available - '+exc.dayNames.join(' / ')+'</span>'
+      + (exc.departure ? ' &middot; <span style="color:var(--muted)">'+exc.departure+'</span>' : '');
+  }
+  if(infoEl) infoEl.innerHTML = infoHtml;
+
+  // Auto-fill pick-up only if available and not manually set
+  if(avail.ok && exc.pickupWR && timeEl && !timeEl.dataset.manuallySet){
+    timeEl.value = exc.pickupWR;
+  } else if(!avail.ok && timeEl && !timeEl.dataset.manuallySet){
+    timeEl.value = '';
+  }
+
+  // Auto-fill cost
+  const adults = parseInt(document.getElementById('gm-pax')?.value)||1;
+  const children = parseInt(document.getElementById('gm-childPax')?.value)||0;
+  const auto = adults*(exc.priceAdult||0) + children*(exc.priceChild||0);
+  if(exc.priceAdult > 0){
+    if(costEl && !costEl.dataset.manuallySet){ costEl.value = auto; }
+    if(costInfo) costInfo.textContent = 'EUR'+exc.priceAdult+' x'+adults+' adult'+(adults>1?'s':'')+(children?' + EUR'+exc.priceChild+' x'+children+' child':'') + ' = EUR'+auto;
+    if(badge) badge.style.display = 'inline-block';
+  } else {
+    if(costInfo) costInfo.textContent = exc.notes||'';
+    if(badge) badge.style.display = 'none';
+  }
+}
+
+function excCostOverride(){
+  const costEl = document.getElementById('gm-cost');
+  const badge = document.getElementById('gm-cost-auto-badge');
+  if(costEl) costEl.dataset.manuallySet = '1';
+  if(badge) badge.style.display = 'none';
+}
+function excRowAutoFill(i){
+  const r=GEN_DATA['excursions'][i];
+  const exc=excGetByName(r.excursion);
+  if(!exc)return;
+  // Auto pick-up if not manually set
+  if(exc.pickupWR && !r.timeManual) GEN_DATA['excursions'][i].time=exc.pickupWR;
+  // Auto cost (only if no override)
+  if(!r.costOverride){
+    GEN_DATA['excursions'][i].cost=excAutoPrice(r.excursion,r.pax,r.childPax)||0;
+  }
+  svGen('excursions');
+  renderGenTab('excursions');
+}
+function excRowCostOverride(tab,i,val){
+  const v=val===''?null:parseFloat(val);
+  GEN_DATA[tab][i].costOverride=v;
+  GEN_DATA[tab][i].cost=v!==null?v:(excAutoPrice(GEN_DATA[tab][i].excursion,GEN_DATA[tab][i].pax,GEN_DATA[tab][i].childPax)||0);
+  svGen(tab);
+}
+function excRowDateCheck(i){
+  const r=GEN_DATA['excursions'][i];
+  if(!r.timeManual && r.excursion){
+    const exc=excGetByName(r.excursion);
+    const avail=excIsAvailable(r.excursion,r.date);
+    GEN_DATA['excursions'][i].time = avail.ok&&exc&&exc.pickupWR ? exc.pickupWR : '';
+  }
+  renderGenTab('excursions');
+}
+
+/* ============================
+   FLOWERS AUTO-FILL
+   ============================ */
+function flowersOnSelect(){
+  const sel=document.getElementById('gm-arrangement');
+  const bosEl=document.getElementById('gm-bosoniPrice');
+  const groEl=document.getElementById('gm-grossPrice');
+  const infoEl=document.getElementById('gm-flowers-info');
+  const bosBadge=document.getElementById('gm-bosoni-badge');
+  const groBadge=document.getElementById('gm-gross-badge');
+  if(!sel) return;
+  const item=flowersGetByName(sel.value);
+  if(!item){if(infoEl)infoEl.textContent='';return;}
+  if(bosEl&&!bosEl.dataset.manuallySet) bosEl.value=item.bosoni||0;
+  if(groEl&&!groEl.dataset.manuallySet) groEl.value=item.gross||0;
+  if(infoEl) infoEl.textContent=item.notes||'';
+  if(bosBadge) bosBadge.style.display='inline-block';
+  if(groBadge) groBadge.style.display='inline-block';
+}
+function flowersCostOverride(){
+  const bosEl=document.getElementById('gm-bosoniPrice');
+  const bosBadge=document.getElementById('gm-bosoni-badge');
+  if(bosEl) bosEl.dataset.manuallySet='1';
+  if(bosBadge) bosBadge.style.display='none';
+}
+
+/* ============================
+   VAN TOURS AUTO-FILL
+   ============================ */
+function vanTourOnSelect(){
+  const sel=document.getElementById('gm-tour');
+  const typeEl=document.getElementById('gm-tourType');
+  const paxEl=document.getElementById('gm-pax');
+  const costEl=document.getElementById('gm-cost');
+  const infoEl=document.getElementById('gm-van-info');
+  const badge=document.getElementById('gm-van-cost-badge');
+  const costInfo=document.getElementById('gm-van-cost-info');
+  if(!sel) return;
+  const tour=vanTourGetByName(sel.value);
+  if(!tour){if(infoEl){infoEl.style.display='none';infoEl.innerHTML='';}return;}
+  const tourType=typeEl?typeEl.value:'standard';
+  const pax=parseInt(paxEl?paxEl.value:2)||2;
+  const paxKey=pax<=2?2:pax<=4?4:6;
+  const autoCost=vanTourAutoPrice(tour.name,paxKey,tourType);
+  if(costEl&&!costEl.dataset.manuallySet&&autoCost) costEl.value=autoCost;
+  if(badge) badge.style.display=autoCost?'inline-block':'none';
+  const isTour10=tour.id==='t10';
+  if(costInfo) costInfo.textContent=isTour10?'Price upon request - edit manually':(autoCost?'EUR'+autoCost+' for '+paxKey+' pax ('+tourType+')':'');
+  if(infoEl){
+    infoEl.style.display='block';
+    const routeHtml=tour.route.map((s,i)=>'<span style="display:inline-flex;align-items:center;gap:4px;margin:1px 0"><span style="color:#7c5e2e;font-weight:700">'+(i+1)+'.</span> '+s+'</span>').join('<br>');
+    const pStr=[2,4,6].map(p=>{const pr=vanTourAutoPrice(tour.name,p,tourType);return pr?p+' pax: EUR'+pr:'';}).filter(Boolean).join(' / ');
+    infoEl.innerHTML='<strong>'+tour.name+'</strong> - '+tour.duration+'<br><span style="font-size:10px">'+routeHtml+'</span><br><span style="font-size:10px;color:#7c5e2e">'+pStr+'</span>'+(tour.hasExclusive&&tourType==='standard'?'<br><span style="font-size:10px;color:#92400e">Exclusive also available</span>':'');
+  }
+  // Show type selector only for tours with exclusive option
+  if(typeEl){typeEl.parentElement.style.display=tour.hasExclusive?'':'none';}
+}
+
+/* Van tour row inline override */
+function vanRowCostOverride(i,val){
+  const v=val===''?null:parseFloat(val);
+  GEN_DATA['vantours'][i].costOverride=v;
+  GEN_DATA['vantours'][i].cost=v!==null?v:(vanTourAutoPrice(GEN_DATA['vantours'][i].tour,GEN_DATA['vantours'][i].pax,GEN_DATA['vantours'][i].tourType)||0);
+  svGen('vantours');
+}
+function vanRowTourChange(i,val){
+  GEN_DATA['vantours'][i].tour=val;
+  if(!GEN_DATA['vantours'][i].costOverride){
+    const paxKey=GEN_DATA['vantours'][i].pax<=2?2:GEN_DATA['vantours'][i].pax<=4?4:6;
+    GEN_DATA['vantours'][i].cost=vanTourAutoPrice(val,paxKey,GEN_DATA['vantours'][i].tourType||'standard')||0;
+  }
+  svGen('vantours');renderGenTab('vantours');
+}
+function vanRowTypeChange(i,val){
+  GEN_DATA['vantours'][i].tourType=val;
+  if(!GEN_DATA['vantours'][i].costOverride){
+    const paxKey=GEN_DATA['vantours'][i].pax<=2?2:GEN_DATA['vantours'][i].pax<=4?4:6;
+    GEN_DATA['vantours'][i].cost=vanTourAutoPrice(GEN_DATA['vantours'][i].tour,paxKey,val)||0;
+  }
+  svGen('vantours');renderGenTab('vantours');
+}
+
+/* ============================
+   BOATS AUTO-FILL (modal)
+   ============================ */
+function boatCompanyChange(){
+  const coId=document.getElementById('gm-company')?.value;
+  const vesWrap=document.getElementById('gm-vessel-row');
+  const vesEl=document.getElementById('gm-vessel');
+  const tripEl=document.getElementById('gm-trip');
+  const infoEl=document.getElementById('gm-boat-info');
+  const seasonRow=document.getElementById('gm-season-row');
+  if(infoEl) infoEl.style.display='none';
+  if(tripEl){tripEl.innerHTML='<option value="">-- Select cruise / trip --</option>';}
+  if(!coId||!vesEl) return;
+  if(coId==='mak'){
+    vesEl.innerHTML='<option value="">-- Select vessel --</option>'+MAK_CATALOG.vessels.map(v=>'<option value="'+v.id+'">'+v.name+'</option>').join('');
+    if(vesWrap) vesWrap.style.display='flex';
+    if(seasonRow) seasonRow.style.display='none';
+  } else if(coId==='ego'){
+    if(vesWrap) vesWrap.style.display='none';
+    if(seasonRow) seasonRow.style.display='none';
+    const opts=EGO_CATALOG.map(t=>'<option value="'+t.id+'">'+t.name+'</option>').join('');
+    if(tripEl) tripEl.innerHTML='<option value="">-- Select cruise --</option>'+opts;
+  } else if(coId==='siw'){
+    if(vesWrap) vesWrap.style.display='none';
+    if(seasonRow) seasonRow.style.display='block';
+    const opts=SIW_CATALOG.map(t=>'<option value="'+t.id+'">['+t.dep+'] '+t.name+'</option>').join('');
+    if(tripEl) tripEl.innerHTML='<option value="">-- Select tour --</option>'+opts;
+  }
+  boatTripChange();
+}
+function boatVesselChange(){
+  const coId=document.getElementById('gm-company')?.value;
+  const vesId=document.getElementById('gm-vessel')?.value;
+  const tripEl=document.getElementById('gm-trip');
+  if(!tripEl) return;
+  const trips=boatGetTrips(coId,vesId);
+  tripEl.innerHTML='<option value="">-- Select cruise --</option>'+trips.map(t=>'<option value="'+t.id+'">'+(t.hours?'['+t.hours+'] ':'')+t.name+(t.onRequest?' (on request)':'')+'</option>').join('');
+  boatTripChange();
+}
+function boatTripChange(){
+  const coId=document.getElementById('gm-company')?.value;
+  const vesId=document.getElementById('gm-vessel')?.value||'';
+  const tripId=document.getElementById('gm-trip')?.value||'';
+  const pax=parseInt(document.getElementById('gm-pax')?.value)||1;
+  const costEl=document.getElementById('gm-cost');
+  const badge=document.getElementById('gm-boat-cost-badge');
+  const costInfo=document.getElementById('gm-boat-cost-info');
+  const infoEl=document.getElementById('gm-boat-info');
+  const season=document.querySelector('input[name="gm-season"]:checked')?.value||'ls';
+  if(!tripId||!coId) return;
+  const auto=boatAutoPrice(coId,vesId,tripId,pax,season);
+  if(costEl&&!costEl.dataset.manuallySet&&auto) costEl.value=auto;
+  if(badge) badge.style.display=auto?'inline-block':'none';
+  if(costInfo) costInfo.textContent=auto?'EUR '+auto+(coId==='ego'?' (EUR '+EGO_CATALOG.find(t=>t.id===tripId)?.price+'/pax)':''):(!tripId?'':'Price on request');
+  if(infoEl&&coId==='ego'){
+    const t=EGO_CATALOG.find(x=>x.id===tripId);
+    if(t){infoEl.style.display='block';infoEl.innerHTML='<strong>Included:</strong> '+t.notes+'<br><strong>Private:</strong> EUR '+t.privateCost+' (entire boat, no other guests)';}
+  } else if(infoEl&&coId==='siw'){
+    const t=SIW_CATALOG.find(x=>x.id===tripId);
+    if(t){infoEl.style.display='block';infoEl.innerHTML='<strong>Departure:</strong> '+t.dep+' 10:00am - 17:00pm &middot; <strong>Duration:</strong> '+t.hours+'<br><strong>Low season:</strong> EUR '+t.priceLS+' &middot; <strong>High season:</strong> EUR '+t.priceHS+(t.onRequest?'<br><em>Price on request</em>':'');}
+  } else if(infoEl){infoEl.style.display='none';}
+}
+
+/* Boats row inline functions */
+function boatRowCostOverride(i,val){
+  const v=val===''?null:parseFloat(val);
+  GEN_DATA['boats'][i].costOverride=v;
+  GEN_DATA['boats'][i].cost=v!==null?v:(boatAutoPrice(GEN_DATA['boats'][i].company,GEN_DATA['boats'][i].vessel,GEN_DATA['boats'][i].trip,GEN_DATA['boats'][i].pax,GEN_DATA['boats'][i].season)||0);
+  svGen('boats');
+}
+function boatRowCompanyChange(i,val){
+  GEN_DATA['boats'][i].company=val;
+  GEN_DATA['boats'][i].vessel='';
+  GEN_DATA['boats'][i].trip='';
+  GEN_DATA['boats'][i].cost=0;
+  GEN_DATA['boats'][i].costOverride=null;
+  svGen('boats');renderGenTab('boats');
+}
+function boatRowVesselChange(i,val){
+  GEN_DATA['boats'][i].vessel=val;
+  GEN_DATA['boats'][i].trip='';
+  GEN_DATA['boats'][i].cost=0;
+  GEN_DATA['boats'][i].costOverride=null;
+  svGen('boats');renderGenTab('boats');
+}
+function boatRowTripChange(i,val,tripName){
+  GEN_DATA['boats'][i].trip=val;
+  GEN_DATA['boats'][i].tripName=tripName;
+  if(!GEN_DATA['boats'][i].costOverride){
+    const auto=boatAutoPrice(GEN_DATA['boats'][i].company,GEN_DATA['boats'][i].vessel,val,GEN_DATA['boats'][i].pax,GEN_DATA['boats'][i].season||'ls');
+    GEN_DATA['boats'][i].cost=auto||0;
+  }
+  svGen('boats');renderGenTab('boats');
+}
+
+/* Flowers row inline override */
+function flowersRowUpdate(i,field,val){
+  GEN_DATA['flowers'][i][field]=field.includes('Price')?parseFloat(val)||0:val;
+  svGen('flowers');
+}
+
+/* -- Price List -- */
 let PLM_DATA={
   cars:{title:'Car Rentals \u2014 ACE Rent a Car',note:'Prices per rental period. Insurance from \u20ac10/day.',items:[]},
-  excursions:{title:'Excursions Price List',note:'Prices to be filled in. Click Add Item to start.',items:[]},
+  excursions:{title:'Excursions 2026 - ATS Kefalonia',note:'Tel: 26710 27911 * excursions@atskefalonia.gr * White Rocks pick-up: 9:45',items:[
+    {name:'Sea & Sun Cruise',price:'75',child:'55',notes:'Mon & Thu * Boat departs Arg/li 09:30 * pick-up 09:45'},
+    {name:'Argostoli Evening Cruise',price:'38',child:'19',notes:'Mon only * Boat departs Arg/li 22:00 * pick-up N/A (transfer separately)'},
+    {name:'Kefalonia Discovery',price:'50',child:'25',notes:'Tue, Thu, Sat * Boat departs Sami 09:15 * pick-up 09:45'},
+    {name:'Ithaka Cruise',price:'60',child:'30',notes:'Fri * Boat departs Sami 09:30 * pick-up 09:45'},
+    {name:'Venetian Voyage',price:'60',child:'30',notes:'Sun (Aug 16th only) * Boat departs Arg/li 18:00 * pick-up N/A'},
+    {name:'Private Discover Kefalonia',price:'on request',child:'up to 7 pax',notes:'Mon/Wed/Fri on request'},
+    {name:'Private Assos & Fiskardo',price:'on request',child:'up to 7 pax',notes:'Mon/Wed/Fri on request'},
+  ]},
   moto:{title:'Moto & Bikes Price List',note:'Prices to be filled in. Click Add Item to start.',items:[]},
-  flowers:{title:'Flowers Price List',note:'Bosoni = cost price, Gross = selling price.',items:[]},
-  boats:{title:'Boats & Cruises Price List',note:'Prices to be filled in. Click Add Item to start.',items:[]},
-  transfers:{title:'Transfers Price List',note:'Prices to be filled in. Click Add Item to start.',items:[]}
+  flowers:{title:'Flowers & Balloons - Ballons & Petals / Bosonis 2026',note:'Bosoni = our cost. Gross = price charged to guest.',items:[
+    {name:'Happy Birthday Balloon Set',bosoni:'50',gross:'80',notes:'1 HB helium + 5 colored helium balloons'},
+    {name:'Rose Petals - Small Bag (5 roses)',bosoni:'15',gross:'30',notes:'Small bag of rose petals'},
+    {name:'Rose Petals - Medium Bag',bosoni:'25',gross:'50',notes:'Medium bag of rose petals'},
+    {name:'Seasonal Bouquet',bosoni:'35',gross:'60',notes:'Seasonal floral bouquet'},
+    {name:'Normal Balloon (x1)',bosoni:'1',gross:'3',notes:'Standard balloon'},
+    {name:'Helium Balloon (x1)',bosoni:'4',gross:'8',notes:'Single helium balloon'},
+    {name:'HB Helium Balloon',bosoni:'12',gross:'24',notes:'Happy Birthday helium, starting price'},
+  ]},
+  boats:{title:'Boats & Cruises — MAK Yachting / Ego Cruises / Seven Islands Ways 2026',note:'Prices auto-loaded from catalog. All prices VAT included. MAK: min 4 pax. SIW: max 10 pax.',items:[]},
+  transfers:{title:'Transfers Price List',note:'Prices to be filled in. Click Add Item to start.',items:[]},
+  vantours:{title:'Van Tours 2026 - Seven Islands Ways',note:'VAT included. Prices per group (2/4/6 pax). Standard & Exclusive options.',items:[
+    {name:'TOUR_1 Oasis Tour',price:'630',notes:'Standard 2p:630 / 4p:740 / 6p:970 | Excl 2p:680 / 4p:885 / 6p:1130 | 6h | Gentilini wine'},
+    {name:'TOUR_2 Azure Treasure',price:'570',notes:'2p:570 / 4p:680 / 6p:800 | 6.5h | Alexandros lunch + Myrtos'},
+    {name:'TOUR_3 Kefalonia Gems',price:'570',notes:'2p:570 / 4p:630 / 6p:740 | 7h | Robola wine + Alexandros lunch'},
+    {name:'TOUR_4 Odyssey Horizon',price:'630',notes:'2p:630 / 4p:740 / 6p:850 | 6h | Antisamos swim 1.5h'},
+    {name:'TOUR_5 Blue Serenity',price:'510',notes:'2p:510 / 4p:630 / 6p:740 | 6h | Myrtos swim 1.5h'},
+    {name:'TOUR_6 Coastal Charm',price:'510',notes:'2p:510 / 4p:630 / 6p:740 | 6h | Assos village 1.5h'},
+    {name:'TOUR_7 Fiskardo Sunset',price:'680',notes:'2p:680 / 4p:800 / 6p:900 | 6h | Evening / dinner tour'},
+    {name:'TOUR_8 Lixouri Experience',price:'630',notes:'2p:630 / 4p:740 / 6p:900 | 7h | Ferry incl. Petani swim'},
+    {name:'TOUR_9 Lixouri Whisper',price:'510',notes:'2p:510 / 4p:630 / 6p:740 | 9h | Ferry incl.'},
+    {name:'TOUR_10 Tour It Your Way!',price:'0',notes:'Custom tour - price on request'},
+  ]}
 };
 (function(){try{const d=JSON.parse(localStorage.getItem('plm_data'));if(d&&typeof d==='object'){Object.keys(d).forEach(k=>{if(PLM_DATA[k])PLM_DATA[k]={...PLM_DATA[k],...d[k]};});}}catch(e){}})();
 let _plmSaveTO=null;
@@ -2019,7 +2840,7 @@ function svPLM(){
     clearTimeout(_plmSaveTO);
     _plmSaveTO=setTimeout(()=>{
       fbdb.ref('plm_data').set(PLM_DATA)
-        .then(()=>setSyncStatus('ok','Price list saved ☁ '+new Date().toLocaleTimeString()))
+        .then(()=>setSyncStatus('ok','Price list saved (cloud) '+new Date().toLocaleTimeString()))
         .catch(e=>setSyncStatus('error','Error: '+e.message));
     },600);
   }
@@ -2035,42 +2856,165 @@ function expShowPriceList(tab){
 }
 
 function renderPLMBody(tab){
-  const d=PLM_DATA[tab];const col=EXP_COLORS[tab];const isFlowers=tab==='flowers';
+  const d=PLM_DATA[tab];
+  const col=EXP_COLORS[tab];
   let html='';
-  if(d.note)html+='<div style="background:var(--bg);border-radius:9px;padding:10px 14px;font-size:12px;color:var(--muted);margin-bottom:14px">'+esc(d.note)+'</div>';
+
+  /* ── Header note ── */
+  if(d.note) html+='<div style="background:var(--bg);border-radius:9px;padding:9px 14px;font-size:11px;color:var(--muted);margin-bottom:14px">'+esc(d.note)+'</div>';
+
+  /* ============ CARS ============ */
   if(tab==='cars'){
     html+='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px">';
-    html+='<thead><tr style="background:linear-gradient(180deg,#f0fff4,#e0f7e9)"><th style="padding:8px 10px;text-align:left;font-size:10px;color:#0d4a2f;font-weight:700;text-transform:uppercase;letter-spacing:.7px;border-right:1px solid #a8d5b8;border-bottom:1px solid #a8d5b8">Vehicle</th><th colspan="2" style="padding:8px 10px;text-align:center;font-size:10px;color:#0d4a2f;font-weight:700;text-transform:uppercase;letter-spacing:.7px;border-right:1px solid #a8d5b8;border-bottom:1px solid #a8d5b8">Low Season</th><th colspan="2" style="padding:8px 10px;text-align:center;font-size:10px;color:#0d4a2f;font-weight:700;text-transform:uppercase;letter-spacing:.7px;border-right:1px solid #a8d5b8;border-bottom:1px solid #a8d5b8">Mid Season</th><th colspan="2" style="padding:8px 10px;text-align:center;font-size:10px;color:#0d4a2f;font-weight:700;text-transform:uppercase;letter-spacing:.7px;border-right:1px solid #a8d5b8;border-bottom:1px solid #a8d5b8">High Season</th><th colspan="2" style="padding:8px 10px;text-align:center;font-size:10px;color:#0d4a2f;font-weight:700;text-transform:uppercase;letter-spacing:.7px;border-bottom:1px solid #a8d5b8">Peak Season</th></tr>';
-    html+='<tr style="background:#f5f5f5;border-bottom:1px solid #a8d5b8"><th style="padding:5px 10px;border-right:1px solid #a8d5b8"></th>';
-    ['Low','Mid','High','Peak'].forEach((_,gi)=>{html+='<th style="padding:5px 8px;text-align:center;font-size:10px;color:var(--muted);font-weight:700;border-right:1px solid #d8e5f0">1d</th><th style="padding:5px 8px;text-align:center;font-size:10px;color:var(--muted);font-weight:700;border-right:1px solid #d8e5f0">3d</th>';});
+    html+='<thead><tr style="background:linear-gradient(180deg,#f0fff4,#e0f7e9)">';
+    html+='<th style="padding:8px 10px;text-align:left;font-size:10px;color:#0d4a2f;font-weight:700;text-transform:uppercase;border-right:1px solid #a8d5b8;border-bottom:1px solid #a8d5b8">Vehicle</th>';
+    ['Low (Apr-May,Oct)','Mid (Jun,Sep)','High (Jul)','Peak (Aug)'].forEach(lbl=>{
+      html+='<th colspan="2" style="padding:8px 10px;text-align:center;font-size:10px;color:#0d4a2f;font-weight:700;text-transform:uppercase;border-right:1px solid #a8d5b8;border-bottom:1px solid #a8d5b8">'+lbl+'</th>';
+    });
+    html+='</tr><tr style="background:#f5f5f5;border-bottom:1px solid #a8d5b8"><th style="border-right:1px solid #a8d5b8"></th>';
+    ['Low','Mid','High','Peak'].forEach(_=>{html+='<th style="padding:5px 8px;text-align:center;font-size:10px;color:var(--muted);font-weight:700;border-right:1px solid #d8e5f0">1d</th><th style="padding:5px 8px;text-align:center;font-size:10px;color:var(--muted);font-weight:700;border-right:1px solid #d8e5f0">3d</th>';});
     html+='</tr></thead><tbody>';
     ACE_CARS.forEach(car=>{
       const p=ACE_PRICES[car.id];if(!p)return;
-      html+='<tr style="border-bottom:1px solid var(--border2)"><td style="padding:7px 10px;font-weight:600;color:var(--ink);border-right:1px solid var(--border2)">'+car.s+'<div style="font-size:10px;color:var(--muted);font-weight:400">'+car.l+'</div></td>';
-      ['low','mid','high','peak'].forEach(s=>{const pr=p[s];html+='<td style="padding:7px 8px;text-align:center;font-weight:700;color:'+col+';border-right:1px solid var(--border2)">'+(pr&&pr[0]!=null?'\u20ac'+pr[0]:'--')+'</td><td style="padding:7px 8px;text-align:center;color:var(--ink2);border-right:1px solid var(--border2)">'+(pr&&pr[2]!=null?'\u20ac'+pr[2]:'--')+'</td>';});
+      html+='<tr style="border-bottom:1px solid var(--border2)"><td style="padding:7px 10px;font-weight:600;color:var(--ink);border-right:1px solid var(--border2)">'+car.s+'<div style="font-size:10px;color:var(--muted)">'+car.l+'</div></td>';
+      ['low','mid','high','peak'].forEach(s=>{const pr=p[s];html+='<td style="padding:7px 8px;text-align:center;font-weight:700;color:'+col+';border-right:1px solid var(--border2)">'+(pr&&pr[0]!=null?'€'+pr[0]:'--')+'</td><td style="padding:7px 8px;text-align:center;color:var(--ink2);border-right:1px solid var(--border2)">'+(pr&&pr[2]!=null?'€'+pr[2]:'--')+'</td>';});
       html+='</tr>';
     });
-    html+='</tbody></table></div><div style="font-size:11px;color:var(--muted);margin-top:10px">Insurance from \u20ac10/day. Showing 1-day and 3-day prices per season.</div>';
+    html+='</tbody></table></div><div style="font-size:11px;color:var(--muted);margin-top:10px">Insurance from €10/day. Showing 1-day and 3-day prices.</div>';
+
+  /* ============ EXCURSIONS ============ */
+  } else if(tab==='excursions'){
+    const DAY_ABB={1:'Mon',2:'Tue',3:'Wed',4:'Thu',5:'Fri',6:'Sat',0:'Sun'};
+    html+='<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:linear-gradient(180deg,#ebf5ff,#dbeeff)">';
+    html+='<th style="padding:8px 11px;text-align:left;font-size:10px;color:#1a6ca8;font-weight:700;text-transform:uppercase;border-right:1px solid #c5dff2">Excursion</th>';
+    html+='<th style="padding:8px 11px;text-align:center;font-size:10px;color:#1a6ca8;font-weight:700;text-transform:uppercase;border-right:1px solid #c5dff2">Days</th>';
+    html+='<th style="padding:8px 11px;text-align:center;font-size:10px;color:#1a6ca8;font-weight:700;text-transform:uppercase;border-right:1px solid #c5dff2">Pick-up WR</th>';
+    html+='<th style="padding:8px 11px;text-align:center;font-size:10px;color:#1a6ca8;font-weight:700;text-transform:uppercase;border-right:1px solid #c5dff2">Adult €</th>';
+    html+='<th style="padding:8px 11px;text-align:center;font-size:10px;color:#1a6ca8;font-weight:700;text-transform:uppercase;border-right:1px solid #c5dff2">Child €</th>';
+    html+='<th style="padding:8px 11px;font-size:10px;color:#1a6ca8;font-weight:700;text-transform:uppercase">Departure</th>';
+    html+='</tr></thead><tbody>';
+    EXC_CATALOG.forEach((exc,i)=>{
+      /* Get editable prices from PLM_DATA if overridden, else from catalog */
+      const plmItem=(PLM_DATA.excursions.items||[]).find(x=>x.name===exc.name);
+      const adult=plmItem&&plmItem.price?plmItem.price:exc.priceAdult;
+      const child=plmItem&&plmItem.child?plmItem.child:exc.priceChild;
+      const pickupStyle='padding:5px 8px;border:1.5px solid transparent;border-radius:7px;font-family:var(--sans);font-size:13px;font-weight:700;text-align:center;background:transparent;outline:none;color:'+col+';width:70px';
+      html+='<tr style="border-bottom:1px solid var(--border2)">';
+      html+='<td style="padding:7px 11px;font-weight:600;color:var(--ink);border-right:1px solid var(--border2)">'+esc(exc.name)+'</td>';
+      html+='<td style="padding:7px 8px;text-align:center;font-size:11px;color:var(--muted);border-right:1px solid var(--border2)">'+exc.dayNames.join(', ')+'</td>';
+      html+='<td style="padding:5px 8px;text-align:center;border-right:1px solid var(--border2)"><input type="time" value="'+exc.pickupWR+'" style="'+pickupStyle+'" onchange="EXC_CATALOG['+i+'].pickupWR=this.value" title="Edit to override pick-up time"></td>';
+      html+='<td style="padding:5px 8px;text-align:center;border-right:1px solid var(--border2)"><input type="number" min="0" value="'+(adult||'')+'" style="'+pickupStyle+'" placeholder="0" onchange="EXC_CATALOG['+i+'].priceAdult=parseFloat(this.value)||0;plmSyncExcursionPrice('+i+',0,this.value)" title="Adult price"></td>';
+      html+='<td style="padding:5px 8px;text-align:center;border-right:1px solid var(--border2)"><input type="number" min="0" value="'+(child||'')+'" style="'+pickupStyle+';color:#0e7490" placeholder="0" onchange="EXC_CATALOG['+i+'].priceChild=parseFloat(this.value)||0;plmSyncExcursionPrice('+i+',1,this.value)" title="Child price"></td>';
+      html+='<td style="padding:7px 11px;font-size:11px;color:var(--muted)">'+esc(exc.departure||exc.notes||'')+'</td>';
+      html+='</tr>';
+    });
+    html+='</tbody></table><div style="font-size:11px;color:var(--muted);margin-top:10px">Click pick-up time or price to edit. Changes apply immediately to new bookings.</div>';
+
+  /* ============ VAN TOURS ============ */
+  } else if(tab==='boats'){
+    const col2='#0e7490';
+    // MAK Yachting section
+    html+='<div style="font-size:13px;font-weight:700;color:#0e4a6e;margin:8px 0 6px;padding:8px 12px;background:#e8f4fd;border-radius:8px;border-left:4px solid #0e4a6e">🚤 Argostoli Boat Hire — MAK Yachting Services &middot; Tel: 0030 6978 203510</div>';
+    html+='<div style="font-size:11px;color:var(--muted);margin-bottom:8px">All prices per trip (not per person) &middot; Fuel & skipper included &middot; Min 4 pax recommended</div>';
+    html+='<table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px">';
+    html+='<thead><tr style="background:linear-gradient(180deg,#e8f4fd,#d0eaf8)"><th style="padding:7px 10px;text-align:left;font-size:10px;color:#0e4a6e;font-weight:700;text-transform:uppercase;border-right:1px solid #b3d9ef">Vessel</th><th style="padding:7px 10px;font-size:10px;color:#0e4a6e;font-weight:700;text-transform:uppercase;border-right:1px solid #b3d9ef">Cruise</th><th style="padding:7px 10px;font-size:10px;color:#0e4a6e;font-weight:700;text-transform:uppercase;text-align:center;border-right:1px solid #b3d9ef">Hours</th><th style="padding:7px 10px;font-size:10px;color:#0e4a6e;font-weight:700;text-transform:uppercase;text-align:center">Price &euro;</th></tr></thead><tbody>';
+    MAK_CATALOG.vessels.forEach(v=>{
+      const cruises=MAK_CATALOG.cruises[v.id]||[];
+      if(!cruises.length) return;
+      cruises.forEach((t,ti)=>{
+        html+='<tr style="border-bottom:1px solid var(--border2)">';
+        if(ti===0) html+='<td style="padding:6px 10px;font-weight:600;color:var(--ink);border-right:1px solid var(--border2);vertical-align:top" rowspan="'+cruises.length+'">'+v.name+'</td>';
+        html+='<td style="padding:5px 10px;border-right:1px solid var(--border2)">'+esc(t.name)+'</td>';
+        html+='<td style="padding:5px 8px;text-align:center;border-right:1px solid var(--border2);color:var(--muted)">'+t.hours+'</td>';
+        html+='<td style="padding:5px 8px;text-align:center;font-weight:700;color:#0e4a6e">'+(t.onRequest?'On Request':'&euro;'+t.price)+'</td></tr>';
+      });
+    });
+    html+='</tbody></table>';
+    // Ego Cruises
+    html+='<div style="font-size:13px;font-weight:700;color:#0e7490;margin:8px 0 6px;padding:8px 12px;background:#e0f7fa;border-radius:8px;border-left:4px solid #0e7490">&#9973; Ego Cruises (Catamaran) &middot; Up to 18 pax &middot; Dep: Sami Port</div>';
+    html+='<table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px">';
+    html+='<thead><tr style="background:linear-gradient(180deg,#e0f7fa,#b2ebf2)"><th style="padding:7px 10px;text-align:left;font-size:10px;color:#0e7490;font-weight:700;text-transform:uppercase;border-right:1px solid #80deea">Cruise</th><th style="padding:7px 10px;text-align:center;font-size:10px;color:#0e7490;font-weight:700;text-transform:uppercase;border-right:1px solid #80deea">Per Person &euro;</th><th style="padding:7px 10px;text-align:center;font-size:10px;color:#0e7490;font-weight:700;text-transform:uppercase;border-right:1px solid #80deea">Private &euro;</th><th style="padding:7px 10px;font-size:10px;color:#0e7490;font-weight:700;text-transform:uppercase">Notes</th></tr></thead><tbody>';
+    EGO_CATALOG.forEach(t=>{
+      html+='<tr style="border-bottom:1px solid var(--border2)"><td style="padding:6px 10px;font-weight:600;border-right:1px solid var(--border2)">'+esc(t.name)+'</td><td style="padding:6px 8px;text-align:center;font-weight:700;color:#0e7490;border-right:1px solid var(--border2)">&euro;'+t.price+'</td><td style="padding:6px 8px;text-align:center;font-weight:700;color:#006064;border-right:1px solid var(--border2)">&euro;'+t.privateCost+'</td><td style="padding:6px 10px;font-size:11px;color:var(--muted)">'+esc(t.notes)+'</td></tr>';
+    });
+    html+='</tbody></table>';
+    // SIW RIB Tours
+    html+='<div style="font-size:13px;font-weight:700;color:#7c5e2e;margin:8px 0 6px;padding:8px 12px;background:#fef3c7;border-radius:8px;border-left:4px solid #7c5e2e">&#128674; Seven Islands Ways (RIB Tours) &middot; Max 10 pax &middot; VAT included &middot; 10:00-17:00</div>';
+    html+='<table style="width:100%;border-collapse:collapse;font-size:12px">';
+    html+='<thead><tr style="background:linear-gradient(180deg,#fefce8,#fef3c7)"><th style="padding:7px 10px;text-align:left;font-size:10px;color:#7c5e2e;font-weight:700;text-transform:uppercase;border-right:1px solid #e2c97e">Tour</th><th style="padding:7px 10px;text-align:center;font-size:10px;color:#7c5e2e;font-weight:700;text-transform:uppercase;border-right:1px solid #e2c97e">Departure</th><th style="padding:7px 10px;text-align:center;font-size:10px;color:#7c5e2e;font-weight:700;text-transform:uppercase;border-right:1px solid #e2c97e">Low Season &euro;</th><th style="padding:7px 10px;text-align:center;font-size:10px;color:#7c5e2e;font-weight:700;text-transform:uppercase">High Season &euro;</th></tr></thead><tbody>';
+    SIW_CATALOG.forEach(t=>{
+      const ls=t.onRequest?'On request':(t.priceLS?'&euro;'+t.priceLS:'');
+      const hs=t.onRequest?'On request':(t.priceHS?'&euro;'+t.priceHS:'');
+      html+='<tr style="border-bottom:1px solid var(--border2)"><td style="padding:6px 10px;font-size:11px;font-weight:600;border-right:1px solid var(--border2)">'+esc(t.name)+'</td><td style="padding:6px 8px;text-align:center;font-size:11px;color:var(--muted);border-right:1px solid var(--border2)">'+esc(t.dep)+'</td><td style="padding:6px 8px;text-align:center;font-weight:700;color:#7c5e2e;border-right:1px solid var(--border2)">'+ls+'</td><td style="padding:6px 8px;text-align:center;font-weight:700;color:#92400e">'+hs+'</td></tr>';
+    });
+    html+='</tbody></table><div style="font-size:11px;color:var(--muted);margin-top:10px">Low season: May-Jun, Oct. High season: Jul-Sep. SIW includes: Seabob, SUP, Sea scooter (on request), snacks, drinks, towels, WiFi, fuel.</div>';
+  } else if(tab==='vantours'){
+    html+='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead>';
+    html+='<tr style="background:linear-gradient(180deg,#fefce8,#fef3c7)">';
+    html+='<th style="padding:8px 11px;text-align:left;font-size:10px;color:#7c5e2e;font-weight:700;text-transform:uppercase;border-right:1px solid #e2c97e">Tour</th>';
+    html+='<th style="padding:8px 11px;text-align:center;font-size:10px;color:#7c5e2e;font-weight:700;text-transform:uppercase;border-right:1px solid #e2c97e">Duration</th>';
+    html+='<th style="padding:8px 11px;text-align:center;font-size:10px;color:#7c5e2e;font-weight:700;text-transform:uppercase;border-right:1px solid #e2c97e">2 pax</th>';
+    html+='<th style="padding:8px 11px;text-align:center;font-size:10px;color:#7c5e2e;font-weight:700;text-transform:uppercase;border-right:1px solid #e2c97e">4 pax</th>';
+    html+='<th style="padding:8px 11px;text-align:center;font-size:10px;color:#7c5e2e;font-weight:700;text-transform:uppercase;border-right:1px solid #e2c97e">6 pax</th>';
+    html+='<th style="padding:8px 11px;font-size:10px;color:#7c5e2e;font-weight:700;text-transform:uppercase">Route Highlights</th></tr></thead><tbody>';
+    const inpVan='padding:5px 7px;border:1.5px solid transparent;border-radius:7px;font-family:var(--serif);font-size:13px;font-weight:700;text-align:center;background:transparent;outline:none;color:#7c5e2e;width:72px';
+    VAN_TOURS.forEach((tour,i)=>{
+      const p=tour.prices.standard;
+      const isCustom=tour.id==='t10';
+      html+='<tr style="border-bottom:1px solid var(--border2)">';
+      html+='<td style="padding:7px 11px;font-weight:600;color:var(--ink);border-right:1px solid var(--border2);min-width:200px">'+esc(tour.name)+(tour.hasExclusive?'<div style="font-size:9px;color:#92400e;margin-top:2px">+ Exclusive option</div>':'')+'</td>';
+      html+='<td style="padding:7px 8px;text-align:center;font-size:11px;color:var(--muted);border-right:1px solid var(--border2)">'+esc(tour.duration)+'</td>';
+      if(isCustom){
+        html+='<td colspan="3" style="padding:7px 11px;text-align:center;font-size:12px;color:var(--muted);border-right:1px solid var(--border2)">Upon request</td>';
+      } else {
+        [2,4,6].forEach(pax=>{
+          html+='<td style="padding:5px 8px;text-align:center;border-right:1px solid var(--border2)"><input type="number" min="0" value="'+(p[pax]||'')+'" style="'+inpVan+'" onchange="VAN_TOURS['+i+'].prices.standard['+pax+']=parseFloat(this.value)||0" title="Standard '+pax+' pax">';
+          if(tour.hasExclusive){const ep=tour.prices.exclusive;html+='<div style="font-size:9px;color:#92400e;margin-top:2px">Excl: <input type="number" min="0" value="'+(ep[pax]||'')+'" style="width:55px;padding:2px 5px;border:1px solid #fcd34d;border-radius:5px;font-size:11px;font-weight:700;color:#92400e;text-align:center;outline:none;background:transparent" onchange="VAN_TOURS['+i+'].prices.exclusive['+pax+']=parseFloat(this.value)||0"></div>';}
+          html+='</td>';
+        });
+      }
+      html+='<td style="padding:7px 11px;font-size:10px;color:var(--muted2)">'+tour.route.slice(0,3).map(s=>esc(s)).join(' + ')+(tour.route.length>3?' +'+( tour.route.length-3)+' more':'')+'</td>';
+      html+='</tr>';
+    });
+    html+='</tbody></table></div><div style="font-size:11px;color:var(--muted);margin-top:10px">All prices VAT included. Click any price to edit directly.</div>';
+
+  /* ============ FLOWERS ============ */
+  } else if(tab==='flowers'){
+    html+='<table style="width:100%;border-collapse:collapse;font-size:12px"><thead>';
+    html+='<tr style="background:linear-gradient(180deg,#fdf2f8,#fce7f3)">';
+    html+='<th style="padding:8px 11px;text-align:left;font-size:10px;color:#be185d;font-weight:700;text-transform:uppercase;border-right:1px solid #fbcfe8">Item</th>';
+    html+='<th style="padding:8px 11px;text-align:center;font-size:10px;color:#be185d;font-weight:700;text-transform:uppercase;border-right:1px solid #fbcfe8">Bosoni €<div style="font-size:9px;font-weight:400;color:var(--muted)">our cost</div></th>';
+    html+='<th style="padding:8px 11px;text-align:center;font-size:10px;color:#1a6644;font-weight:700;text-transform:uppercase;border-right:1px solid #fbcfe8">Gross €<div style="font-size:9px;font-weight:400;color:var(--muted)">guest price</div></th>';
+    html+='<th style="padding:8px 11px;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase">Notes</th></tr></thead><tbody>';
+    const inpF='padding:5px 8px;border:1.5px solid transparent;border-radius:7px;font-family:var(--serif);font-size:14px;font-weight:700;text-align:center;background:transparent;outline:none;width:75px';
+    FLOWERS_CATALOG.forEach((item,i)=>{
+      html+='<tr style="border-bottom:1px solid var(--border2)">';
+      html+='<td style="padding:7px 11px;font-weight:600;color:var(--ink);border-right:1px solid var(--border2)">'+esc(item.name)+'</td>';
+      html+='<td style="padding:5px 8px;text-align:center;border-right:1px solid var(--border2)"><input type="number" min="0" value="'+(item.bosoni||'')+'" style="'+inpF+';color:#be185d" onchange="FLOWERS_CATALOG['+i+'].bosoni=parseFloat(this.value)||0" title="Bosoni cost price"></td>';
+      html+='<td style="padding:5px 8px;text-align:center;border-right:1px solid var(--border2)"><input type="number" min="0" value="'+(item.gross||'')+'" style="'+inpF+';color:#1a6644" onchange="FLOWERS_CATALOG['+i+'].gross=parseFloat(this.value)||0" title="Gross guest price"></td>';
+      html+='<td style="padding:7px 11px;font-size:11px;color:var(--muted)">'+esc(item.notes||'')+'</td>';
+      html+='</tr>';
+    });
+    html+='</tbody></table><div style="font-size:11px;color:var(--muted);margin-top:10px">Click any price to edit. Auto-fills into new bookings immediately.</div>';
+
+  /* ============ GENERIC EDITABLE (moto, boats, transfers) ============ */
   } else {
-    html+='<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="plmAddRow(\''+tab+'\')" style="display:flex;align-items:center;gap:6px;padding:7px 14px;background:'+col+';color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans)"><i class="ti ti-plus"></i> Add Item</button></div>';
-    if(!d.items||!d.items.length){html+='<div style="padding:32px;text-align:center;color:var(--muted2);font-size:13px"><i class="ti ti-table-off" style="font-size:32px;display:block;margin-bottom:8px;opacity:.3"></i>No price items yet</div>';}
-    else{
-      html+='<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:linear-gradient(180deg,#f7f9fc,#eef2f8)"><th style="padding:8px 11px;text-align:left;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;border-right:1px solid var(--border2)">Item / Description</th>';
-      if(isFlowers){html+='<th style="padding:8px 11px;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;text-align:center;border-right:1px solid var(--border2)">Bosoni \u20ac</th><th style="padding:8px 11px;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;text-align:center;border-right:1px solid var(--border2)">Gross \u20ac</th>';}
-      else{html+='<th style="padding:8px 11px;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;text-align:center;border-right:1px solid var(--border2)">Price \u20ac</th>';}
+    html+='<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="plmAddRow(\'+tab+\')" style="display:flex;align-items:center;gap:6px;padding:7px 14px;background:'+col+';color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans)"><i class="ti ti-plus"></i> Add Item</button></div>';
+    if(!d.items||!d.items.length){
+      html+='<div style="padding:32px;text-align:center;color:var(--muted2);font-size:13px"><i class="ti ti-table-off" style="font-size:32px;display:block;margin-bottom:8px;opacity:.3"></i>No price items yet</div>';
+    } else {
+      html+='<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:linear-gradient(180deg,#f7f9fc,#eef2f8)">';
+      html+='<th style="padding:8px 11px;text-align:left;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;border-right:1px solid var(--border2)">Item</th>';
+      html+='<th style="padding:8px 11px;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;text-align:center;border-right:1px solid var(--border2)">Price €</th>';
       html+='<th style="padding:8px 11px;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase">Notes</th><th style="width:34px"></th></tr></thead><tbody>';
+      const inpStyle='width:100%;padding:5px 7px;border:1.5px solid transparent;border-radius:7px;font-family:var(--sans);font-size:12px;color:var(--ink);background:transparent;outline:none';
+      const numStyle='width:80px;padding:5px 7px;border:1.5px solid transparent;border-radius:7px;font-family:var(--sans);font-size:13px;font-weight:700;text-align:center;background:transparent;outline:none;color:'+col;
       d.items.forEach((item,i)=>{
-        const inpStyle='width:100%;padding:5px 7px;border:1.5px solid transparent;border-radius:7px;font-family:var(--sans);font-size:12px;color:var(--ink);background:transparent;outline:none';
-        const numStyle='width:80px;padding:5px 7px;border:1.5px solid transparent;border-radius:7px;font-family:var(--sans);font-size:13px;font-weight:700;text-align:center;background:transparent;outline:none';
-        html+='<tr style="border-bottom:1px solid var(--border2)"><td style="padding:5px 8px;border-right:1px solid var(--border2)"><input style="'+inpStyle+'" value="'+esc(item.name||'')+'" placeholder="Item name" onchange="PLM_DATA[\''+tab+'\'].items['+i+'].name=this.value;svPLM()"></td>';
-        if(isFlowers){
-          html+='<td style="padding:5px 8px;text-align:center;border-right:1px solid var(--border2)"><input type="number" min="0" style="'+numStyle+';color:#be185d" value="'+esc(item.bosoni||'')+'" placeholder="0" onchange="PLM_DATA[\''+tab+'\'].items['+i+'].bosoni=this.value;svPLM()"></td>';
-          html+='<td style="padding:5px 8px;text-align:center;border-right:1px solid var(--border2)"><input type="number" min="0" style="'+numStyle+';color:#0d4a2f" value="'+esc(item.gross||'')+'" placeholder="0" onchange="PLM_DATA[\''+tab+'\'].items['+i+'].gross=this.value;svPLM()"></td>';
-        } else {
-          html+='<td style="padding:5px 8px;text-align:center;border-right:1px solid var(--border2)"><input type="number" min="0" style="'+numStyle+';color:'+col+'" value="'+esc(item.price||'')+'" placeholder="0" onchange="PLM_DATA[\''+tab+'\'].items['+i+'].price=this.value;svPLM()"></td>';
-        }
-        html+='<td style="padding:5px 8px"><input style="'+inpStyle+';color:var(--muted);font-size:11px" value="'+esc(item.notes||'')+'" placeholder="Notes..." onchange="PLM_DATA[\''+tab+'\'].items['+i+'].notes=this.value;svPLM()"></td>';
-        html+='<td style="padding:5px 8px"><button onclick="plmDelRow(\''+tab+'\','+i+')" style="width:26px;height:26px;background:#fce8e8;border:none;border-radius:6px;cursor:pointer;color:var(--coral);display:flex;align-items:center;justify-content:center"><i class="ti ti-trash" style="font-size:12px"></i></button></td></tr>';
+        html+='<tr style="border-bottom:1px solid var(--border2)">';
+        html+='<td style="padding:5px 8px;border-right:1px solid var(--border2)"><input style="'+inpStyle+'" value="'+esc(item.name||'')+'" placeholder="Item" onchange="PLM_DATA[\'+tab+\'].items['+i+'].name=this.value;svPLM()"></td>';
+        html+='<td style="padding:5px 8px;text-align:center;border-right:1px solid var(--border2)"><input type="number" min="0" style="'+numStyle+'" value="'+esc(item.price||'')+'" placeholder="0" onchange="PLM_DATA[\'+tab+\'].items['+i+'].price=this.value;svPLM()"></td>';
+        html+='<td style="padding:5px 8px"><input style="'+inpStyle+';color:var(--muted);font-size:11px" value="'+esc(item.notes||'')+'" placeholder="Notes..." onchange="PLM_DATA[\'+tab+\'].items['+i+'].notes=this.value;svPLM()"></td>';
+        html+='<td><button onclick="plmDelRow(\'+tab+\','+i+')" style="width:26px;height:26px;background:#fce8e8;border:none;border-radius:6px;cursor:pointer;color:var(--coral);display:flex;align-items:center;justify-content:center"><i class="ti ti-trash" style="font-size:12px"></i></button></td></tr>';
       });
       html+='</tbody></table>';
     }
@@ -2078,8 +3022,24 @@ function renderPLMBody(tab){
   document.getElementById('plm-body').innerHTML=html;
 }
 
+function plmSyncExcursionPrice(idx,isChild,val){
+  if(!PLM_DATA.excursions.items)PLM_DATA.excursions.items=[];
+  const exc=EXC_CATALOG[idx];if(!exc)return;
+  let item=PLM_DATA.excursions.items.find(x=>x.name===exc.name);
+  if(!item){item={name:exc.name,price:'',child:'',notes:''};PLM_DATA.excursions.items.push(item);}
+  if(!isChild)item.price=val; else item.child=val;
+  svPLM();
+}
+
 function plmAddRow(tab){if(!PLM_DATA[tab].items)PLM_DATA[tab].items=[];PLM_DATA[tab].items.push({name:'',price:'',bosoni:'',gross:'',notes:''});svPLM();renderPLMBody(tab);}
 function plmDelRow(tab,i){if(!confirm('Remove this item?'))return;PLM_DATA[tab].items.splice(i,1);svPLM();renderPLMBody(tab);}
+/* Sync EXC_CATALOG live when admin edits price list */
+function excSyncPriceFromPLM(excName,type,val){
+  const exc=EXC_CATALOG.find(e=>e.name===excName);
+  if(!exc)return;
+  if(type==='adult')exc.priceAdult=parseFloat(val)||0;
+  if(type==='child')exc.priceChild=parseFloat(val)||0;
+}
 function plmPrint(){
   const tab=document.getElementById('priceListModal').dataset.tab;
   const d=PLM_DATA[tab];const col=EXP_COLORS[tab];
@@ -2096,9 +3056,43 @@ function expPrintTable(tab){
   if(!rows.length){showToast('No bookings to print','w');return;}
   let headers='',rowsHtml='';
   const statusMap={confirmed:'Confirmed',waiting:'Waiting',cancelled:'Cancelled'};
+  if(tab==='boats'){
+    const coEl=document.getElementById('gm-company');
+    const vesEl=document.getElementById('gm-vessel');
+    const tripEl=document.getElementById('gm-trip');
+    const costEl=document.getElementById('gm-cost');
+    const seasEl=document.querySelector('input[name="gm-season"]:checked');
+    row.company=coEl?coEl.value:'';
+    row.vessel=vesEl?vesEl.value:'';
+    row.trip=tripEl?tripEl.value:'';
+    row.tripName=tripEl?tripEl.options[tripEl.selectedIndex]?.text||'':'';
+    row.season=seasEl?seasEl.value:'ls';
+    const autoCost=boatAutoPrice(row.company,row.vessel,row.trip,row.pax,row.season);
+    row.cost=costEl&&costEl.value?parseFloat(costEl.value)||0:(autoCost||0);
+  }
+  if(tab==='flowers'){
+    const arrEl=document.getElementById('gm-arrangement');
+    const bosEl=document.getElementById('gm-bosoniPrice');
+    const groEl=document.getElementById('gm-grossPrice');
+    row.arrangement=arrEl?arrEl.value:'';
+    row.bosoniPrice=bosEl?parseFloat(bosEl.value)||0:0;
+    row.grossPrice=groEl?parseFloat(groEl.value)||0:0;
+  }
+  if(tab==='vantours'){
+    const tourEl=document.getElementById('gm-tour');
+    const typeEl=document.getElementById('gm-tourType');
+    const costEl=document.getElementById('gm-cost');
+    const timeEl=document.getElementById('gm-time');
+    row.tour=tourEl?tourEl.value:'';
+    row.tourType=typeEl?typeEl.value:'standard';
+    const autoCost=vanTourAutoPrice(row.tour,row.pax,row.tourType);
+    row.cost=costEl&&costEl.value?parseFloat(costEl.value)||0:(autoCost||0);
+    row.time=timeEl?timeEl.value:'';
+  }
   if(tab==='excursions'){
     headers='<th>#</th><th>Ref</th><th>Name</th><th>Room</th><th>Booking</th><th>Date</th><th>Time</th><th>Excursion</th><th>Pax</th><th>Cost</th><th>Status</th>';
-    rowsHtml=rows.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(r.ref||'')+'</td><td>'+esc(r.name||'')+'</td><td>'+esc(r.room||'')+'</td><td>'+esc(r.bookDate||'')+'</td><td>'+esc(r.date||'')+'</td><td>'+esc(r.time||'')+'</td><td>'+esc(r.excursion||'')+'</td><td>'+(r.pax||'')+'</td><td>'+(r.cost?'\u20ac'+r.cost:'')+'</td><td>'+(statusMap[r.status]||r.status||'')+'</td></tr>').join('');
+    headers='<th>#</th><th>Ref</th><th>Name</th><th>Room</th><th>Booking</th><th>Date</th><th>Excursion</th><th>Adults</th><th>Children</th><th>Pick-up</th><th>Cost</th><th>Status</th>';
+    rowsHtml=rows.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(r.ref||'')+'</td><td>'+esc(r.name||'')+'</td><td>'+esc(r.room||'')+'</td><td>'+esc(r.bookDate||'')+'</td><td>'+esc(r.date||'')+'</td><td>'+esc(r.excursion||'')+'</td><td>'+(r.pax||1)+'</td><td>'+(r.childPax||0)+'</td><td>'+(r.time||'')+'</td><td>'+(r.cost?'\u20ac'+r.cost:'')+'</td><td>'+(statusMap[r.status]||r.status||'')+'</td></tr>').join('');
   } else if(tab==='moto'){
     headers='<th>#</th><th>Ref</th><th>Name</th><th>Room</th><th>Booking</th><th>Rental</th><th>Time</th><th>Vehicle</th><th>Days</th><th>Cost</th><th>Status</th>';
     rowsHtml=rows.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(r.ref||'')+'</td><td>'+esc(r.name||'')+'</td><td>'+esc(r.room||'')+'</td><td>'+esc(r.bookDate||'')+'</td><td>'+esc(r.rentalDate||'')+'</td><td>'+esc(r.time||'')+'</td><td>'+esc(r.vehicle||'')+'</td><td>'+(r.days||'')+'</td><td>'+(r.cost?'\u20ac'+r.cost:'')+'</td><td>'+(statusMap[r.status]||r.status||'')+'</td></tr>').join('');
@@ -2167,13 +3161,13 @@ function renderCars(){
   const SIC={confirmed:'<i class="ti ti-circle-check"></i>',waiting:'<i class="ti ti-clock"></i>',cancelled:'<i class="ti ti-circle-x"></i>'};
   const SLB={confirmed:'Confirmed',waiting:'Waiting',cancelled:'Cancelled'};
   const SRCLS={confirmed:'car-rc',waiting:'car-rw',cancelled:'car-rx'};
-  const carOpts=ACE_CARS.map(a=>`<option value="${a.id}">`+a.s+' — '+a.l+'</option>').join('');
+  const carOpts=ACE_CARS.map(a=>`<option value="${a.id}">`+a.s+' - '+a.l+'</option>').join('');
 
   let html='';
   filtered.forEach((c,n)=>{
     const i=CARS.indexOf(c);const isOpen=carOpenEP===i;
     const{base,ins,total}=carCalc(c);
-    const selOpts=ACE_CARS.map(a=>`<option value="${a.id}"${c.carType===a.id?' selected':''}>${a.s} — ${a.l}</option>`).join('');
+    const selOpts=ACE_CARS.map(a=>`<option value="${a.id}"${c.carType===a.id?' selected':''}>${a.s} - ${a.l}</option>`).join('');
 
     html+=`<tr class="${SRCLS[c.status]||'car-rw'}${isOpen?' car-ep-open':''}">
       <td style="padding:7px 9px;color:var(--muted2);font-size:11px;text-align:center">${n+1}</td>
@@ -2186,12 +3180,12 @@ function renderCars(){
       <td><input class="car-ci" type="time" value="${c.rentalTime||''}" style="font-size:11px;padding:6px 7px" onchange="CARS[${i}].rentalTime=this.value;svCars()"></td>
       <td><select class="car-ci" style="font-size:11px;padding:5px 4px" onchange="carUpd(${i},'carType',this.value)">${selOpts}</select></td>
       <td><input class="car-ci" type="number" min="1" max="60" value="${c.days||1}" style="text-align:center;font-weight:700;padding:5px 4px" onchange="CARS[${i}].days=Math.max(1,parseInt(this.value)||1);this.value=CARS[${i}].days;carUpd(${i},'days',CARS[${i}].days)"></td>
-      <td style="padding:7px 9px;text-align:right;font-weight:700;color:${c.priceOverride!=null?'#b45309':'#1a6644'}">${base!=null?'€'+base+(c.priceOverride!=null?' ✎':''):c.carType==='T'?'On Req':'—'}</td>
+      <td style="padding:7px 9px;text-align:right;font-weight:700;color:${c.priceOverride!=null?'#b45309':'#1a6644'}">${base!=null?'EUR'+base+(c.priceOverride!=null?' ✎':''):c.carType==='T'?'On Req':'-'}</td>
       <td style="padding:4px 7px;text-align:center">
         <input type="checkbox"${c.insurance?' checked':''} style="width:15px;height:15px;cursor:pointer;accent-color:#1a6644" onchange="carUpd(${i},'insurance',this.checked)" title="Full Insurance">
-        ${c.insurance&&ins?'<div style="font-size:9px;color:#1a6644;font-weight:700;margin-top:1px">€'+ins+'</div>':''}
+        ${c.insurance&&ins?'<div style="font-size:9px;color:#1a6644;font-weight:700;margin-top:1px">EUR'+ins+'</div>':''}
       </td>
-      <td style="padding:7px 9px;text-align:right;font-weight:700;font-size:14px;color:#0d4a2f;font-family:var(--serif)">${total!=null?'€'+total:c.carType==='T'?'On Req':'—'}</td>
+      <td style="padding:7px 9px;text-align:right;font-weight:700;font-size:14px;color:#0d4a2f;font-family:var(--serif)">${total!=null?'EUR'+total:c.carType==='T'?'On Req':'-'}</td>
       <td style="padding:4px 7px;text-align:center">
         <button class="car-badge ${c.status}" onclick="carCycleStatus(${i})" title="Click to change">
           ${SIC[c.status]||SIC.waiting} ${SLB[c.status]||'Waiting'}
@@ -2232,13 +3226,13 @@ function renderCars(){
           <div class="car-pbox">
             <div class="cpl">${sl}</div>
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
-              <span style="font-size:11px;color:#0d4a2f;font-weight:700">€</span>
-              <input type="number" min="0" value="${displayBase!=null?displayBase:''}" placeholder="${bp!=null?bp:(c.carType==='T'?'On Req':'N/A')}" style="width:80px;padding:4px 7px;border:1.5px solid ${hasOverride?'#b45309':'#a8d5b8'};border-radius:7px;font-size:18px;font-weight:700;color:${hasOverride?'#b45309':'#1a6644'};font-family:var(--serif);background:${hasOverride?'#fef7e6':'#fff'};outline:none" oninput="carPriceOverride(${i},this.value)" title="${hasOverride?'Custom price (overridden)':'Auto-calculated price — edit to override'}">
+              <span style="font-size:11px;color:#0d4a2f;font-weight:700">EUR</span>
+              <input type="number" min="0" value="${displayBase!=null?displayBase:''}" placeholder="${bp!=null?bp:(c.carType==='T'?'On Req':'N/A')}" style="width:80px;padding:4px 7px;border:1.5px solid ${hasOverride?'#b45309':'#a8d5b8'};border-radius:7px;font-size:18px;font-weight:700;color:${hasOverride?'#b45309':'#1a6644'};font-family:var(--serif);background:${hasOverride?'#fef7e6':'#fff'};outline:none" oninput="carPriceOverride(${i},this.value)" title="${hasOverride?'Custom price (overridden)':'Auto-calculated price - edit to override'}">
               ${hasOverride?'<button onclick="carClearOverride('+i+')" title="Reset to auto price" style="padding:3px 7px;font-size:11px;background:#fef7e6;color:#b45309;border:1px solid #b45309;border-radius:6px;cursor:pointer;font-family:var(--sans)">Auto</button>':''}
             </div>
-            ${hasOverride?'<div style="font-size:10px;color:#b45309;margin-bottom:2px">⚠ Custom price</div>':''}
-            ${c.insurance&&ip?'<div class="cpi">+ €'+ip+' insurance</div>':''}
-            ${c.insurance&&displayTotal!=null?'<div class="cpt">Total: €'+displayTotal+'</div>':''}
+            ${hasOverride?'<div style="font-size:10px;color:#b45309;margin-bottom:2px">! Custom price</div>':''}
+            ${c.insurance&&ip?'<div class="cpi">+ EUR'+ip+' insurance</div>':''}
+            ${c.insurance&&displayTotal!=null?'<div class="cpt">Total: EUR'+displayTotal+'</div>':''}
           </div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;align-items:end">
@@ -2248,11 +3242,11 @@ function renderCars(){
           <div class="car-epg"><label>Room No</label><input value="${esc(c.room)}" placeholder="407" onchange="CARS[${i}].room=this.value;svCars()"></div>
           <div class="car-epg"><label>Pick-up Time</label><input type="time" value="${c.rentalTime||''}" onchange="CARS[${i}].rentalTime=this.value;svCars()"></div>
           <div class="car-epg" style="grid-column:1/3">
-            <label>Full Insurance &middot; €${ACE_INS[c.carType]||0}/day${ip?' &middot; Total insurance: €'+ip:''}</label>
+            <label>Full Insurance &middot; EUR${ACE_INS[c.carType]||0}/day${ip?' &middot; Total insurance: EUR'+ip:''}</label>
             <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
               <input type="checkbox" id="carins${i}"${c.insurance?' checked':''} style="width:17px;height:17px;cursor:pointer;accent-color:#1a6644" onchange="carUpd(${i},'insurance',this.checked)">
               <label for="carins${i}" style="font-size:13px;cursor:pointer;color:var(--ink);text-transform:none;letter-spacing:0;font-weight:500">
-                Add full insurance${c.insurance&&ip?' <strong style="color:#1a6644">→ +€'+ip+'</strong>':''}
+                Add full insurance${c.insurance&&ip?' <strong style="color:#1a6644">-> +EUR'+ip+'</strong>':''}
               </label>
             </div>
           </div>
@@ -2286,7 +3280,7 @@ function renderCarSum(){
     html+='<div class="car-sum-card">'
       +'<div class="car-sum-month">'+MN[m]+'</div>'
       +'<div class="car-sum-count">'+mc.length+' bookings</div>'
-      +(rev>0?'<div class="car-sum-rev">€'+rev.toFixed(0)+' revenue</div>':'')
+      +(rev>0?'<div class="car-sum-rev">EUR'+rev.toFixed(0)+' revenue</div>':'')
       +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">'
       +(conf?'<span style="color:#1a6644;font-size:11px;font-weight:700">&#10003; '+conf+'</span>':'')
       +(wait?'<span style="color:#b45309;font-size:11px;font-weight:700">&#9203; '+wait+'</span>':'')
@@ -2297,7 +3291,7 @@ function renderCarSum(){
 }
 
 
-/* ── CAR ADD MODAL ── */
+/* -- CAR ADD MODAL -- */
 function carAdd(){
   // Open modal instead of adding directly
   document.getElementById('carModal').classList.add('open');
@@ -2330,9 +3324,9 @@ function carModalUpdatePrice(){
   if(type==='T'){el.innerHTML='<div class="cpl">Price</div><div class="cpv" style="font-size:16px">On Request</div>';return;}
   if(base==null){el.innerHTML='<div class="cpl">'+sl+'</div><div style="font-size:13px;color:var(--muted)">N/A for '+days+' days</div>';return;}
   el.innerHTML='<div class="cpl">'+sl+'</div>'
-    +'<div class="cpv">€'+base+'</div>'
-    +(ins&&insAmt?'<div class="cpi">+ €'+insAmt+' insurance</div>':'')
-    +(ins&&total?'<div class="cpt">Total: €'+total+'</div>':'');
+    +'<div class="cpv">EUR'+base+'</div>'
+    +(ins&&insAmt?'<div class="cpi">+ EUR'+insAmt+' insurance</div>':'')
+    +(ins&&total?'<div class="cpt">Total: EUR'+total+'</div>':'');
 }
 
 function carModalSave(){
@@ -3646,7 +4640,7 @@ fbdb.ref('cls_data').once('value').then(snap=>{const d=snap.val();if(d&&typeof d
 fbdb.ref('cls_data').on('value',snap=>{const d=snap.val();if(d&&typeof d==='object'&&JSON.stringify(d)!==JSON.stringify(clsData)){clsData=d;const yogaTab=document.getElementById('tab-yoga');const pilatesTab=document.getElementById('tab-pilates');if(yogaTab&&!yogaTab.classList.contains('hidden'))renderCls('yoga');if(pilatesTab&&!pilatesTab.classList.contains('hidden'))renderCls('pilates');}});
 fbdb.ref('ace_cars').once('value').then(snap=>{const d=snap.val();if(d&&Array.isArray(d)){CARS=d;try{localStorage.setItem('ace_cars',JSON.stringify(d));}catch(e){}const expTab=document.getElementById('tab-experiences');if(expTab&&!expTab.classList.contains('hidden'))renderCars();}});
 fbdb.ref('ace_cars').on('value',snap=>{const d=snap.val();if(d&&Array.isArray(d)&&JSON.stringify(d)!==JSON.stringify(CARS)){CARS=d;const expTab=document.getElementById('tab-experiences');if(expTab&&!expTab.classList.contains('hidden'))renderCars();}});
-['excursions','moto','flowers','boats','transfers'].forEach(tab=>{
+['excursions','moto','flowers','boats','transfers','vantours'].forEach(tab=>{
   try{const ls=JSON.parse(localStorage.getItem('gen_'+tab));if(ls&&Array.isArray(ls))GEN_DATA[tab]=ls;}catch(e){}
   fbdb.ref('gen_'+tab).once('value').then(snap=>{const d=snap.val();if(d&&Array.isArray(d)){GEN_DATA[tab]=d;try{localStorage.setItem('gen_'+tab,JSON.stringify(d));}catch(e){}}});
   fbdb.ref('gen_'+tab).on('value',snap=>{const d=snap.val();if(d&&Array.isArray(d)&&JSON.stringify(d)!==JSON.stringify(GEN_DATA[tab])){GEN_DATA[tab]=d;if(expCurrentTab===tab)renderGenTab(tab);}});
