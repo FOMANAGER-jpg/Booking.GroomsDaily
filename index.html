@@ -945,6 +945,9 @@ canvas.an-chart{width:100%!important;height:220px!important}
       </div>
       <button class="rev-save-btn" onclick="saveReview('ta')"><i class="ti ti-device-floppy"></i> Save to history</button>
     </div>
+    <div style="text-align:right;margin-bottom:6px">
+      <button onclick="clearAllTAReviews()" style="padding:5px 12px;background:#fce8e8;color:#c0392b;border:1.5px solid #fca5a5;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--sans)"><i class="ti ti-trash"></i> Clear all TA reviews</button>
+    </div>
     <div class="rev-history" id="ta-history-wrap">
       <h3 style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px"><span><i class="ti ti-history" style="color:var(--sea)"></i> Review History</span><button class="print-rev-btn" onclick="printRevHistory('ta')"><i class="ti ti-printer"></i> Print</button></h3>
       <div id="ta-history-list"><div class="rev-empty"><i class="ti ti-brand-tripadvisor"></i>No saved reviews yet</div></div>
@@ -1194,6 +1197,12 @@ canvas.an-chart{width:100%!important;height:220px!important}
         <button onclick="msAddManual()" style="padding:9px 18px;background:#b45309;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:6px"><i class="ti ti-check"></i> Save</button>
         <button onclick="msToggleAddForm()" style="padding:9px 12px;background:var(--bg);color:var(--muted);border:1.5px solid var(--border);border-radius:9px;font-size:13px;cursor:pointer;font-family:var(--sans)">Cancel</button>
       </div>
+    </div>
+    <!-- Month + Status filter bar -->
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:10px 0 6px">
+      <div id="ms-month-tabs" style="display:flex;gap:4px;flex-wrap:wrap"></div>
+      <div style="width:1px;height:22px;background:var(--border2);margin:0 4px"></div>
+      <div id="ms-status-tabs" style="display:flex;gap:4px;flex-wrap:wrap"></div>
     </div>
     <div id="massageContent"></div>
   </div>
@@ -3095,7 +3104,7 @@ function goTab(t){
   if(t==='analytics')renderAnalytics();
   if(t==='yoga'){initClsDates('yoga');renderCls('yoga');}
   if(t==='pilates'){initClsDates('pilates');renderCls('pilates');}
-  if(t==='massage')renderMassage();
+  if(t==='massage'){msRenderFilterBars();renderMassage();}
   if(t==='alerts')renderAlerts();
   if(t==='experiences')renderCars();
   if(t==='suggestions')renderSuggestions();
@@ -3414,6 +3423,14 @@ function pasteFromClaude(){if(!window.CLAUDE_DATA||!window.CLAUDE_DATA.length){s
 let taHistory=JSON.parse(localStorage.getItem('ta_reviews')||'[]');
 let gooHistory=JSON.parse(localStorage.getItem('goo_reviews')||'[]');
 const svTA=()=>{try{localStorage.setItem('ta_reviews',JSON.stringify(taHistory));}catch(e){}};
+function clearAllTAReviews(){
+  if(!confirm('Delete ALL TripAdvisor reviews? This cannot be undone.'))return;
+  taHistory=[];
+  svTA();
+  if(typeof fbdb!=='undefined')fbdb.ref('ta_reviews').set([]);
+  renderRevHistory('ta');
+  showToast('All TA reviews deleted','w');
+}
 const svGoo=()=>{try{localStorage.setItem('goo_reviews',JSON.stringify(gooHistory));}catch(e){}};
 function starsHtml(score,max){const full=Math.floor(score);const half=score-full>=0.5?1:0;const empty=max-full-half;return '\u2605'.repeat(full)+(half?'\u00bd':'')+'\u2606'.repeat(empty);}
 async function parseReviews(src){
@@ -3845,8 +3862,26 @@ const MASSAGE_SCHEDULE={'2026-05-28':[{start:'11:00',end:'13:00'},{start:'17:30'
 function timeToMins(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
 function minsToTime(m){return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');}
 function getSlots(dateKey){const windows=MASSAGE_SCHEDULE[dateKey]||[];const slots=[];windows.forEach(w=>{let cur=timeToMins(w.start);const end=timeToMins(w.end);while(cur+60<=end){slots.push(minsToTime(cur));cur+=60;}});return slots;}
+let msMFilter='all'; // month filter: 'all' or '05','06',...
+let msSFilter='all'; // status filter: 'all','waiting','confirmed','commission','cancelled'
+
+function msBtnStyle(active,col){return 'padding:5px 11px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--sans);border:1.5px solid '+(active?col:' var(--border)')+';background:'+(active?col:'var(--white)')+';color:'+(active?'#fff':'var(--muted)');}
+
+function msRenderFilterBars(){
+  // Month tabs
+  const mEl=document.getElementById('ms-month-tabs');if(!mEl)return;
+  const months=[['all','All'],['05','May'],['06','Jun'],['07','Jul'],['08','Aug'],['09','Sep'],['10','Oct']];
+  mEl.innerHTML=months.map(([v,l])=>'<button onclick="msMFilter=\''+v+'\';msRenderFilterBars();renderMassage()" style="'+msBtnStyle(msMFilter===v,'#b45309')+'">'+l+'</button>').join('');
+  // Status tabs
+  const sEl=document.getElementById('ms-status-tabs');if(!sEl)return;
+  const statuses=[['all','All'],['waiting','⏳ Waiting'],['confirmed','✓ Confirmed'],['commission','💰 Commission'],['cancelled','✗ Cancelled']];
+  const stCols={all:'#64748b',waiting:'#b45309',confirmed:'#1a6644',commission:'#d97706',cancelled:'#c0392b'};
+  sEl.innerHTML=statuses.map(([v,l])=>'<button onclick="msSFilter=\''+v+'\';msRenderFilterBars();renderMassage()" style="'+msBtnStyle(msSFilter===v,stCols[v])+'">'+l+'</button>').join('');
+}
+
 function renderMassage(){
   const el=document.getElementById('massageContent');if(!el)return;
+  msRenderFilterBars();
   const DAY_GR=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const MON_GR=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const colHdr='<div style="display:grid;grid-template-columns:90px 1fr 1.4fr 110px 70px 0.8fr 130px 34px;gap:8px;padding:7px 16px;background:var(--amber-light);border-bottom:1px solid rgba(180,83,9,.15)"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#92400e">Time</div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#92400e">Room</div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#92400e">Guest Name</div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#92400e">Duration</div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#92400e;text-align:center">€ Cost</div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#92400e">Notes</div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#92400e">Status</div><div></div></div>';
@@ -3879,7 +3914,9 @@ function renderMassage(){
 
   // Merge scheduled days + any extra days with manual bookings
   const extraDays=Object.keys(massageData).filter(dk=>!MASSAGE_SCHEDULE[dk]&&Object.values(massageData[dk]||{}).some(b=>b.name||b.room));
-  const allDays=[...Object.keys(MASSAGE_SCHEDULE),...extraDays].sort();
+  let allDays=[...Object.keys(MASSAGE_SCHEDULE),...extraDays].sort();
+  // Apply month filter
+  if(msMFilter!=='all') allDays=allDays.filter(dk=>dk.slice(5,7)===msMFilter);
   let html='';
   allDays.forEach(dateKey=>{
     const windows=MASSAGE_SCHEDULE[dateKey]||[];
@@ -3890,10 +3927,18 @@ function renderMassage(){
     const scheduledSlots=getSlots(dateKey);
     const manualSlots=Object.keys(bookings).filter(t=>!scheduledSlots.includes(t)&&(bookings[t].name||bookings[t].room)).sort();
     const allSlots=[...scheduledSlots,...manualSlots];
+    // Apply status filter: if filtering, only show booked slots matching status (+ empty slots if 'all')
+    const filteredSlots=msSFilter==='all'?allSlots:allSlots.filter(t=>{
+      const b=bookings[t]||{};
+      if(!b.name&&!b.room)return false; // hide empty slots when filtering by status
+      return (b.status||'waiting')===msSFilter;
+    });
+    // If status filter active and no matching slots on this day, skip day entirely
+    if(msSFilter!=='all'&&filteredSlots.length===0)return;
     const bookedCount=Object.values(bookings).filter(b=>b.name||b.room).length;
     const totalRevenue=Object.values(bookings).reduce((s,b)=>s+(parseFloat(b.cost)||0),0);
     let slotsHtml=colHdr;
-    allSlots.forEach(slotTime=>{slotsHtml+=slotRow(dateKey,slotTime,bookings);});
+    filteredSlots.forEach(slotTime=>{slotsHtml+=slotRow(dateKey,slotTime,bookings);});
     if(!allSlots.length){slotsHtml+='<div style="padding:16px;text-align:center;color:var(--muted2);font-size:12px">No bookings</div>';}
     const windowsLbl=isManualOnly?'<span style="font-size:11px;color:rgba(255,255,255,.7)">Manual booking</span>':'<span style="font-size:11px;color:rgba(255,255,255,.7)">'+windows.map(w=>w.start+'\u2013'+w.end).join(' | ')+'</span>';
     html+='<div class="ms-day-card"><div class="ms-day-hdr"><div class="ms-day-title"><i class="ti ti-calendar"></i>'+dateLbl+(isManualOnly?' <span style="background:rgba(255,255,255,.25);border-radius:6px;padding:2px 8px;font-size:11px;font-family:var(--sans)">Manual</span>':'')+'</div><div style="display:flex;align-items:center;gap:8px">'+windowsLbl+'<span class="ms-day-count">'+bookedCount+(scheduledSlots.length?'/'+allSlots.length:'')+'</span></div></div>'+slotsHtml+'<div class="ms-stats"><span class="ms-stat">Slots: <strong>'+allSlots.length+'</strong></span><span class="ms-stat">Booked: <strong>'+bookedCount+'</strong></span>'+(totalRevenue>0?'<span class="ms-stat" style="margin-left:auto">Revenue: <strong>\u20ac'+totalRevenue.toFixed(0)+'</strong></span>':'')+'</div></div>';
@@ -4611,7 +4656,7 @@ fbdb.ref('bk_reviews').once('value').then(snap=>{const d=snap.val();if(d&&Array.
 fbdb.ref('alerts_data').once('value').then(snap=>{const d=snap.val();if(d&&typeof d==='object'){alertsData=d;try{localStorage.setItem('alerts_data',JSON.stringify(d));}catch(e){}checkOverdueTasks();}});
 fbdb.ref('alerts_data').on('value',snap=>{const d=snap.val();if(d&&typeof d==='object'&&JSON.stringify(d)!==JSON.stringify(alertsData)){alertsData=d;checkOverdueTasks();const alTab=document.getElementById('tab-alerts');if(alTab&&!alTab.classList.contains('hidden'))renderAlerts();}});
 fbdb.ref('massage_data').once('value').then(snap=>{const d=snap.val();if(d&&typeof d==='object'){massageData=d;try{localStorage.setItem('massage_data',JSON.stringify(d));}catch(e){}}});
-fbdb.ref('massage_data').on('value',snap=>{const d=snap.val();if(d&&typeof d==='object'&&JSON.stringify(d)!==JSON.stringify(massageData)){massageData=d;const msTab=document.getElementById('tab-massage');if(msTab&&!msTab.classList.contains('hidden'))renderMassage();}});
+fbdb.ref('massage_data').on('value',snap=>{const d=snap.val();if(d&&typeof d==='object'&&JSON.stringify(d)!==JSON.stringify(massageData)){massageData=d;const msTab=document.getElementById('tab-massage');if(msTab&&!msTab.classList.contains('hidden')){msRenderFilterBars();renderMassage();}}});
 fbdb.ref('gym_bookings').once('value').then(snap=>{const d=snap.val();if(d&&typeof d==='object'){gymBookings=d;try{localStorage.setItem('gym_bookings',JSON.stringify(d));}catch(e){}}});
 fbdb.ref('gym_bookings').on('value',snap=>{const d=snap.val();if(d&&typeof d==='object'&&JSON.stringify(d)!==JSON.stringify(gymBookings)){gymBookings=d;const gymTab=document.getElementById('tab-gym');if(gymTab&&!gymTab.classList.contains('hidden'))renderGym();}});
 fbdb.ref('cls_data').once('value').then(snap=>{const d=snap.val();if(d&&typeof d==='object'){clsData=d;try{localStorage.setItem('cls_data',JSON.stringify(d));}catch(e){}}});
