@@ -1914,6 +1914,8 @@ function renderACHistory(){
   </div>
 </div>
 
+
+
 <!-- ── SUGGESTION EDIT MODAL ── -->
 <div class="modal-bg" id="sugEditModal">
   <div class="modal" style="width:600px;max-width:96vw;max-height:90vh;display:flex;flex-direction:column">
@@ -3372,7 +3374,13 @@ function goTab(t){
   if(t==='alerts')renderAlerts();
   if(t==='ac'){renderAC();const ad=document.getElementById('ac-date');if(ad&&!ad.value)ad.value=new Date().toISOString().split('T')[0];}
   if(t==='experiences')renderCars();
-  if(t==='suggestions')renderSuggestions();
+  if(t==='suggestions'){
+    const tabSug=document.getElementById('tab-suggestions');
+    if(tabSug){tabSug.classList.remove('hidden');tabSug.style.display='';}
+    const ntSug=document.getElementById('nt-suggestions');
+    if(ntSug){ntSug.style.display='';ntSug.classList.add('on');}
+    setTimeout(renderSuggestions, 50);
+  }
 }
 function renderStats(){
   const n=RES.length,a=RES.filter(r=>r.room&&r.room!=='').length,rt=RES.filter(r=>r.rating>0).length;
@@ -4671,7 +4679,7 @@ function sugToggleEdit() {
     document.getElementById('sug-edit-btn').innerHTML = '<i class="ti ti-pencil" style="font-size:14px"></i> Edit';
     document.getElementById('sug-edit-btn').style.background = 'rgba(255,255,255,.15)';
     document.getElementById('sug-edit-mode-badge').style.display = 'none';
-    renderSuggestions();
+    setTimeout(renderSuggestions, 50);
   }
 }
 
@@ -4959,6 +4967,7 @@ const TAB_DEFS = [
   {id:'massage',label:'Massage',        icon:'ti-heart-handshake',color:'#b45309',      visible:true,  order:12, group:''},
   {id:'experiences',label:'Experiences',icon:'ti-map-pin',       color:'#1a6644',       visible:true,  order:13, group:''},
   {id:'suggestions',label:'Suggestions',icon:'ti-map-2',         color:'#0e7490',       visible:true,  order:14, group:''},
+  {id:'ac',         label:'A/C Issues',  icon:'ti-air-conditioning',color:'#0e7490',       visible:true,  order:15, group:''},
 ];
 let tsmTabs = null;
 let tsmGroups = [];
@@ -4967,7 +4976,12 @@ let tsmDragSrc = null;
 function tsmLoad() {
   try {
     const saved = JSON.parse(localStorage.getItem('tsm_tabs') || 'null');
-    if (saved && Array.isArray(saved) && saved.length >= TAB_DEFS.length) {
+    if (saved && Array.isArray(saved) && saved.some(t=>t.id==='ac') && saved.some(t=>t.id==='suggestions')) {
+      // Merge: add any new TAB_DEFS entries not in saved
+      const savedIds = new Set(saved.map(t => t.id));
+      TAB_DEFS.forEach(def => {
+        if (!savedIds.has(def.id)) saved.push({ ...def });
+      });
       tsmTabs = saved;
     } else {
       tsmTabs = JSON.parse(JSON.stringify(TAB_DEFS));
@@ -5064,7 +5078,7 @@ function closeAllGroupDDs() {
 document.addEventListener('click', closeAllGroupDDs);
 
 function openTabSettings() {
-  tsmLoad();
+  try { tsmLoad(); } catch(e) { tsmTabs = JSON.parse(JSON.stringify(TAB_DEFS)); tsmGroups = []; }
   document.getElementById('tsm-lock').style.display = 'block';
   document.getElementById('tsm-editor').style.display = 'none';
   document.getElementById('tsm-pwd').value = '';
