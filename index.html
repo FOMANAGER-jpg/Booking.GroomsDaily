@@ -44,10 +44,10 @@ table.car-tbl{width:100%;border-collapse:collapse;font-size:12px;min-width:1000p
 .car-tbl td{padding:0;vertical-align:middle;border-right:1px solid var(--border2)}
 .car-tbl td:last-child{border-right:none}
 .car-ci{width:100%;padding:8px 9px;border:none;background:transparent;font-family:var(--sans);font-size:12px;color:var(--ink);outline:none}
-.exp-locked .car-ci,.exp-locked select.car-ci{pointer-events:none;background:transparent!important;-webkit-appearance:none;appearance:none}
-.exp-locked .car-add-btn,.exp-locked .car-ep-btn,.exp-locked .tog,.exp-locked button[onclick*="genDel"],.exp-locked button[onclick*="carDel"],.exp-locked button[onclick*="expShowPriceList"],.exp-locked button[onclick*="genAdd"],.exp-locked button[onclick*="carAdd"],.exp-locked button[onclick*="expPrintTable"]{display:none!important}
-.exp-locked .car-ci,.exp-locked select.car-ci{pointer-events:none;user-select:none}
-.exp-locked .car-toolbar{justify-content:flex-end}
+
+
+
+
 .car-ci:focus{background:rgba(26,102,68,.06)}
 .car-ci.room{font-weight:700;color:#1a6644;text-align:center}
 .car-ci.mono{font-family:monospace;font-size:11px;color:var(--muted2)}
@@ -1267,7 +1267,7 @@ canvas.an-chart{width:100%!important;height:220px!important}
       <button class="exp-subtab" id="expsub-vantours" onclick="expGoTab('vantours',this)" style="color:#7c5e2e"><i class="ti ti-steering-wheel"></i> Van Tours</button>
     </div>
 
-    <div id="exp-content" class="exp-locked">
+    <div id="exp-content">
     <!-- ── CARS PANEL ── -->
     <div id="exppanel-cars">
       <div class="car-toolbar">
