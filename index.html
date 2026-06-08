@@ -3734,46 +3734,77 @@ async function bkGenerateAllMonths(){
   sumEl.innerHTML='<div style="display:flex;align-items:center;gap:10px;color:#16a34a"><i class="ti ti-circle-check" style="font-size:18px"></i> Done! '+processed+' months summarised and saved.</div><div style="margin-top:8px"><button onclick="document.getElementById(\'bk-ai-summary\').style.display=\'none\'" style="padding:6px 12px;background:var(--bg);color:var(--muted);border:1px solid var(--border);border-radius:8px;font-size:12px;cursor:pointer;font-family:var(--sans)">&#x2715; Close</button></div>';
 }
 
-async function bkGenerateSummary(){
+function bkGenerateSummary(){
   const mFilter=document.getElementById('bk-period-m')?.value||'all';
   const rated=getBKRated(mFilter);
   if(!rated.length){showToast('No ratings for this period','w');return;}
   const mNames={'05':'May 2026','06':'June 2026','07':'July 2026','08':'August 2026','09':'September 2026','10':'October 2026','all':'Season 2026'};
   const period=mNames[mFilter]||'Season 2026';
   const avg=(rated.reduce((s,r)=>s+r.rating,0)/rated.length).toFixed(1);
-  const notes=rated.filter(r=>r.notes&&r.notes.trim()).map(r=>'Room '+(r.room||'?')+' ('+r.rating+'/10): '+r.notes.trim());
-  const notesBlock=notes.length?'Guest notes:\n'+notes.join('\n'):'No notes available.';
-  const scoreLines=[10,9,8,7,6,5,4,3].map(s=>{const n=rated.filter(r=>r.rating===s).length;return n?s+'/10: '+n+' guests':'';}).filter(Boolean).join(', ');
-  const prompt='Analyze Booking.com reviews for White Rocks Hotel Kefalonia. Period: '+period+'. Average: '+avg+'/10. '+rated.length+' guests. Scores: '+scoreLines+'. '+notesBlock+'. Reply ONLY with JSON: {"summary":"brief summary","positives":["p1","p2","p3"],"improvements":["i1","i2","i3"]}';
+
+  // Collect all notes from rated guests
+  const withNotes=rated.filter(r=>r.notes&&r.notes.trim());
+
+  // Parse notes using + / - prefix per line/sentence
+  const positiveNotes=[];
+  const negativeNotes=[];
+
+  withNotes.forEach(r=>{
+    const lines=r.notes.split(/[\n,;]+/).map(s=>s.trim()).filter(Boolean);
+    let hasMark=false;
+    lines.forEach(line=>{
+      if(line.startsWith('+')){
+        positiveNotes.push({name:r.name,room:r.room,rating:r.rating,note:line.slice(1).trim()});
+        hasMark=true;
+      } else if(line.startsWith('-')){
+        negativeNotes.push({name:r.name,room:r.room,rating:r.rating,note:line.slice(1).trim()});
+        hasMark=true;
+      }
+    });
+    // If no + / - markers, use rating
+    if(!hasMark){
+      const note=r.notes.trim();
+      if(r.rating>=9) positiveNotes.push({name:r.name,room:r.room,rating:r.rating,note});
+      else if(r.rating<=7) negativeNotes.push({name:r.name,room:r.room,rating:r.rating,note});
+    }
+  });
+
+  const posPoints=positiveNotes.map(r=>'<b>'+esc(r.name||'Guest')+' ('+r.room+')</b> — <i>'+esc(r.note)+'</i>');
+  const negPoints=negativeNotes.map(r=>'<b>'+esc(r.name||'Guest')+' ('+r.room+')</b> — <i>'+esc(r.note)+'</i>');
+
+  // Score distribution
+  const dist=[10,9,8,7,6,5,4,3].map(s=>{const n=rated.filter(r=>r.rating===s).length;return n?s+'/10: <b>'+n+'</b>':'';}).filter(Boolean).join(' &nbsp;|&nbsp; ');
+
+  const col=parseFloat(avg)>=9?'#16a34a':parseFloat(avg)>=7?'#0069ff':'#dc2626';
   const sumEl=document.getElementById('bk-ai-summary');
   sumEl.style.display='block';
-  sumEl.innerHTML='<div style="color:#6366f1;padding:10px"><i class="ti ti-loader ti-spin"></i> Generating...</div>';
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:prompt}]})
-    });
-    const data=await res.json();
-    const raw=(data.content||[]).map(b=>b.text||'').join('');
-    let p={summary:'',positives:[],improvements:[]};
-    try{p=JSON.parse(raw.replace(/```json|```/g,'').trim());}catch(e){p.summary=raw;}
-    const col=avg>=9?'#16a34a':avg>=7?'#0069ff':'#dc2626';
-    const pos=(p.positives||[]).map(x=>'<div style="display:flex;gap:5px;margin-bottom:4px"><span style="color:#16a34a">&#10003;</span><span style="font-size:12px">'+esc(x)+'</span></div>').join('');
-    const imp=(p.improvements||[]).map(x=>'<div style="display:flex;gap:5px;margin-bottom:4px"><span style="color:#d97706">&#9651;</span><span style="font-size:12px">'+esc(x)+'</span></div>').join('');
-    sumEl.innerHTML='<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><i class="ti ti-sparkles" style="color:#6366f1;font-size:18px"></i><b style="font-size:14px;color:#1e1b4b">'+period+'</b><span style="margin-left:auto;font-size:24px;font-weight:800;color:'+col+'">'+avg+'/10</span></div>'
-      +'<div style="font-size:13px;line-height:1.7;margin-bottom:12px">'+(p.summary||raw)+'</div>'
-      +(pos||imp?'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">'+(pos?'<div><div style="font-size:10px;font-weight:700;color:#16a34a;margin-bottom:5px">WHAT GUESTS LOVED</div>'+pos+'</div>':'')+(imp?'<div><div style="font-size:10px;font-weight:700;color:#d97706;margin-bottom:5px">POINTS TO IMPROVE</div>'+imp+'</div>':'')+'</div>':'')
-      +'<div style="display:flex;gap:6px"><button onclick="bkSaveWithSummary()" style="padding:6px 13px;background:#0069ff;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer">Save</button>'
-      +'<button onclick="document.getElementById(\'bk-ai-summary\').style.display=\'none\'" style="padding:6px 12px;background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;cursor:pointer">Close</button></div>';
-    sumEl.dataset.summary=p.summary||raw;
-    sumEl.dataset.positives=JSON.stringify(p.positives||[]);
-    sumEl.dataset.improvements=JSON.stringify(p.improvements||[]);
-    sumEl.dataset.period=period;sumEl.dataset.avg=avg;sumEl.dataset.count=rated.length;
-  }catch(e){
-    sumEl.innerHTML='<div style="color:#dc2626;padding:10px"><i class="ti ti-alert-circle"></i> '+e.message+'</div>';
-  }
+  sumEl.innerHTML=
+    '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">'
+    +'<i class="ti ti-sparkles" style="color:#6366f1;font-size:18px"></i>'
+    +'<b style="font-size:14px;color:#1e1b4b">Summary — '+period+'</b>'
+    +'<span style="margin-left:auto;font-size:26px;font-weight:800;color:'+col+'">'+avg+'<span style="font-size:14px">/10</span></span>'
+    +'</div>'
+    +'<div style="font-size:12px;color:var(--muted);margin-bottom:14px">'+dist+'</div>'
+    +(posPoints.length||negPoints.length
+      ?'<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px">'
+        +(posPoints.length?'<div><div style="font-size:10px;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px">&#10003; What guests loved</div>'
+          +posPoints.map(p=>'<div style="border-left:3px solid #86efac;padding:6px 10px;margin-bottom:6px;background:#f0fdf4;border-radius:0 7px 7px 0;font-size:12px;line-height:1.5">'+p+'</div>').join('')+'</div>':'')
+        +(negPoints.length?'<div><div style="font-size:10px;font-weight:700;color:#d97706;text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px">&#9651; Points to improve</div>'
+          +negPoints.map(p=>'<div style="border-left:3px solid #fcd34d;padding:6px 10px;margin-bottom:6px;background:#fffbeb;border-radius:0 7px 7px 0;font-size:12px;line-height:1.5">'+p+'</div>').join('')+'</div>':'')
+        +'</div>'
+      :'<div style="padding:14px;background:#f8f9fa;border-radius:8px;font-size:13px;color:var(--muted)">No guest notes found for this period. Add notes in the Reservations tab to see feedback analysis.</div>')
+    +'<div style="display:flex;gap:6px">'
+    +'<button onclick="bkSaveWithSummary()" style="padding:6px 13px;background:#0069ff;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans)"><i class="ti ti-device-floppy"></i> Save</button>'
+    +'<button id="bk-sum-close" style="padding:6px 12px;background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;cursor:pointer;font-family:var(--sans)">&#x2715; Close</button>'
+    +'</div>';
+  document.getElementById('bk-sum-close').onclick=function(){sumEl.style.display='none';};
+  sumEl.dataset.summary=avg+'/10 — '+rated.length+' ratings. '+withNotes.length+' notes. '+positiveNotes.length+' positive, '+negativeNotes.length+' areas for improvement.';
+  sumEl.dataset.positives=JSON.stringify(positiveNotes.slice(0,5).map(r=>r.name+' (Rm '+r.room+'): '+r.note));
+  sumEl.dataset.improvements=JSON.stringify(negativeNotes.slice(0,5).map(r=>r.name+' (Rm '+r.room+'): '+r.note));
+  sumEl.dataset.period=period;sumEl.dataset.avg=avg;sumEl.dataset.count=rated.length;
+  sumEl.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
+
 
 function bkSaveWithSummary(){
   const sumEl=document.getElementById('bk-ai-summary');
