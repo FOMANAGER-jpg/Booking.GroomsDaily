@@ -611,6 +611,141 @@ canvas.an-chart{width:100%!important;height:220px!important}
 #sug-search:focus{border-color:var(--sea);background:var(--white)}
 
 .ac-wrap{padding:16px 20px 40px}.ac-hdr{display:flex;align-items:center;gap:14px;margin-bottom:18px;padding:18px 20px;background:var(--white);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--sh)}.ac-hdr-ico{width:46px;height:46px;border-radius:12px;background:#e0f7fa;display:flex;align-items:center;justify-content:center;font-size:22px;color:#0e7490;flex-shrink:0}.ac-hdr-t{font-size:18px;font-weight:800;color:var(--ink)}.ac-hdr-s{font-size:12px;color:var(--muted);margin-top:2px}.ac-kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}.ac-kpi{background:var(--white);border-radius:var(--r);border:1px solid var(--border);padding:14px 16px;box-shadow:var(--sh)}.ac-kpi-val{font-size:26px;font-weight:800;font-family:var(--serif)}.ac-kpi-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-top:2px}.ac-add-card{background:var(--white);border-radius:var(--r);border:1px solid var(--border);padding:16px 18px;margin-bottom:14px;box-shadow:var(--sh)}.ac-add-card h3{font-size:13px;font-weight:700;color:#0e7490;margin:0 0 12px;display:flex;align-items:center;gap:6px}.ac-form-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}.ac-form-group{display:flex;flex-direction:column;gap:4px}.ac-form-group label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted)}.ac-inp{padding:8px 11px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:var(--sans);outline:none;background:var(--white);color:var(--ink)}.ac-inp:focus{border-color:#0e7490}.ac-save-btn{padding:9px 18px;background:#0e7490;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:6px;white-space:nowrap}.ac-filters{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:12px}.ac-filter-btn{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--sans);border:1.5px solid var(--border);background:var(--white);color:var(--muted)}.ac-filter-btn.on{border-color:#0e7490;background:#0e7490;color:#fff}.ac-tbl-wrap{background:var(--white);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--sh);overflow-x:auto}.ac-tbl{width:100%;border-collapse:collapse;font-size:12px}.ac-tbl thead{background:linear-gradient(180deg,#e0f7fa,#b2ebf2)}.ac-tbl th{padding:9px 11px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#0e4a6e;white-space:nowrap;border-bottom:1px solid #b2ebf2}.ac-tbl td{padding:7px 11px;border-bottom:1px solid var(--border2);vertical-align:middle}.ac-tbl tr:last-child td{border-bottom:none}.ac-tbl tr.ac-open{border-left:3px solid #dc2626}.ac-tbl tr.ac-inprogress{border-left:3px solid #d97706}.ac-tbl tr.ac-resolved{border-left:3px solid #16a34a;opacity:.75}.ac-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;cursor:pointer;border:none;font-family:var(--sans)}.ac-badge.open{background:#fce8e8;color:#dc2626}.ac-badge.inprogress{background:#fffbeb;color:#d97706}.ac-badge.resolved{background:#f0fdf4;color:#16a34a}.ac-pri{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}.ac-pri.urgent{background:#fce8e8;color:#dc2626}.ac-pri.normal{background:#fef9c3;color:#854d0e}.ac-pri.low{background:#f0fdf4;color:#16a34a}.ac-ci{width:100%;padding:5px 7px;border:none;background:transparent;font-family:var(--sans);font-size:12px;color:var(--ink);outline:none}.ac-ci:focus{background:#f0f9ff;border-radius:6px}.ac-empty{padding:40px;text-align:center;color:var(--muted2);font-size:13px}.ac-empty i{font-size:36px;display:block;margin-bottom:10px;opacity:.3}.ac-hist-item{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:8px;border-left:4px solid}.ac-hist-item.open{border-left-color:#dc2626}.ac-hist-item.inprogress{border-left-color:#d97706}.ac-hist-item.resolved{border-left-color:#16a34a}.ac-hist-room{font-size:15px;font-weight:800;color:var(--ink);margin-bottom:3px}.ac-hist-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--muted)}.ac-hist-action{background:#f0fdf4;border-radius:7px;padding:6px 10px;font-size:12px;margin-top:6px;color:#166534;border-left:3px solid #16a34a}
+
+const firebaseConfig={apiKey:"AIzaSyCBMSHwHStDYkKX5OgzxoLE8R5Rq1aCNAk",authDomain:"groomsdailylist.firebaseapp.com",projectId:"groomsdailylist",storageBucket:"groomsdailylist.firebasestorage.app",messagingSenderId:"22818207608",appId:"1:22818207608:web:e279242f2344027bde7a8d",databaseURL:"https://groomsdailylist-default-rtdb.europe-west1.firebasedatabase.app"};
+firebase.initializeApp(firebaseConfig);
+const fbdb=firebase.database();
+function setSyncStatus(state,msg){const dot=document.getElementById('syncDot');const txt=document.getElementById('syncMsg');const colors={ok:'#4ade80',syncing:'#f5a623',error:'#e05a4e'};dot.style.background=colors[state]||'#4ade80';if(state==='syncing')dot.style.animation='pulse 0.7s infinite';else dot.style.animation='pulse 2s infinite';txt.textContent=msg;}
+const _origSv=window.sv;const _origSvG=window.svG;let _saveTO=null;
+window.sv=function(){setSyncStatus('syncing','Saving to cloud...');clearTimeout(_saveTO);_saveTO=setTimeout(()=>{fbdb.ref('reservations').set(RES).then(()=>setSyncStatus('ok','Synced \u2601 '+new Date().toLocaleTimeString())).catch(e=>{setSyncStatus('error','Error: '+e.message);_origSv&&_origSv();});},800);};
+window.svG=function(){setSyncStatus('syncing','Saving grooms to cloud...');clearTimeout(_saveTO);_saveTO=setTimeout(()=>{fbdb.ref('grooms').set(GR).then(()=>setSyncStatus('ok','Synced \u2601 '+new Date().toLocaleTimeString())).catch(e=>{setSyncStatus('error','Error: '+e.message);});},800);};
+setSyncStatus('syncing','Loading from cloud...');
+fbdb.ref('reservations').once('value').then(snap=>{const data=snap.val();if(data&&Array.isArray(data)&&data.length>0){RES=data;renderStats();renderRes();setSyncStatus('ok','Connected to Firebase \u2014 data loaded \u2601');}else{setSyncStatus('ok','Connected \u2014 using seed data');}}).catch(()=>setSyncStatus('error','Could not connect to Firebase'));
+fbdb.ref('grooms').once('value').then(snap=>{const data=snap.val();if(data&&Array.isArray(data)){GR=data;renderGrooms();}});
+fbdb.ref('reservations').on('value',snap=>{const data=snap.val();if(data&&Array.isArray(data)&&JSON.stringify(data)!==JSON.stringify(RES)){RES=data;renderStats();renderRes();setSyncStatus('ok','Updated from cloud \u2601 '+new Date().toLocaleTimeString());}});
+fbdb.ref('grooms').on('value',snap=>{const data=snap.val();if(data&&Array.isArray(data)&&JSON.stringify(data)!==JSON.stringify(GR)){GR=data;renderGrooms();}});
+fbdb.ref('ta_reviews').once('value').then(snap=>{const d=snap.val();if(d&&Array.isArray(d)){taHistory=d;localStorage.setItem('ta_reviews',JSON.stringify(d));renderRevHistory('ta');}});
+fbdb.ref('goo_reviews').once('value').then(snap=>{const d=snap.val();if(d&&Array.isArray(d)){gooHistory=d;localStorage.setItem('goo_reviews',JSON.stringify(d));renderRevHistory('goo');}});
+fbdb.ref('bk_reviews').once('value').then(snap=>{const d=snap.val();if(d&&Array.isArray(d)){bkHistory=d;localStorage.setItem('bk_reviews',JSON.stringify(d));renderBKHistory();}});
+fbdb.ref('alerts_data').once('value').then(snap=>{const d=snap.val();if(d&&typeof d==='object'){alertsData=d;try{localStorage.setItem('alerts_data',JSON.stringify(d));}catch(e){}checkOverdueTasks();}});
+fbdb.ref('comp_data').once('value').then(snap=>{const d=snap.val();if(d&&Array.isArray(d)){COMP_DATA=d;}});
+fbdb.ref('ac_issues').once('value').then(snap=>{const d=snap.val();if(d&&Array.isArray(d)){AC_DATA=d;}});
+fbdb.ref('alerts_data').on('value',snap=>{const d=snap.val();if(d&&typeof d==='object'&&JSON.stringify(d)!==JSON.stringify(alertsData)){alertsData=d;checkOverdueTasks();const alTab=document.getElementById('tab-alerts');if(alTab&&!alTab.classList.contains('hidden'))renderAlerts();}});
+fbdb.ref('massage_data').once('value').then(snap=>{const d=snap.val();if(d&&typeof d==='object'){massageData=d;try{localStorage.setItem('massage_data',JSON.stringify(d));}catch(e){}}});
+fbdb.ref('massage_data').on('value',snap=>{const d=snap.val();if(d&&typeof d==='object'&&JSON.stringify(d)!==JSON.stringify(massageData)){massageData=d;
+      // Restore any custom slots saved in massageData
+      Object.keys(d).forEach(dk=>{
+        if(d[dk]&&d[dk].__customSlots&&Array.isArray(d[dk].__customSlots)){
+          MASSAGE_SCHEDULE[dk]=d[dk].__customSlots;
+        }
+      });
+      const msTab=document.getElementById('tab-massage');if(msTab&&!msTab.classList.contains('hidden')){msRenderFilterBars();renderMassage();}}});
+fbdb.ref('gym_bookings').once('value').then(snap=>{const d=snap.val();if(d&&typeof d==='object'){gymBookings=d;try{localStorage.setItem('gym_bookings',JSON.stringify(d));}catch(e){}}});
+fbdb.ref('gym_bookings').on('value',snap=>{const d=snap.val();if(d&&typeof d==='object'&&JSON.stringify(d)!==JSON.stringify(gymBookings)){gymBookings=d;const gymTab=document.getElementById('tab-gym');if(gymTab&&!gymTab.classList.contains('hidden'))renderGym();}});
+fbdb.ref('cls_data').once('value').then(snap=>{const d=snap.val();if(d&&typeof d==='object'){clsData=d;try{localStorage.setItem('cls_data',JSON.stringify(d));}catch(e){}}});
+fbdb.ref('cls_data').on('value',snap=>{const d=snap.val();if(d&&typeof d==='object'&&JSON.stringify(d)!==JSON.stringify(clsData)){clsData=d;const yogaTab=document.getElementById('tab-yoga');const pilatesTab=document.getElementById('tab-pilates');if(yogaTab&&!yogaTab.classList.contains('hidden'))renderCls('yoga');if(pilatesTab&&!pilatesTab.classList.contains('hidden'))renderCls('pilates');}});
+fbdb.ref('ace_cars').once('value').then(snap=>{const d=snap.val();if(d&&Array.isArray(d)){CARS=d;try{localStorage.setItem('ace_cars',JSON.stringify(d));}catch(e){}const expTab=document.getElementById('tab-experiences');if(expTab&&!expTab.classList.contains('hidden'))renderCars();}});
+fbdb.ref('ace_cars').on('value',snap=>{const d=snap.val();if(d&&Array.isArray(d)&&JSON.stringify(d)!==JSON.stringify(CARS)){CARS=d;const expTab=document.getElementById('tab-experiences');if(expTab&&!expTab.classList.contains('hidden'))renderCars();}});
+['excursions','moto','flowers','boats','transfers','vantours'].forEach(tab=>{
+  try{const ls=JSON.parse(localStorage.getItem('gen_'+tab));if(ls&&Array.isArray(ls))GEN_DATA[tab]=ls;}catch(e){}
+  fbdb.ref('gen_'+tab).once('value').then(snap=>{const d=snap.val();if(d&&Array.isArray(d)){GEN_DATA[tab]=d;try{localStorage.setItem('gen_'+tab,JSON.stringify(d));}catch(e){}}});
+  fbdb.ref('gen_'+tab).on('value',snap=>{const d=snap.val();if(d&&Array.isArray(d)&&JSON.stringify(d)!==JSON.stringify(GEN_DATA[tab])){GEN_DATA[tab]=d;if(expCurrentTab===tab)renderGenTab(tab);}});
+});
+fbdb.ref('plm_data').once('value').then(snap=>{const d=snap.val();if(d&&typeof d==='object'){Object.keys(d).forEach(k=>{if(PLM_DATA[k])PLM_DATA[k]={...PLM_DATA[k],...d[k]};});try{localStorage.setItem('plm_data',JSON.stringify(PLM_DATA));}catch(e){}}});
+fbdb.ref('plm_data').on('value',snap=>{const d=snap.val();if(d&&typeof d==='object'){const changed=JSON.stringify(d)!==JSON.stringify(PLM_DATA);if(changed){Object.keys(d).forEach(k=>{if(PLM_DATA[k])PLM_DATA[k]={...PLM_DATA[k],...d[k]};});try{localStorage.setItem('plm_data',JSON.stringify(PLM_DATA));}catch(e){}}}});
+/* ── Custom Suggestions Firebase Sync ── */
+fbdb.ref('custom_suggestions').once('value').then(snap=>{
+  const d=snap.val();
+  if(d&&Array.isArray(d)){
+    CUSTOM_SUGGESTIONS=d;
+    try{localStorage.setItem('custom_suggestions',JSON.stringify(d));}catch(e){}
+    const sugTab=document.getElementById('tab-suggestions');
+    if(sugTab&&!sugTab.classList.contains('hidden'))renderSuggestions();
+  }
+});
+fbdb.ref('custom_suggestions').on('value',snap=>{
+  const d=snap.val();
+  if(d&&Array.isArray(d)&&JSON.stringify(d)!==JSON.stringify(CUSTOM_SUGGESTIONS)){
+    CUSTOM_SUGGESTIONS=d;
+    try{localStorage.setItem('custom_suggestions',JSON.stringify(d));}catch(e){}
+    const sugTab=document.getElementById('tab-suggestions');
+    if(sugTab&&!sugTab.classList.contains('hidden'))renderSuggestions();
+  }
+});
+fbdb.ref('deleted_suggestions').once('value').then(snap=>{
+  const d=snap.val();
+  if(d&&Array.isArray(d)){
+    try{localStorage.setItem('deleted_suggestions',JSON.stringify(d));}catch(e){}
+  }
+});
+fbdb.ref('deleted_suggestions').on('value',snap=>{
+  const d=snap.val();
+  if(d&&Array.isArray(d)){
+    try{const cur=JSON.parse(localStorage.getItem('deleted_suggestions')||'[]');
+    if(JSON.stringify(d)!==JSON.stringify(cur)){
+      localStorage.setItem('deleted_suggestions',JSON.stringify(d));
+      const sugTab=document.getElementById('tab-suggestions');
+      if(sugTab&&!sugTab.classList.contains('hidden'))renderSuggestions();
+    }}catch(e){}
+  }
+});
+/* ── TSM Layout Firebase Sync ── */
+fbdb.ref('tsm_layout').once('value').then(snap=>{
+  const d=snap.val();
+  if(d&&d.tabs){tsmApplyFirebaseData(d);applyTabLayout();setSyncStatus('ok','Layout loaded ☁');}
+});
+fbdb.ref('tsm_layout').on('value',snap=>{
+  const d=snap.val();
+  if(!d||!d.tabs)return;
+  const curStr=JSON.stringify({tabs:tsmTabs,groups:tsmGroups});
+  const newStr=JSON.stringify({tabs:d.tabs,groups:d.groups||[]});
+  if(curStr!==newStr){
+    tsmApplyFirebaseData(d);
+    applyTabLayout();
+    // If settings editor is open, re-render the list
+    if(document.getElementById('tsm-editor')&&document.getElementById('tsm-editor').style.display!=='none'){renderTsmList();}
+    setSyncStatus('ok','Layout synced ☁ '+new Date().toLocaleTimeString());
+  }
+});
+</script>
+</body>
+</html>
+/* ── COMPLIMENTARY / COMPLAINTS ── */
+.comp-wrap{padding:16px 20px 40px}
+.comp-hdr{display:flex;align-items:center;gap:14px;margin-bottom:18px;padding:18px 20px;background:var(--white);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--sh)}
+.comp-hdr-ico{width:46px;height:46px;border-radius:12px;background:#fdf2f8;display:flex;align-items:center;justify-content:center;font-size:22px;color:#be185d;flex-shrink:0}
+.comp-hdr-t{font-size:18px;font-weight:800;color:var(--ink)}.comp-hdr-s{font-size:12px;color:var(--muted);margin-top:2px}
+.comp-add-card{background:var(--white);border-radius:var(--r);border:1px solid var(--border);padding:16px 18px;margin-bottom:14px;box-shadow:var(--sh)}
+.comp-add-card h3{font-size:13px;font-weight:700;color:#be185d;margin:0 0 12px;display:flex;align-items:center;gap:6px}
+.comp-form-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.comp-form-group{display:flex;flex-direction:column;gap:4px}
+.comp-form-group label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted)}
+.comp-inp{padding:8px 11px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:var(--sans);outline:none;background:var(--white);color:var(--ink)}
+.comp-inp:focus{border-color:#be185d}
+.comp-save-btn{padding:9px 18px;background:#be185d;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.comp-filters{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.comp-filter-btn{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--sans);border:1.5px solid var(--border);background:var(--white);color:var(--muted)}
+.comp-filter-btn.on{border-color:#be185d;background:#be185d;color:#fff}
+.comp-list{display:flex;flex-direction:column;gap:10px}
+.comp-card{background:var(--white);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--sh);padding:14px 16px;border-left:4px solid}
+.comp-card.open{border-left-color:#dc2626}
+.comp-card.resolved{border-left-color:#16a34a;opacity:.8}
+.comp-card.pending{border-left-color:#d97706}
+.comp-card-hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.comp-room{font-size:20px;font-weight:800;color:#be185d;min-width:60px}
+.comp-reason{font-size:14px;font-weight:700;color:var(--ink);flex:1}
+.comp-date{font-size:11px;color:var(--muted);white-space:nowrap}
+.comp-notes{font-size:12px;color:var(--ink);line-height:1.6;background:var(--bg);border-radius:8px;padding:8px 10px;margin-top:6px}
+.comp-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;align-items:center}
+.comp-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;cursor:pointer;border:none;font-family:var(--sans)}
+.comp-badge.open{background:#fce8e8;color:#dc2626}
+.comp-badge.pending{background:#fffbeb;color:#d97706}
+.comp-badge.resolved{background:#f0fdf4;color:#16a34a}
+.comp-resolve-row{display:flex;gap:6px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.comp-ci{padding:6px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;font-family:var(--sans);outline:none;background:var(--white);color:var(--ink)}
+.comp-ci:focus{border-color:#be185d}
+.comp-empty{padding:40px;text-align:center;color:var(--muted2);font-size:13px}
+.comp-empty i{font-size:36px;display:block;margin-bottom:10px;opacity:.3}
 </style>
 </head>
 <body>
@@ -663,6 +798,7 @@ canvas.an-chart{width:100%!important;height:220px!important}
         <div class="dd-item" id="ddi-report" onclick="ddGo('report','Report')"><i class="ti ti-chart-bar"></i> Report</div>
         <div class="dd-divider"></div>
         <div class="dd-sec-lbl">Groom Tools</div>
+        <div class="dd-item" id="ddi-comp" onclick="ddGo('comp','Complaints &amp; Complimentary')"><i class="ti ti-mood-sad" style="color:#be185d"></i> Complaints &amp; Complimentary</div>
         <div class="dd-item" id="ddi-ac" onclick="ddGo('ac','A/C Issues')"><i class="ti ti-air-conditioning" style="color:#0e7490"></i> A/C Issues</div>
         <div class="dd-item pur" id="ddi-grooms" onclick="ddGo('grooms','Grooms Daily List')"><i class="ti ti-luggage"></i> Grooms Daily List</div>
         <div class="dd-divider"></div>
@@ -698,6 +834,7 @@ canvas.an-chart{width:100%!important;height:220px!important}
   <div class="tab" id="nt-alerts" onclick="goTab('alerts')"><i class="ti ti-bell-ringing"></i> Alerts</div>
   <div class="tab" id="nt-day3" onclick="goTab('day3')"><i class="ti ti-calendar-check"></i> Day 1 &amp; Day 3</div>
   <div class="tab" id="nt-report" onclick="goTab('report')"><i class="ti ti-chart-bar"></i> Report</div>
+  <div class="tab" id="nt-comp" onclick="goTab('comp')" style="color:#be185d"><i class="ti ti-mood-sad"></i> Complaints</div>
   <div class="tab" id="nt-ac" onclick="goTab('ac')" style="color:#0e7490"><i class="ti ti-air-conditioning"></i> A/C Issues</div>
   <div class="tab pur-tab" id="nt-grooms" onclick="goTab('grooms')"><i class="ti ti-luggage"></i> Grooms Daily List</div>
   <div class="tab amb-tab" id="nt-import" onclick="goTab('import')"><i class="ti ti-brand-booking"></i> Booking.com</div>
@@ -808,6 +945,55 @@ canvas.an-chart{width:100%!important;height:220px!important}
 </div>
 
 <!-- GROOMS DAILY LIST -->
+<div id="tab-comp" class="hidden">
+  <div class="comp-wrap">
+    <div class="comp-hdr">
+      <div class="comp-hdr-ico"><i class="ti ti-mood-sad"></i></div>
+      <div>
+        <div class="comp-hdr-t">Complaints &amp; Complimentary</div>
+        <div class="comp-hdr-s">Track guest complaints &bull; Log complimentary actions &bull; Monitor resolutions</div>
+      </div>
+    </div>
+    <div class="comp-add-card">
+      <h3><i class="ti ti-plus"></i> Add Entry</h3>
+      <div class="comp-form-row">
+        <div class="comp-form-group"><label>Date</label><input type="date" id="comp-date" class="comp-inp" style="width:145px"></div>
+        <div class="comp-form-group"><label>Room</label><input id="comp-room" class="comp-inp" placeholder="e.g. 407" style="width:90px"></div>
+        <div class="comp-form-group"><label>Guest Name</label><input id="comp-guest" class="comp-inp" placeholder="Guest name" style="width:150px"></div>
+        <div class="comp-form-group" style="flex:1;min-width:200px"><label>Reason / Complaint</label><input id="comp-reason" class="comp-inp" placeholder="e.g. A/C issue, late checkout, noisy room..."></div>
+        <div class="comp-form-group"><label>Complimentary Given</label><input id="comp-gift" class="comp-inp" placeholder="e.g. Bottle of wine, upgrade..." style="width:200px"></div>
+        <div class="comp-form-group" style="flex:1;min-width:180px"><label>Notes</label><input id="comp-notes" class="comp-inp" placeholder="Additional notes..."></div>
+        <button class="comp-save-btn" onclick="compAdd()"><i class="ti ti-device-floppy"></i> Add</button>
+      </div>
+    </div>
+    <div class="comp-filters" style="justify-content:space-between">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      <span style="font-size:11px;color:var(--muted);font-weight:600">Status:</span>
+      <button class="comp-filter-btn on" id="compf-all" onclick="compSetFilter('all',this)">All</button>
+      <button class="comp-filter-btn" id="compf-open" onclick="compSetFilter('open',this)">🔴 Open</button>
+      <button class="comp-filter-btn" id="compf-pending" onclick="compSetFilter('pending',this)">🟡 Pending</button>
+      <button class="comp-filter-btn" id="compf-resolved" onclick="compSetFilter('resolved',this)">✅ Resolved</button>
+      <div style="width:1px;height:20px;background:var(--border2);margin:0 4px"></div>
+      <span style="font-size:11px;color:var(--muted);font-weight:600">Month:</span>
+      <button class="comp-filter-btn on" id="compfm-all" onclick="compSetMonthFilter('all',this)">All</button>
+      <button class="comp-filter-btn" onclick="compSetMonthFilter('05',this)">May</button>
+      <button class="comp-filter-btn" onclick="compSetMonthFilter('06',this)">Jun</button>
+      <button class="comp-filter-btn" onclick="compSetMonthFilter('07',this)">Jul</button>
+      <button class="comp-filter-btn" onclick="compSetMonthFilter('08',this)">Aug</button>
+      <button class="comp-filter-btn" onclick="compSetMonthFilter('09',this)">Sep</button>
+      <button class="comp-filter-btn" onclick="compSetMonthFilter('10',this)">Oct</button>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center">
+        <span style="font-size:11px;color:var(--muted);font-weight:600">Sort:</span>
+        <button class="comp-filter-btn on" id="compsort-status" onclick="compSetSort('status',this)" title="Sort: Open first">🔴 Status</button>
+        <button class="comp-filter-btn" id="compsort-date" onclick="compSetSort('date',this)" title="Sort by date">📅 Date</button>
+        <button onclick="compPrint()" style="display:flex;align-items:center;gap:5px;padding:6px 13px;background:#be185d;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans)"><i class="ti ti-printer" style="font-size:13px"></i> Print</button>
+      </div>
+    </div>
+    <div class="comp-list" id="comp-list"></div>
+  </div>
+</div>
+
 <div id="tab-ac" class="hidden">
   <div class="ac-wrap">
     <div class="ac-hdr">
@@ -3153,7 +3339,7 @@ function ddGo(tab,lbl){
   goTab(tab);
 }
 function goTab(t){
-  ['res','day3','report','grooms','ac','import','ta','goo','analytics','gym','yoga','pilates','massage','alerts','experiences','suggestions'].forEach(x=>{
+  ['res','day3','report','grooms','ac','comp','import','ta','goo','analytics','gym','yoga','pilates','massage','alerts','experiences','suggestions'].forEach(x=>{
     const el=document.getElementById('tab-'+x);
     const nt=document.getElementById('nt-'+x);
     if(el)el.classList.toggle('hidden',x!==t);
@@ -3172,6 +3358,7 @@ function goTab(t){
   if(t==='pilates'){initClsDates('pilates');renderCls('pilates');}
   if(t==='massage'){msRenderFilterBars();renderMassage();}
   if(t==='alerts')renderAlerts();
+  if(t==='comp'){renderComp();const cd=document.getElementById('comp-date');if(cd&&!cd.value)cd.value=new Date().toISOString().split('T')[0];}
   if(t==='ac'){renderAC();const ad=document.getElementById('ac-date');if(ad&&!ad.value)ad.value=new Date().toISOString().split('T')[0];}
   if(t==='experiences')renderCars();
   if(t==='suggestions')renderSuggestions();
@@ -4831,6 +5018,7 @@ const TAB_DEFS = [
   {id:'experiences',label:'Experiences',icon:'ti-map-pin',       color:'#1a6644',       visible:true,  order:13, group:''},
   {id:'suggestions',label:'Suggestions',icon:'ti-map-2',         color:'#0e7490',       visible:true,  order:14, group:''},
   {id:'ac',label:'A/C Issues',icon:'ti-air-conditioning',color:'#0e7490',visible:true,order:15,group:''},
+  {id:'comp',label:'Complaints',icon:'ti-mood-sad',color:'#be185d',visible:true,order:16,group:''},
 ];
 let tsmTabs = null;
 let tsmGroups = [];
@@ -5189,100 +5377,160 @@ function renderACHistory(){
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script>
-const firebaseConfig={apiKey:"AIzaSyCBMSHwHStDYkKX5OgzxoLE8R5Rq1aCNAk",authDomain:"groomsdailylist.firebaseapp.com",projectId:"groomsdailylist",storageBucket:"groomsdailylist.firebasestorage.app",messagingSenderId:"22818207608",appId:"1:22818207608:web:e279242f2344027bde7a8d",databaseURL:"https://groomsdailylist-default-rtdb.europe-west1.firebasedatabase.app"};
-firebase.initializeApp(firebaseConfig);
-const fbdb=firebase.database();
-function setSyncStatus(state,msg){const dot=document.getElementById('syncDot');const txt=document.getElementById('syncMsg');const colors={ok:'#4ade80',syncing:'#f5a623',error:'#e05a4e'};dot.style.background=colors[state]||'#4ade80';if(state==='syncing')dot.style.animation='pulse 0.7s infinite';else dot.style.animation='pulse 2s infinite';txt.textContent=msg;}
-const _origSv=window.sv;const _origSvG=window.svG;let _saveTO=null;
-window.sv=function(){setSyncStatus('syncing','Saving to cloud...');clearTimeout(_saveTO);_saveTO=setTimeout(()=>{fbdb.ref('reservations').set(RES).then(()=>setSyncStatus('ok','Synced \u2601 '+new Date().toLocaleTimeString())).catch(e=>{setSyncStatus('error','Error: '+e.message);_origSv&&_origSv();});},800);};
-window.svG=function(){setSyncStatus('syncing','Saving grooms to cloud...');clearTimeout(_saveTO);_saveTO=setTimeout(()=>{fbdb.ref('grooms').set(GR).then(()=>setSyncStatus('ok','Synced \u2601 '+new Date().toLocaleTimeString())).catch(e=>{setSyncStatus('error','Error: '+e.message);});},800);};
-setSyncStatus('syncing','Loading from cloud...');
-fbdb.ref('reservations').once('value').then(snap=>{const data=snap.val();if(data&&Array.isArray(data)&&data.length>0){RES=data;renderStats();renderRes();setSyncStatus('ok','Connected to Firebase \u2014 data loaded \u2601');}else{setSyncStatus('ok','Connected \u2014 using seed data');}}).catch(()=>setSyncStatus('error','Could not connect to Firebase'));
-fbdb.ref('grooms').once('value').then(snap=>{const data=snap.val();if(data&&Array.isArray(data)){GR=data;renderGrooms();}});
-fbdb.ref('reservations').on('value',snap=>{const data=snap.val();if(data&&Array.isArray(data)&&JSON.stringify(data)!==JSON.stringify(RES)){RES=data;renderStats();renderRes();setSyncStatus('ok','Updated from cloud \u2601 '+new Date().toLocaleTimeString());}});
-fbdb.ref('grooms').on('value',snap=>{const data=snap.val();if(data&&Array.isArray(data)&&JSON.stringify(data)!==JSON.stringify(GR)){GR=data;renderGrooms();}});
-fbdb.ref('ta_reviews').once('value').then(snap=>{const d=snap.val();if(d&&Array.isArray(d)){taHistory=d;localStorage.setItem('ta_reviews',JSON.stringify(d));renderRevHistory('ta');}});
-fbdb.ref('goo_reviews').once('value').then(snap=>{const d=snap.val();if(d&&Array.isArray(d)){gooHistory=d;localStorage.setItem('goo_reviews',JSON.stringify(d));renderRevHistory('goo');}});
-fbdb.ref('bk_reviews').once('value').then(snap=>{const d=snap.val();if(d&&Array.isArray(d)){bkHistory=d;localStorage.setItem('bk_reviews',JSON.stringify(d));renderBKHistory();}});
-fbdb.ref('alerts_data').once('value').then(snap=>{const d=snap.val();if(d&&typeof d==='object'){alertsData=d;try{localStorage.setItem('alerts_data',JSON.stringify(d));}catch(e){}checkOverdueTasks();}});
-fbdb.ref('ac_issues').once('value').then(snap=>{const d=snap.val();if(d&&Array.isArray(d)){AC_DATA=d;}});
-fbdb.ref('alerts_data').on('value',snap=>{const d=snap.val();if(d&&typeof d==='object'&&JSON.stringify(d)!==JSON.stringify(alertsData)){alertsData=d;checkOverdueTasks();const alTab=document.getElementById('tab-alerts');if(alTab&&!alTab.classList.contains('hidden'))renderAlerts();}});
-fbdb.ref('massage_data').once('value').then(snap=>{const d=snap.val();if(d&&typeof d==='object'){massageData=d;try{localStorage.setItem('massage_data',JSON.stringify(d));}catch(e){}}});
-fbdb.ref('massage_data').on('value',snap=>{const d=snap.val();if(d&&typeof d==='object'&&JSON.stringify(d)!==JSON.stringify(massageData)){massageData=d;
-      // Restore any custom slots saved in massageData
-      Object.keys(d).forEach(dk=>{
-        if(d[dk]&&d[dk].__customSlots&&Array.isArray(d[dk].__customSlots)){
-          MASSAGE_SCHEDULE[dk]=d[dk].__customSlots;
-        }
-      });
-      const msTab=document.getElementById('tab-massage');if(msTab&&!msTab.classList.contains('hidden')){msRenderFilterBars();renderMassage();}}});
-fbdb.ref('gym_bookings').once('value').then(snap=>{const d=snap.val();if(d&&typeof d==='object'){gymBookings=d;try{localStorage.setItem('gym_bookings',JSON.stringify(d));}catch(e){}}});
-fbdb.ref('gym_bookings').on('value',snap=>{const d=snap.val();if(d&&typeof d==='object'&&JSON.stringify(d)!==JSON.stringify(gymBookings)){gymBookings=d;const gymTab=document.getElementById('tab-gym');if(gymTab&&!gymTab.classList.contains('hidden'))renderGym();}});
-fbdb.ref('cls_data').once('value').then(snap=>{const d=snap.val();if(d&&typeof d==='object'){clsData=d;try{localStorage.setItem('cls_data',JSON.stringify(d));}catch(e){}}});
-fbdb.ref('cls_data').on('value',snap=>{const d=snap.val();if(d&&typeof d==='object'&&JSON.stringify(d)!==JSON.stringify(clsData)){clsData=d;const yogaTab=document.getElementById('tab-yoga');const pilatesTab=document.getElementById('tab-pilates');if(yogaTab&&!yogaTab.classList.contains('hidden'))renderCls('yoga');if(pilatesTab&&!pilatesTab.classList.contains('hidden'))renderCls('pilates');}});
-fbdb.ref('ace_cars').once('value').then(snap=>{const d=snap.val();if(d&&Array.isArray(d)){CARS=d;try{localStorage.setItem('ace_cars',JSON.stringify(d));}catch(e){}const expTab=document.getElementById('tab-experiences');if(expTab&&!expTab.classList.contains('hidden'))renderCars();}});
-fbdb.ref('ace_cars').on('value',snap=>{const d=snap.val();if(d&&Array.isArray(d)&&JSON.stringify(d)!==JSON.stringify(CARS)){CARS=d;const expTab=document.getElementById('tab-experiences');if(expTab&&!expTab.classList.contains('hidden'))renderCars();}});
-['excursions','moto','flowers','boats','transfers','vantours'].forEach(tab=>{
-  try{const ls=JSON.parse(localStorage.getItem('gen_'+tab));if(ls&&Array.isArray(ls))GEN_DATA[tab]=ls;}catch(e){}
-  fbdb.ref('gen_'+tab).once('value').then(snap=>{const d=snap.val();if(d&&Array.isArray(d)){GEN_DATA[tab]=d;try{localStorage.setItem('gen_'+tab,JSON.stringify(d));}catch(e){}}});
-  fbdb.ref('gen_'+tab).on('value',snap=>{const d=snap.val();if(d&&Array.isArray(d)&&JSON.stringify(d)!==JSON.stringify(GEN_DATA[tab])){GEN_DATA[tab]=d;if(expCurrentTab===tab)renderGenTab(tab);}});
-});
-fbdb.ref('plm_data').once('value').then(snap=>{const d=snap.val();if(d&&typeof d==='object'){Object.keys(d).forEach(k=>{if(PLM_DATA[k])PLM_DATA[k]={...PLM_DATA[k],...d[k]};});try{localStorage.setItem('plm_data',JSON.stringify(PLM_DATA));}catch(e){}}});
-fbdb.ref('plm_data').on('value',snap=>{const d=snap.val();if(d&&typeof d==='object'){const changed=JSON.stringify(d)!==JSON.stringify(PLM_DATA);if(changed){Object.keys(d).forEach(k=>{if(PLM_DATA[k])PLM_DATA[k]={...PLM_DATA[k],...d[k]};});try{localStorage.setItem('plm_data',JSON.stringify(PLM_DATA));}catch(e){}}}});
-/* ── Custom Suggestions Firebase Sync ── */
-fbdb.ref('custom_suggestions').once('value').then(snap=>{
-  const d=snap.val();
-  if(d&&Array.isArray(d)){
-    CUSTOM_SUGGESTIONS=d;
-    try{localStorage.setItem('custom_suggestions',JSON.stringify(d));}catch(e){}
-    const sugTab=document.getElementById('tab-suggestions');
-    if(sugTab&&!sugTab.classList.contains('hidden'))renderSuggestions();
+/* ── COMPLIMENTARY / COMPLAINTS ── */
+let COMP_DATA=[];
+let compFilter='all';
+let compMonthFilter='all';
+let compSort='status';
+const COMP_STATUS_ORDER=['open','pending','resolved'];
+const COMP_STATUS_LBL={open:'🔴 Open',pending:'🟡 Pending',resolved:'✅ Resolved'};
+const COMP_STATUS_CLS={open:'open',pending:'pending',resolved:'resolved'};
+
+function svComp(){if(typeof fbdb!=='undefined')fbdb.ref('comp_data').set(COMP_DATA);}
+
+function compAdd(){
+  const room=(document.getElementById('comp-room')?.value||'').trim();
+  const reason=(document.getElementById('comp-reason')?.value||'').trim();
+  if(!room||!reason){showToast('Room and Reason are required','w');return;}
+  COMP_DATA.unshift({
+    id:Date.now()+'',
+    date:document.getElementById('comp-date')?.value||new Date().toISOString().split('T')[0],
+    room,
+    guest:(document.getElementById('comp-guest')?.value||'').trim(),
+    reason,
+    gift:(document.getElementById('comp-gift')?.value||'').trim(),
+    notes:(document.getElementById('comp-notes')?.value||'').trim(),
+    resolveDate:'',
+    resolveNotes:'',
+    status:'open'
+  });
+  svComp();renderComp();showToast('Entry added','s');
+  ['comp-room','comp-guest','comp-reason','comp-gift','comp-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+
+function compDel(i){
+  if(!confirm('Delete this entry?'))return;
+  COMP_DATA.splice(i,1);svComp();renderComp();showToast('Deleted','w');
+}
+
+function compCycleStatus(i){
+  const o=COMP_STATUS_ORDER;
+  COMP_DATA[i].status=o[(o.indexOf(COMP_DATA[i].status||'open')+1)%o.length];
+  if(COMP_DATA[i].status==='resolved'&&!COMP_DATA[i].resolveDate)
+    COMP_DATA[i].resolveDate=new Date().toISOString().split('T')[0];
+  svComp();renderComp();
+}
+
+function compUpd(i,field,val){COMP_DATA[i][field]=val;svComp();}
+
+function compSetFilter(f,btn){
+  compFilter=f;
+  document.querySelectorAll('#compf-all,#compf-open,#compf-pending,#compf-resolved').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');renderComp();
+}
+
+function compSetMonthFilter(m,btn){
+  compMonthFilter=m;
+  document.querySelectorAll('[id^="compfm-"]').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');renderComp();
+}
+
+function compSetSort(s,btn){
+  compSort=s;
+  document.querySelectorAll('#compsort-status,#compsort-date').forEach(b=>b.classList.remove('on'));
+  if(btn)btn.classList.add('on');
+  renderComp();
+}
+
+function compPrint(){
+  let rows=[...COMP_DATA];
+  if(compFilter!=='all')rows=rows.filter(r=>r.status===compFilter);
+  if(compMonthFilter!=='all')rows=rows.filter(r=>(r.date||'').slice(5,7)===compMonthFilter);
+  // Always sort for print: Open → Pending → Resolved, then by date
+  const order={open:0,pending:1,resolved:2};
+  rows.sort((a,b)=>(order[a.status||'open']||0)-(order[b.status||'open']||0)||((a.date||'').localeCompare(b.date||'')));
+  const statusBadge={open:'<span style="background:#fce8e8;color:#dc2626;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700">🔴 Open</span>',pending:'<span style="background:#fffbeb;color:#d97706;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700">🟡 Pending</span>',resolved:'<span style="background:#f0fdf4;color:#16a34a;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700">✅ Resolved</span>'};
+  const rows_html=rows.map((r,i)=>`
+    <tr style="border-bottom:1px solid #e5e7eb;page-break-inside:avoid">
+      <td style="padding:10px 12px;text-align:center;color:#9ca3af;font-size:12px">${i+1}</td>
+      <td style="padding:10px 12px;font-weight:700;color:#be185d;font-size:15px">Rm ${r.room||''}</td>
+      <td style="padding:10px 12px;font-size:12px;color:#6b7280">${r.date||''}</td>
+      <td style="padding:10px 12px"><div style="font-weight:600;font-size:13px">${r.guest||''}</div></td>
+      <td style="padding:10px 12px;font-size:13px">${r.reason||''}</td>
+      <td style="padding:10px 12px;font-size:12px;color:#be185d">${r.gift||'—'}</td>
+      <td style="padding:10px 12px;font-size:12px;color:#6b7280">${r.notes||''}</td>
+      <td style="padding:10px 12px">${statusBadge[r.status||'open']||''}</td>
+      <td style="padding:10px 12px;font-size:12px;color:#16a34a">${r.resolveDate||''}<br><span style="color:#6b7280">${r.resolveNotes||''}</span></td>
+    </tr>`).join('');
+  const mLabel={'05':'May','06':'June','07':'July','08':'August','09':'September','10':'October','all':'Season'}[compMonthFilter]||'';
+  const win=window.open('','_blank','width=1000,height=800');
+  win.document.write(`<!DOCTYPE html><html><head><title>Complaints & Complimentary</title>
+  <style>
+    body{font-family:Arial,sans-serif;padding:24px;color:#1a2535;font-size:13px}
+    h1{font-size:20px;color:#be185d;margin-bottom:4px}
+    .sub{font-size:12px;color:#6b7280;margin-bottom:20px}
+    table{width:100%;border-collapse:collapse}
+    thead{background:#fdf2f8}
+    th{padding:9px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#be185d;border-bottom:2px solid #fbcfe8}
+    tr:nth-child(even){background:#fdf2f8}
+    @media print{body{padding:10px}button{display:none}}
+  </style></head><body>
+  <h1>Complaints &amp; Complimentary</h1>
+  <div class="sub">White Rocks Hotel &amp; Bungalows &nbsp;&bull;&nbsp; ${mLabel} 2026 &nbsp;&bull;&nbsp; ${rows.length} entries &nbsp;&bull;&nbsp; Printed ${new Date().toLocaleDateString('el-GR')}</div>
+  <table><thead><tr>
+    <th>#</th><th>Room</th><th>Date</th><th>Guest</th><th>Reason / Complaint</th><th>Complimentary</th><th>Notes</th><th>Status</th><th>Resolved</th>
+  </tr></thead><tbody>${rows_html}</tbody></table>
+  <script>window.onload=function(){window.print();}<\/script>
+  </body></html>`);
+  win.document.close();
+}
+
+function renderComp(){
+  let rows=[...COMP_DATA];
+  if(compFilter!=='all')rows=rows.filter(r=>r.status===compFilter);
+  if(compMonthFilter!=='all')rows=rows.filter(r=>(r.date||'').slice(5,7)===compMonthFilter);
+  // Sort
+  const sOrder={open:0,pending:1,resolved:2};
+  if(compSort==='status'){
+    rows.sort((a,b)=>(sOrder[a.status||'open']||0)-(sOrder[b.status||'open']||0)||((a.date||'').localeCompare(b.date||'')));
+  } else {
+    rows.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   }
-});
-fbdb.ref('custom_suggestions').on('value',snap=>{
-  const d=snap.val();
-  if(d&&Array.isArray(d)&&JSON.stringify(d)!==JSON.stringify(CUSTOM_SUGGESTIONS)){
-    CUSTOM_SUGGESTIONS=d;
-    try{localStorage.setItem('custom_suggestions',JSON.stringify(d));}catch(e){}
-    const sugTab=document.getElementById('tab-suggestions');
-    if(sugTab&&!sugTab.classList.contains('hidden'))renderSuggestions();
+  const el=document.getElementById('comp-list');if(!el)return;
+  if(!rows.length){
+    el.innerHTML='<div class="comp-empty"><i class="ti ti-mood-happy"></i>No entries found</div>';
+    return;
   }
-});
-fbdb.ref('deleted_suggestions').once('value').then(snap=>{
-  const d=snap.val();
-  if(d&&Array.isArray(d)){
-    try{localStorage.setItem('deleted_suggestions',JSON.stringify(d));}catch(e){}
-  }
-});
-fbdb.ref('deleted_suggestions').on('value',snap=>{
-  const d=snap.val();
-  if(d&&Array.isArray(d)){
-    try{const cur=JSON.parse(localStorage.getItem('deleted_suggestions')||'[]');
-    if(JSON.stringify(d)!==JSON.stringify(cur)){
-      localStorage.setItem('deleted_suggestions',JSON.stringify(d));
-      const sugTab=document.getElementById('tab-suggestions');
-      if(sugTab&&!sugTab.classList.contains('hidden'))renderSuggestions();
-    }}catch(e){}
-  }
-});
-/* ── TSM Layout Firebase Sync ── */
-fbdb.ref('tsm_layout').once('value').then(snap=>{
-  const d=snap.val();
-  if(d&&d.tabs){tsmApplyFirebaseData(d);applyTabLayout();setSyncStatus('ok','Layout loaded ☁');}
-});
-fbdb.ref('tsm_layout').on('value',snap=>{
-  const d=snap.val();
-  if(!d||!d.tabs)return;
-  const curStr=JSON.stringify({tabs:tsmTabs,groups:tsmGroups});
-  const newStr=JSON.stringify({tabs:d.tabs,groups:d.groups||[]});
-  if(curStr!==newStr){
-    tsmApplyFirebaseData(d);
-    applyTabLayout();
-    // If settings editor is open, re-render the list
-    if(document.getElementById('tsm-editor')&&document.getElementById('tsm-editor').style.display!=='none'){renderTsmList();}
-    setSyncStatus('ok','Layout synced ☁ '+new Date().toLocaleTimeString());
-  }
-});
-</script>
-</body>
-</html>
+  el.innerHTML=rows.map((r,n)=>{
+    const i=COMP_DATA.indexOf(r);
+    const st=r.status||'open';
+    const resolveSection=st!=='resolved'
+      ?'<div class="comp-resolve-row">'
+        +'<input class="comp-ci" type="date" value="'+(r.resolveDate||'')+'" placeholder="Resolve date" onchange="compUpd('+i+','resolveDate',this.value)" title="Resolve date">'
+        +'<input class="comp-ci" value="'+esc(r.resolveNotes||'')+'" placeholder="Resolution notes..." style="flex:1;min-width:150px" oninput="compUpd('+i+','resolveNotes',this.value)">'
+        +'</div>'
+      :'<div style="font-size:11px;color:#16a34a;margin-top:6px"><i class="ti ti-circle-check"></i> Resolved'+(r.resolveDate?' on '+r.resolveDate:'')+(r.resolveNotes?' — '+esc(r.resolveNotes):'')+'</div>';
+    return '<div class="comp-card '+st+'">'
+      +'<div class="comp-card-hdr">'
+        +'<div class="comp-room">Rm '+esc(r.room)+'</div>'
+        +'<div style="flex:1">'
+          +'<div class="comp-reason">'+esc(r.reason)+'</div>'
+          +(r.guest?'<div style="font-size:11px;color:var(--muted);margin-top:2px"><i class="ti ti-user" style="font-size:10px"></i> '+esc(r.guest)+'</div>':'')
+        +'</div>'
+        +'<div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">'
+          +'<span class="comp-date">'+( r.date||'')+'</span>'
+          +'<button class="comp-badge '+st+'" onclick="compCycleStatus('+i+')">'+COMP_STATUS_LBL[st]+'</button>'
+        +'</div>'
+      +'</div>'
+      +(r.gift?'<div style="display:inline-flex;align-items:center;gap:5px;background:#fdf2f8;border:1px solid #fbcfe8;border-radius:8px;padding:4px 10px;font-size:12px;color:#be185d;margin-bottom:6px"><i class="ti ti-gift" style="font-size:13px"></i> '+esc(r.gift)+'</div>':'')
+      +(r.notes?'<div class="comp-notes">'+esc(r.notes)+'</div>':'')
+      +resolveSection
+      +'<div class="comp-actions">'
+        +'<button onclick="compDel('+i+')" style="padding:4px 10px;background:#fce8e8;border:none;border-radius:7px;cursor:pointer;color:#c0392b;font-size:11px;font-family:var(--sans);display:flex;align-items:center;gap:4px"><i class="ti ti-trash" style="font-size:11px"></i> Delete</button>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+}
+/* ── END COMPLAINTS ── */
+
+
