@@ -1401,6 +1401,7 @@ canvas.an-chart{width:100%!important;height:220px!important}
             <th style="min-width:90px">Booked By</th>
             <th style="width:85px">Base Price</th>
             <th style="width:78px">Insurance</th>
+            <th style="width:72px">Extras</th>
             <th style="width:90px">Total</th>
             <th style="width:105px">Status</th>
             <th style="width:58px"></th>
@@ -1692,6 +1693,17 @@ canvas.an-chart{width:100%!important;height:220px!important}
         <label for="cm-ins" style="font-size:12px;cursor:pointer;color:var(--ink);font-weight:500">Full Insurance</label>
       </div>
     </div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;padding:10px 14px;background:#f8fffe;border:1px solid #a8d5b8;border-radius:9px">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#0d4a2f;width:100%;margin-bottom:4px">Extras Upon Request</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <input type="checkbox" id="cm-extra-gps" style="width:16px;height:16px;cursor:pointer;accent-color:#1a6644" onchange="carModalUpdatePrice()">
+        <label for="cm-extra-gps" style="font-size:12px;cursor:pointer;color:var(--ink)">GPS <span style="color:#1a6644;font-weight:700">+€5/day</span></label>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <input type="checkbox" id="cm-extra-babySeat" style="width:16px;height:16px;cursor:pointer;accent-color:#1a6644" onchange="carModalUpdatePrice()">
+        <label for="cm-extra-babySeat" style="font-size:12px;cursor:pointer;color:var(--ink)">Baby/Booster Seat <span style="color:#1a6644;font-weight:700">+€3/day</span></label>
+      </div>
+    </div>
 
     <!-- PRICE BOX -->
     <div id="cm-pricebox" style="background:#e8f5ee;border:2px solid #a8d5b8;border-radius:10px;padding:12px 16px;text-align:center;margin-bottom:16px;min-height:52px">
@@ -1940,20 +1952,21 @@ const ACE_CARS=[
   {id:'T',    s:'Tesla T',     l:'Tesla Model 3 (On Request)'}
 ];
 const ACE_PRICES={
-  'A-M': {low:[40,70,105,120,150,180,210,30],mid:[60,100,150,192,230,270,301,43],high:[70,120,165,220,275,330,385,55],peak:[null,195,240,300,360,420,null,60]},
-  'A-A': {low:[45,80,120,160,175,210,245,35],mid:[70,112,168,210,255,294,329,47],high:[80,140,180,240,300,360,420,60],peak:[null,210,280,325,390,455,null,65]},
-  'B-M': {low:[45,80,120,160,175,210,245,35],mid:[70,110,165,204,250,282,315,45],high:[80,140,180,240,300,360,420,60],peak:[null,210,280,325,390,455,null,65]},
-  'B1-M':{low:[45,80,120,160,175,210,245,35],mid:[70,112,168,210,255,294,329,47],high:[80,140,180,240,300,360,420,60],peak:[null,210,280,325,390,455,null,65]},
-  'B-A': {low:[55,100,135,180,200,240,280,40],mid:[80,120,180,232,280,336,385,55],high:[90,174,240,320,400,480,560,80],peak:[null,270,360,450,540,630,null,90]},
-  'C-M': {low:[55,100,135,180,200,240,280,40],mid:[80,120,180,232,280,336,385,55],high:[90,150,210,280,350,420,490,70],peak:[null,240,320,400,480,560,null,80]},
-  'C1-M':{low:[60,110,165,200,250,300,350,50],mid:[90,140,210,260,320,380,420,60],high:[100,170,240,320,400,480,560,80],peak:[null,300,400,500,540,630,null,90]},
-  'D-M': {low:[70,120,180,232,280,336,385,55],mid:[100,170,255,336,415,492,560,80],high:[130,240,300,400,500,540,630,90],peak:[null,360,440,550,660,770,null,110]},
-  'J-M': {low:[90,180,210,280,350,420,490,70],mid:[100,200,255,336,415,492,560,80],high:[150,240,360,440,550,660,770,110],peak:[null,390,500,600,720,840,null,120]},
-  'J-A': {low:[90,180,210,280,350,420,490,70],mid:[100,200,255,336,415,492,560,80],high:[150,240,360,440,550,660,770,110],peak:[null,390,500,600,720,840,null,120]},
-  'J-E': {low:[100,170,255,320,400,480,560,80],mid:[130,240,360,420,500,600,700,100],high:[null,null,390,500,600,720,840,120],peak:[null,450,560,700,840,980,null,140]},
+  'A-M': {low:[40,70,105,120,150,180,210,30],mid:[60,100,150,192,230,270,301,43],high:[70,120,165,220,275,330,385,55],peak:[null,null,195,240,300,360,420,60]},
+  'A-A': {low:[45,80,120,160,175,210,245,35],mid:[70,112,168,210,255,294,329,47],high:[80,140,180,240,300,360,420,60],peak:[null,null,210,280,325,390,455,65]},
+  'B-M': {low:[45,80,120,160,175,210,245,35],mid:[70,110,165,204,250,282,315,45],high:[80,140,180,240,300,360,420,60],peak:[null,null,210,280,325,390,455,65]},
+  'B1-M':{low:[45,80,120,160,175,210,245,35],mid:[70,112,168,210,255,294,329,47],high:[80,140,180,240,300,360,420,60],peak:[null,null,210,280,325,390,455,65]},
+  'B-A': {low:[55,100,135,180,200,240,280,40],mid:[80,120,180,232,280,336,385,55],high:[90,174,240,320,400,480,560,80],peak:[null,null,270,360,450,540,630,90]},
+  'C-M': {low:[55,100,135,180,200,240,280,40],mid:[80,120,180,232,280,336,385,55],high:[90,150,210,280,350,420,490,70],peak:[null,null,240,320,400,480,560,80]},
+  'C1-M':{low:[60,110,165,200,250,300,350,50],mid:[90,140,210,260,320,380,420,60],high:[100,170,240,320,400,480,560,80],peak:[null,null,300,400,500,540,630,90]},
+  'D-M': {low:[70,120,180,232,280,336,385,55],mid:[100,170,255,336,415,492,560,80],high:[130,240,300,400,500,540,630,90],peak:[null,null,360,440,550,660,770,110]},
+  'J-M': {low:[90,180,210,280,350,420,490,70],mid:[100,200,255,336,415,492,560,80],high:[150,240,360,440,550,660,770,110],peak:[null,null,390,500,600,720,840,120]},
+  'J-A': {low:[90,180,210,280,350,420,490,70],mid:[100,200,255,336,415,492,560,80],high:[150,240,360,440,550,660,770,110],peak:[null,null,390,500,600,720,840,120]},
+  'J-E': {low:[100,170,255,320,400,480,560,80],mid:[130,240,360,420,500,600,700,100],high:[null,null,390,500,600,720,840,120],peak:[null,null,450,560,700,840,980,140]},
   'T':   {low:[null,null,null,null,null,null,null,null],mid:[null,null,null,null,null,null,null,null],high:[null,null,null,null,null,null,null,null],peak:[null,null,null,null,null,null,null,null]}
 };
 const ACE_INS={'A-M':10,'A-A':10,'B-M':10,'B1-M':10,'B-A':13,'C-M':13,'C1-M':15,'D-M':15,'J-M':20,'J-A':20,'J-E':20,'T':25};
+const ACE_EXTRAS=[{id:'gps',label:'GPS',price:5},{id:'babySeat',label:'Baby/Booster Seat',price:3}];
 
 function carSeason(d){if(!d)return'low';const m=new Date(d).getMonth()+1;if(m===8)return'peak';if(m===7)return'high';if(m===6||m===9)return'mid';return'low';}
 function carSeasonLbl(d){return{low:'Low Season (Apr–May, Oct)',mid:'Middle Season (Jun, Sep)',high:'High Season (Jul)',peak:'Peak Season (Aug)'}[carSeason(d)];}
@@ -1968,9 +1981,16 @@ function carInsPrice(id,days){return(ACE_INS[id]||0)*days;}
 function carCalc(c){
   const base=c.priceOverride!=null?c.priceOverride:carBasePrice(c.carType,c.days,c.rentalDate||c.bookDate);
   const ins=c.insurance?carInsPrice(c.carType,c.days):0;
-  return{base,ins,total:base!=null?base+ins:null};
+  const extrasTotal=ACE_EXTRAS.reduce((s,e)=>(c.extras&&c.extras[e.id])?s+e.price*(c.days||1):s,0);
+  return{base,ins,extras:extrasTotal,total:base!=null?base+ins+extrasTotal:null};
 }
 function carPriceOverride(i,val){const v=val===''?null:parseFloat(val);CARS[i].priceOverride=v;svCars();renderCars();}
+function carUpdExtra(i,extId,val){
+  if(!CARS[i].extras)CARS[i].extras={};
+  if(val)CARS[i].extras[extId]=true;
+  else delete CARS[i].extras[extId];
+  svCars();renderCars();
+}
 function carClearOverride(i){CARS[i].priceOverride=null;delete CARS[i].priceOverride;svCars();renderCars();showToast('Price reset to auto','s');}
 function carGetMonth(c){const d=new Date(c.rentalDate||c.bookDate||'');return isNaN(d)?'':String(d.getMonth()+1).padStart(2,'0');}
 
@@ -2022,6 +2042,20 @@ function expPrintDaily(){
     sections.push({title:tab.label,color:tab.color,cols:'# | Guest | Room | Ref | Service | Time | Company | Booked By | Cost | Status',rows});
   });
 
+  if(typeof massageData!=='undefined'){
+    var _md=massageData[date],_ms=[];
+    if(_md){Object.keys(_md).forEach(function(sl){
+      if(sl==='__customSlots')return;
+      var b=_md[sl];
+      if(b&&b.name)_ms.push({time:sl,name:b.name,room:b.room||'',duration:b.dur||b.duration||60,status:b.status||'waiting'});
+    });}
+    if(_ms.length){
+      _ms.sort(function(a,b2){return a.time.localeCompare(b2.time);});
+      sections.push({title:'Massage',icon:'M',color:'#b45309',items:_ms.map(function(s){
+        return {ref:'',name:s.name,room:s.room,detail:s.time+' · '+s.duration+'min',extra:'',cost:'',status:s.status};
+      })});
+    }
+  }
   if(!sections.length){
     alert('No bookings found for '+lbl);
     return;
@@ -2089,6 +2123,22 @@ function expDailyView(){
       ref:r.ref||'',name:r.name||'',room:r.room||'',detail:(r[detailField]||'')+(r.pax?' · '+r.pax+' pax':'')+(r.time?' · '+r.time:'')+(r.company?' · '+r.company:''),extra:r.bookedBy?'Booked by: '+r.bookedBy:'',cost:r.cost?'€'+r.cost:'',status:r.status||''
     }))});
   });
+
+  // Massage bookings for this date
+  if(typeof massageData!=='undefined'){
+    var _mmd=massageData[date],_mms=[];
+    if(_mmd){Object.keys(_mmd).forEach(function(sl){
+      if(sl==='__customSlots')return;
+      var b=_mmd[sl];
+      if(b&&b.name)_mms.push({time:sl,name:b.name,room:b.room||'',duration:b.dur||b.duration||60,status:b.status||'waiting'});
+    });}
+    if(_mms.length){
+      _mms.sort(function(a,b2){return a.time.localeCompare(b2.time);});
+      sections.push({title:'Massage',icon:'💆',color:'#b45309',items:_mms.map(function(s){
+        return {ref:'',name:s.name,room:s.room,detail:s.time+' · '+s.duration+'min',extra:'',cost:'',status:s.status};
+      })});
+    }
+  }
 
   if(!sections.length){
     showToast('No bookings found for '+fmt,'w');return;
@@ -2661,19 +2711,42 @@ function renderPLMBody(tab){
 
   // ── CARS ──
   if(tab==='cars'){
-    html+='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead>';
-    html+='<tr style="background:linear-gradient(180deg,#f0fff4,#e0f7e9)"><th style="padding:8px 10px;text-align:left;font-size:10px;color:#0d4a2f;font-weight:700;text-transform:uppercase;border-right:1px solid #a8d5b8;border-bottom:1px solid #a8d5b8">Vehicle</th>';
-    ['Low (Apr-May,Oct)','Mid (Jun,Sep)','High (Jul)','Peak (Aug)'].forEach(l=>{html+='<th colspan="2" style="padding:8px 10px;text-align:center;font-size:10px;color:#0d4a2f;font-weight:700;text-transform:uppercase;border-right:1px solid #a8d5b8;border-bottom:1px solid #a8d5b8">'+l+'</th>';});
-    html+='</tr><tr style="background:#f5f5f5;border-bottom:1px solid #a8d5b8"><th style="border-right:1px solid #a8d5b8"></th>';
-    ['Low','Mid','High','Peak'].forEach(()=>{html+='<th style="padding:5px 8px;text-align:center;font-size:10px;color:var(--muted);font-weight:700;border-right:1px solid #d8e5f0">1d</th><th style="padding:5px 8px;text-align:center;font-size:10px;color:var(--muted);font-weight:700;border-right:1px solid #d8e5f0">3d</th>';});
-    html+='</tr></thead><tbody>';
-    ACE_CARS.forEach(car=>{
-      const p=ACE_PRICES[car.id];if(!p)return;
-      html+='<tr style="border-bottom:1px solid var(--border2)"><td style="padding:7px 10px;font-weight:600;border-right:1px solid var(--border2)">'+car.s+'<div style="font-size:10px;color:var(--muted);font-weight:400">'+car.l+'</div></td>';
-      ['low','mid','high','peak'].forEach(s=>{const pr=p[s];html+='<td style="padding:7px 8px;text-align:center;font-weight:700;color:#1a6644;border-right:1px solid var(--border2)">'+(pr&&pr[0]!=null?'\u20ac'+pr[0]:'--')+'</td><td style="padding:7px 8px;text-align:center;color:var(--ink2);border-right:1px solid var(--border2)">'+(pr&&pr[2]!=null?'\u20ac'+pr[2]:'--')+'</td>';});
-      html+='</tr>';
+    const seasons=[
+      {key:'low',label:'Low Season',sub:'Apr–May · Oct',color:'#1a6644',bg:'#f0fff4'},
+      {key:'mid',label:'Mid Season',sub:'Jun · Sep',color:'#0369a1',bg:'#f0f9ff'},
+      {key:'high',label:'High Season',sub:'Jul',color:'#7c3aed',bg:'#f5f3ff'},
+      {key:'peak',label:'Peak Season',sub:'Aug',color:'#dc2626',bg:'#fef2f2'},
+    ];
+    const dayLabels=['1d','2d','3d','4d','5d','6d','7d','+d'];
+    seasons.forEach(function(season){
+      html+='<div style="margin-bottom:22px">';
+      html+='<div style="background:'+season.bg+';border-left:4px solid '+season.color+';padding:8px 14px;border-radius:8px 8px 0 0;display:flex;align-items:center;gap:8px">';
+      html+='<span style="font-size:13px;font-weight:800;color:'+season.color+'">'+season.label+'</span>';
+      html+='<span style="font-size:11px;color:var(--muted)">'+season.sub+'</span>';
+      html+='<span style="font-size:11px;color:var(--muted);margin-left:auto">GPS +€5/day · Baby Seat +€3/day · Insurance from €10/day</span>';
+      html+='</div>';
+      html+='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px">';
+      html+='<thead><tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb">';
+      html+='<th style="padding:7px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);border-right:1px solid #e5e7eb;min-width:160px">Vehicle</th>';
+      dayLabels.forEach(function(d){html+='<th style="padding:5px 7px;text-align:center;font-size:10px;font-weight:700;color:'+season.color+';border-right:1px solid #e5e7eb">'+d+'</th>';});
+      html+='</tr></thead><tbody>';
+      ACE_CARS.forEach(function(car){
+        if(car.id==='T')return;
+        const pr=(ACE_PRICES[car.id]||{})[season.key]||[];
+        const allNull=pr.every(function(v){return v==null;});if(allNull)return;
+        html+='<tr style="border-bottom:1px solid #f3f4f6">';
+        html+='<td style="padding:7px 10px;border-right:1px solid #e5e7eb"><div style="font-weight:700;color:var(--ink)">'+car.s+'</div><div style="font-size:10px;color:var(--muted)">'+car.l+'</div></td>';
+        pr.forEach(function(p,idx){
+          const isExtra=idx===7;
+          const val=p!=null?(isExtra?'+€'+p:'€'+p):'—';
+          const clr=p!=null?(isExtra?'#6b7280':season.color):'#d1d5db';
+          html+='<td style="padding:6px 7px;text-align:center;font-size:12px;border-right:1px solid #f3f4f6;font-weight:'+(isExtra?'500':'700')+';color:'+clr+(p==null?';opacity:.4':'')+'">'+(isExtra&&p==null?'—':val)+'</td>';
+        });
+        html+='</tr>';
+      });
+      html+='</tbody></table></div></div>';
     });
-    html+='</tbody></table></div><div style="font-size:11px;color:var(--muted);margin-top:10px">Insurance from \u20ac10/day. Showing 1-day and 3-day prices.</div>';
+    html+='<div style="padding:10px 14px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;font-size:12px;color:var(--muted)"><b style="color:var(--ink)">Tesla Model 3</b> — On request · Insurance €25/day</div>';
 
   // ── EXCURSIONS ──
   } else if(tab==='excursions'){
@@ -2951,6 +3024,9 @@ function renderCars(){
         <input type="checkbox"${c.insurance?' checked':''} style="width:15px;height:15px;cursor:pointer;accent-color:#1a6644" onchange="carUpd(${i},'insurance',this.checked)" title="Full Insurance">
         ${c.insurance&&ins?'<div style="font-size:9px;color:#1a6644;font-weight:700;margin-top:1px">€'+ins+'</div>':''}
       </td>
+      <td style="padding:5px 7px;text-align:center">
+        ${ACE_EXTRAS.filter(e=>c.extras&&c.extras[e.id]).map(e=>'<span style="display:inline-block;background:#e8f5ee;color:#1a6644;border:1px solid #a8d5b8;border-radius:5px;padding:2px 6px;font-size:10px;font-weight:700;margin:1px">'+e.label+' +€'+(e.price*(c.days||1))+'</span>').join('')||''}
+      </td>
       <td style="padding:7px 9px;text-align:right;font-weight:700;font-size:14px;color:#0d4a2f;font-family:var(--serif)">${total!=null?'€'+total:c.carType==='T'?'On Req':'—'}</td>
       <td style="padding:4px 7px;text-align:center">
         <button class="car-badge ${c.status}" onclick="carCycleStatus(${i})" title="Click to change">
@@ -3014,6 +3090,12 @@ function renderCars(){
               <label for="carins${i}" style="font-size:13px;cursor:pointer;color:var(--ink);text-transform:none;letter-spacing:0;font-weight:500">
                 Add full insurance${c.insurance&&ip?' <strong style="color:#1a6644">→ +€'+ip+'</strong>':''}
               </label>
+            </div>
+            <div style="margin-top:10px;padding:10px 12px;background:#f8fffe;border:1px solid #a8d5b8;border-radius:8px">
+              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#0d4a2f;margin-bottom:6px">Extras Upon Request</div>
+              <div style="display:flex;gap:14px;flex-wrap:wrap">
+                ${ACE_EXTRAS.map(e=>'<div style="display:flex;align-items:center;gap:5px"><input type="checkbox" id="carex_'+e.id+'_'+i+'" '+(c.extras&&c.extras[e.id]?'checked':'')+' style="width:15px;height:15px;cursor:pointer;accent-color:#1a6644" onchange="carUpdExtra('+i+',\''+e.id+'\',this.checked)"><label for="carex_'+e.id+'_'+i+'" style="font-size:12px;cursor:pointer;color:var(--ink)">'+e.label+' <strong style="color:#1a6644">+€'+e.price+'/day</strong></label></div>').join('')}
+              </div>
             </div>
           </div>
           <div class="car-epg" style="grid-column:3/6">
@@ -3082,9 +3164,11 @@ function carModalUpdatePrice(){
   const rentalDate=document.getElementById('cm-rentaldate').value||document.getElementById('cm-bookdate').value;
   const ins=document.getElementById('cm-ins').checked;
   const bookedBy=(document.getElementById('cm-bookedby')?.value||'').trim();
+  const extras={};ACE_EXTRAS.forEach(e=>{const el=document.getElementById('cm-extra-'+e.id);if(el&&el.checked)extras[e.id]=true;});
   const base=carBasePrice(type,days,rentalDate);
   const insAmt=ins?carInsPrice(type,days):0;
-  const total=base!=null?base+insAmt:null;
+  const extrasTotal=ACE_EXTRAS.reduce((s,e)=>extras[e.id]?s+e.price*days:s,0);
+  const total=base!=null?base+insAmt+extrasTotal:null;
   const sl=carSeasonLbl(rentalDate);
   const el=document.getElementById('cm-pricebox');
   if(!el)return;
@@ -3093,7 +3177,8 @@ function carModalUpdatePrice(){
   el.innerHTML='<div class="cpl">'+sl+'</div>'
     +'<div class="cpv">€'+base+'</div>'
     +(ins&&insAmt?'<div class="cpi">+ €'+insAmt+' insurance</div>':'')
-    +(ins&&total?'<div class="cpt">Total: €'+total+'</div>':'');
+    +(extrasTotal?'<div class="cpi">+ €'+extrasTotal+' extras</div>':'')
+    +(total?'<div class="cpt">Total: €'+total+'</div>':'');
 }
 
 function carModalSave(){
@@ -3103,6 +3188,7 @@ function carModalSave(){
   const bookDate=document.getElementById('cm-bookdate').value;
   const ins=document.getElementById('cm-ins').checked;
   const bookedBy=(document.getElementById('cm-bookedby')?.value||'').trim();
+  const extras={};ACE_EXTRAS.forEach(e=>{const el=document.getElementById('cm-extra-'+e.id);if(el&&el.checked)extras[e.id]=true;});
   const base=carBasePrice(type,days,rentalDate||bookDate);
   const insAmt=ins?carInsPrice(type,days):0;
   CARS.unshift({
@@ -3114,7 +3200,7 @@ function carModalSave(){
     bookDate,rentalDate,
     rentalTime:document.getElementById('cm-time').value,
     carType:type,days,insurance:ins,
-    status:document.getElementById('cm-status').value,bookedBy:bookedBy,
+    status:document.getElementById('cm-status').value,bookedBy:bookedBy,extras:extras,
     base,insAmt,total:base!=null?base+insAmt:null
   });
   svCars();carOpenEP=null;
@@ -3562,7 +3648,7 @@ function goTab(t){
   if(t==='analytics')renderAnalytics();
   if(t==='yoga'){initClsDates('yoga');renderCls('yoga');}
   if(t==='pilates'){initClsDates('pilates');renderCls('pilates');}
-  if(t==='massage'){msRenderFilterBars();renderMassage();}
+  if(t==='massage'){msRenderFilterBars();renderMassage();setTimeout(function(){var td=new Date().toISOString().split('T')[0];var el=document.querySelector('[data-msdate="'+td+'"]');if(el)el.scrollIntoView({behavior:'smooth',block:'center'});},200);}
   if(t==='alerts')renderAlerts();
   if(t==='comp'){renderComp();const cd=document.getElementById('comp-date');if(cd&&!cd.value)cd.value=new Date().toISOString().split('T')[0];}
   if(t==='ac'){renderAC();const ad=document.getElementById('ac-date');if(ad&&!ad.value)ad.value=new Date().toISOString().split('T')[0];}
@@ -4673,7 +4759,7 @@ function renderMassage(){
     filteredSlots.forEach(slotTime=>{slotsHtml+=slotRow(dateKey,slotTime,bookings);});
     if(!allSlots.length){slotsHtml+='<div style="padding:16px;text-align:center;color:var(--muted2);font-size:12px">No bookings</div>';}
     const windowsLbl=isManualOnly?'<span style="font-size:11px;color:rgba(255,255,255,.7)">Manual booking</span>':'<span style="font-size:11px;color:rgba(255,255,255,.7)">'+windows.map(w=>w.start+'\u2013'+w.end).join(' | ')+'</span>';
-    html+='<div class="ms-day-card"><div class="ms-day-hdr"><div class="ms-day-title"><i class="ti ti-calendar"></i>'+dateLbl+(isManualOnly?' <span style="background:rgba(255,255,255,.25);border-radius:6px;padding:2px 8px;font-size:11px;font-family:var(--sans)">Manual</span>':'')+'</div><div style="display:flex;align-items:center;gap:8px">'+windowsLbl+'<span class="ms-day-count">'+bookedCount+(scheduledSlots.length?'/'+allSlots.length:'')+'</span></div></div>'+slotsHtml+'<div class="ms-stats"><span class="ms-stat">Slots: <strong>'+allSlots.length+'</strong></span><span class="ms-stat">Booked: <strong>'+bookedCount+'</strong></span>'+(totalRevenue>0?'<span class="ms-stat" style="margin-left:auto">Revenue: <strong>\u20ac'+totalRevenue.toFixed(0)+'</strong></span>':'')+'</div></div>';
+    html+='<div class="ms-day-card" data-msdate="'+dateKey+'"><div class="ms-day-hdr"><div class="ms-day-title"><i class="ti ti-calendar"></i>'+dateLbl+(isManualOnly?' <span style="background:rgba(255,255,255,.25);border-radius:6px;padding:2px 8px;font-size:11px;font-family:var(--sans)">Manual</span>':'')+'</div><div style="display:flex;align-items:center;gap:8px">'+windowsLbl+'<span class="ms-day-count">'+bookedCount+(scheduledSlots.length?'/'+allSlots.length:'')+'</span></div></div>'+slotsHtml+'<div class="ms-stats"><span class="ms-stat">Slots: <strong>'+allSlots.length+'</strong></span><span class="ms-stat">Booked: <strong>'+bookedCount+'</strong></span>'+(totalRevenue>0?'<span class="ms-stat" style="margin-left:auto">Revenue: <strong>\u20ac'+totalRevenue.toFixed(0)+'</strong></span>':'')+'</div></div>';
   });
   if(!allDays.length)html='<div style="padding:40px;text-align:center;color:var(--muted2)"><i class="ti ti-calendar-off" style="font-size:36px;display:block;margin-bottom:10px;opacity:.3"></i>No massage schedule yet</div>';
   el.innerHTML=html;
