@@ -308,8 +308,8 @@ table.gtbl{width:100%;border-collapse:collapse;font-size:13px}
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(26,37,53,.5);z-index:500;align-items:flex-start;justify-content:center;padding:40px 0;overflow-y:auto}
 .modal-bg.open{display:flex}
 .modal{background:var(--white);border-radius:16px;padding:24px;width:490px;max-width:96vw;box-shadow:0 20px 60px rgba(26,37,53,.25)}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--ink);color:#fff;border-radius:10px;padding:11px 22px;font-size:13px;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:999;display:flex;align-items:center;gap:8px}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--ink);color:#fff;border-radius:10px;padding:11px 18px;font-size:13px;opacity:0;transition:all .25s;pointer-events:none;z-index:9999;display:flex;align-items:center;gap:10px;max-width:90vw}.toast-undo-btn{background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.4);border-radius:7px;color:#fff;font-size:12px;font-weight:700;padding:4px 10px;cursor:pointer;font-family:var(--sans);flex-shrink:0}.toast-undo-btn:hover{background:rgba(255,255,255,.35)}.toast-countdown{font-size:10px;opacity:.7;font-weight:600;min-width:20px;text-align:right}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:all}
 .toast.s{background:var(--olive)}.toast.w{background:var(--amber)}
 .hidden{display:none!important}
 .rev-wrap{padding:16px 20px 40px}
@@ -616,6 +616,13 @@ canvas.an-chart{width:100%!important;height:220px!important}
 .exp-search{padding:7px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:12px;font-family:var(--sans);outline:none;background:var(--white);color:var(--ink);width:220px;transition:border-color .15s}
 .exp-search:focus{border-color:#1a6644}
 .exp-search-wrap{display:flex;align-items:center;gap:6px}
+
+.dd-item-edit{display:flex;align-items:center;gap:6px;padding:6px 14px}
+.dd-item-edit input{flex:1;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:var(--sans);background:var(--bg)}
+.dd-sec-edit{display:flex;align-items:center;gap:6px;padding:3px 14px}
+.dd-sec-edit input{flex:1;padding:3px 8px;border:1px solid #f0c060;border-radius:5px;font-size:10px;font-weight:700;text-transform:uppercase;font-family:var(--sans);background:#fffbeb;color:#92400e}
+.dd-edit-bar{padding:8px 14px;border-top:1px solid var(--border);margin-top:4px;display:flex;gap:6px}
+.dd-edit-bar button{padding:5px 12px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--sans);border:none}
 </style>
 </head>
 <body>
@@ -664,18 +671,16 @@ canvas.an-chart{width:100%!important;height:220px!important}
         <div class="dd-sec-lbl">Hotel</div>
         <div class="dd-item on" id="ddi-res" onclick="ddGo('res','Reservations')"><i class="ti ti-list-details"></i> Reservations</div>
         <div class="dd-item" id="ddi-alerts" onclick="ddGo('alerts','Alerts')"><i class="ti ti-bell-ringing" style="color:#dc2626"></i> Alerts</div>
+        <div class="dd-item" id="ddi-comp" onclick="ddGo('comp','Complaints &amp; Complimentary')"><i class="ti ti-mood-sad" style="color:#be185d"></i> Complaints &amp; Complimentary</div>
         <div class="dd-item" id="ddi-day3" onclick="ddGo('day3','Day 1 &amp; Day 3')"><i class="ti ti-calendar-check"></i> Day 1 &amp; Day 3</div>
         <div class="dd-item" id="ddi-report" onclick="ddGo('report','Report')"><i class="ti ti-chart-bar"></i> Report</div>
         <div class="dd-divider"></div>
-        <div class="dd-sec-lbl">Groom Tools</div>
-        <div class="dd-item" id="ddi-comp" onclick="ddGo('comp','Complaints &amp; Complimentary')"><i class="ti ti-mood-sad" style="color:#be185d"></i> Complaints &amp; Complimentary</div>
+        <div class="dd-sec-lbl">Tools</div>
         <div class="dd-item" id="ddi-ac" onclick="ddGo('ac','A/C Issues')"><i class="ti ti-air-conditioning" style="color:#0e7490"></i> A/C Issues</div>
         <div class="dd-item pur" id="ddi-grooms" onclick="ddGo('grooms','Grooms Daily List')"><i class="ti ti-luggage"></i> Grooms Daily List</div>
         <div class="dd-divider"></div>
-        <div class="dd-sec-lbl">Tools</div>
-        <div class="dd-item amb" id="ddi-import" onclick="ddGo('import','Booking.com')"><i class="ti ti-brand-booking"></i> Booking.com Reviews</div>
-        <div style="height:1px;background:var(--border);margin:2px 0"></div>
         <div class="dd-sec-lbl">Reviews</div>
+        <div class="dd-item amb" id="ddi-import" onclick="ddGo('import','Booking.com')"><i class="ti ti-brand-booking"></i> Booking.com Reviews</div>
         <div class="dd-item" id="ddi-ta" onclick="ddGo('ta','TripAdvisor')" style="color:#2d9c68"><i class="ti ti-brand-tripadvisor" style="color:#2d9c68"></i> TripAdvisor</div>
         <div class="dd-item" id="ddi-goo" onclick="ddGo('goo','Google Reviews')" style="color:#4285f4"><i class="ti ti-brand-google" style="color:#4285f4"></i> Google Reviews</div>
         <div class="dd-item" id="ddi-analytics" onclick="ddGo('analytics','Analytics &amp; AI')"><i class="ti ti-chart-dots" style="color:#2563aa"></i> Analytics &amp; AI Responses</div>
@@ -694,7 +699,8 @@ canvas.an-chart{width:100%!important;height:220px!important}
   <div class="hdr-r">
     <div class="sync-pill"><span class="sdot"></span><span class="s-lbl">live</span></div>
     <div class="clk" id="clk">--:--:--</div>
-    <button onclick="openTabSettings()" title="Tab Settings" style="width:32px;height:32px;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.28)'" onmouseout="this.style.background='rgba(255,255,255,.15)'"><i class="ti ti-settings" style="font-size:16px"></i></button>
+    <button id="menu-edit-btn" onclick="menuEditToggle()" title="Edit Menu" style="width:32px;height:32px;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.28)'" onmouseout="this.style.background='rgba(255,255,255,.15)'"><i class="ti ti-pencil" style="font-size:16px"></i></button>
+<button onclick="openTabSettings()" title="Tab Settings" style="width:32px;height:32px;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.28)'" onmouseout="this.style.background='rgba(255,255,255,.15)'"><i class="ti ti-settings" style="font-size:16px"></i></button>
   </div>
 </div>
 
@@ -1333,12 +1339,17 @@ canvas.an-chart{width:100%!important;height:220px!important}
   <div class="exp-wrap">
     <div class="exp-hdr">
       <div class="exp-hdr-ico"><i class="ti ti-map-pin"></i></div>
-      <div>
+      <div style="flex:1">
         <div class="exp-hdr-t">Experiences &amp; Services</div>
         <div class="exp-hdr-s">Car Rentals &middot; Excursions &middot; Moto &amp; Bikes &middot; Flowers &middot; Boats &amp; Cruises &middot; Transfers</div>
       </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <input type="date" id="exp-daily-date" style="padding:7px 10px;border:1.5px solid rgba(255,255,255,.4);border-radius:9px;font-size:12px;font-family:var(--sans);outline:none;background:rgba(255,255,255,.15);color:#fff;cursor:pointer" onchange="expDailyView()">
+        <button onclick="expDailyView()" style="display:flex;align-items:center;gap:6px;padding:8px 16px;background:rgba(255,255,255,.2);color:#fff;border:1.5px solid rgba(255,255,255,.4);border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans)"><i class="ti ti-calendar-day" style="font-size:14px"></i> Daily View</button>
+      </div>
     </div>
-    <div class="exp-subnav" style="flex-wrap:wrap;gap:4px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+      <div class="exp-subnav" style="flex-wrap:wrap;gap:4px;margin-bottom:0;flex:1">
       <button class="exp-subtab on" id="expsub-cars" onclick="expGoTab('cars',this)"><i class="ti ti-car"></i> Car Rentals</button>
       <button class="exp-subtab" id="expsub-excursions" onclick="expGoTab('excursions',this)"><i class="ti ti-binoculars"></i> Excursions</button>
       <button class="exp-subtab" id="expsub-moto" onclick="expGoTab('moto',this)"><i class="ti ti-motorbike"></i> Moto &amp; Bikes</button>
@@ -1346,6 +1357,12 @@ canvas.an-chart{width:100%!important;height:220px!important}
       <button class="exp-subtab" id="expsub-boats" onclick="expGoTab('boats',this)"><i class="ti ti-sailboat"></i> Boats &amp; Cruises</button>
       <button class="exp-subtab" id="expsub-transfers" onclick="expGoTab('transfers',this)"><i class="ti ti-bus"></i> Transfers</button>
       <button class="exp-subtab" id="expsub-vantours" onclick="expGoTab('vantours',this)" style="color:#7c5e2e"><i class="ti ti-steering-wheel"></i> Van Tours</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:8px 12px;box-shadow:var(--sh);flex-shrink:0">
+        <i class="ti ti-calendar-event" style="color:#1a6644;font-size:15px"></i>
+        <input type="date" id="exp-daily-date" style="padding:4px 8px;border:1.5px solid var(--border);border-radius:7px;font-size:12px;font-family:var(--sans);outline:none;color:var(--ink)">
+        <button onclick="expPrintDaily()" style="display:flex;align-items:center;gap:5px;padding:7px 14px;background:#1a6644;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans)"><i class="ti ti-printer" style="font-size:13px"></i> Daily View</button>
+      </div>
     </div>
 
     <!-- ── CARS PANEL ── -->
@@ -1967,6 +1984,172 @@ const EXP_LABELS={cars:'Car Rentals',excursions:'Excursions',moto:'Moto & Bikes'
 
 let expCurrentTab='cars';
 
+
+function expPrintDaily(){
+  const dateEl=document.getElementById('exp-daily-date');
+  const dateVal=dateEl?.value||new Date().toISOString().split('T')[0];
+  const d=new Date(dateVal+'T12:00:00');
+  const DAY3=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const MON3=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const lbl=DAY3[d.getDay()]+', '+d.getDate()+' '+MON3[d.getMonth()]+' '+d.getFullYear();
+
+  // Collect bookings for this date from all tabs
+  const sections=[];
+
+  // CARS — match rentalDate
+  const cars=(CARS||[]).filter(c2=>c2.rentalDate===dateVal);
+  if(cars.length){
+    const rows=cars.map((c2,i)=>'<tr><td>'+(i+1)+'</td><td><b>'+esc(c2.name||'')+'</b></td><td>'+esc(c2.room||'')+'</td><td>'+esc(c2.ref||'')+'</td><td>'+esc(c2.carType||c2.category||'')+'</td><td>'+esc(c2.time||'')+'</td><td>'+esc(c2.company||'')+'</td><td>'+esc(c2.bookedBy||'')+'</td><td style="color:#1a6644;font-weight:700">€'+(c2.total||c2.basePrice||0)+'</td><td>'+esc(c2.status||'')+'</td></tr>').join('');
+    sections.push({title:'🚗 Car Rentals',color:'#1a6644',cols:'# | Guest | Room | Ref | Car | Time | Company | Booked By | Total | Status',rows});
+  }
+
+  // GEN TABS
+  const genTabs=[
+    {id:'excursions',label:'🗺️ Excursions',color:'#1a6ca8',dateField:'date',nameFields:['excursion']},
+    {id:'moto',label:'🏍️ Moto & Bikes',color:'#5c3d8f',dateField:'rentalDate',nameFields:['vehicle']},
+    {id:'flowers',label:'🌸 Flowers',color:'#be185d',dateField:'delivDate',nameFields:['arrangement']},
+    {id:'boats',label:'⛵ Boats & Cruises',color:'#0e7490',dateField:'date',nameFields:['trip']},
+    {id:'transfers',label:'🚌 Transfers',color:'#92400e',dateField:'date',nameFields:['route']},
+    {id:'vantours',label:'🚐 Van Tours',color:'#7c5e2e',dateField:'date',nameFields:['tourType','route']},
+  ];
+  genTabs.forEach(tab=>{
+    const data=(GEN_DATA[tab.id]||[]).filter(r=>r[tab.dateField]===dateVal);
+    if(!data.length)return;
+    const rows=data.map((r,i)=>{
+      const svc=tab.nameFields.map(f=>r[f]||'').filter(Boolean).join(' / ');
+      return '<tr><td>'+(i+1)+'</td><td><b>'+esc(r.name||'')+'</b></td><td>'+esc(r.room||'')+'</td><td>'+esc(r.ref||'')+'</td><td>'+esc(svc)+'</td><td>'+esc(r.time||'')+'</td><td>'+esc(r.company||'')+'</td><td>'+esc(r.bookedBy||'')+'</td><td style="font-weight:700">€'+(r.cost||r.grossPrice||r.bosoniPrice||0)+'</td><td>'+esc(r.status||'')+'</td></tr>';
+    }).join('');
+    sections.push({title:tab.label,color:tab.color,cols:'# | Guest | Room | Ref | Service | Time | Company | Booked By | Cost | Status',rows});
+  });
+
+  if(!sections.length){
+    alert('No bookings found for '+lbl);
+    return;
+  }
+
+  const total=sections.reduce((s,sec)=>s+(sec.rows.match(/<tr>/g)||[]).length,0);
+
+  const sectionsHtml=sections.map(sec=>`
+    <h2 style="font-size:16px;color:${sec.color};margin:20px 0 8px;border-bottom:2px solid ${sec.color};padding-bottom:5px">${sec.title}</h2>
+    <table><thead style="background:${sec.color}20">
+      <tr>${sec.cols.split(' | ').map(h=>'<th>'+h+'</th>').join('')}</tr>
+    </thead><tbody>${sec.rows}</tbody></table>`).join('');
+
+  const win=window.open('','_blank','width=1100,height=900');
+  win.document.write(`<!DOCTYPE html><html><head><title>Daily Experiences — ${lbl}</title>
+  <style>
+    body{font-family:Arial,sans-serif;padding:28px;color:#1a2535;font-size:13px}
+    h1{font-size:22px;color:#1a6644;margin-bottom:4px}
+    .sub{font-size:12px;color:#6b7280;margin-bottom:6px}
+    table{width:100%;border-collapse:collapse;margin-bottom:4px;font-size:12px}
+    th{padding:7px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px}
+    td{padding:7px 10px;border-bottom:1px solid #e5e7eb}
+    tr:nth-child(even){background:#f9fafb}
+    @media print{body{padding:12px}button{display:none}}
+  </style></head><body>
+  <h1>Daily Experiences Report</h1>
+  <div class="sub">${lbl} &bull; White Rocks Hotel &amp; Bungalows &bull; ${total} total bookings</div>
+  <button onclick="window.print()" style="margin-bottom:16px;padding:7px 16px;background:#1a6644;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer">🖨️ Print</button>
+  ${sectionsHtml}
+  </body></html>`);
+  win.document.close();
+}
+
+function expDailyView(){
+  const dateEl=document.getElementById('exp-daily-date');
+  const date=dateEl?.value||new Date().toISOString().split('T')[0];
+  if(!dateEl?.value)dateEl.value=date;
+  const [y,m,d]=date.split('-');
+  const fmt=new Date(date).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+  // Collect all bookings for this date from all tabs
+  const sections=[];
+
+  // CARS — match rentalDate
+  const cars=(CARS||[]).filter(c=>(c.rentalDate||'').slice(0,10)===date);
+  if(cars.length){
+    sections.push({title:'Car Rentals',icon:'🚗',color:'#1a6644',items:cars.map(c=>({
+      ref:c.ref||'',name:c.name||'',room:c.room||'',detail:(c.carType||c.category||'')+(c.days?' · '+c.days+'d':'')+(c.company?' · '+c.company:''),extra:c.bookedBy?'Booked by: '+c.bookedBy:'',status:c.status||''
+    }))});
+  }
+
+  // GEN TABS
+  const genTabs=[
+    {key:'excursions',label:'Excursions',icon:'🗺️',color:'#1a6ca8',dateField:'date',detailField:'excursion'},
+    {key:'moto',label:'Moto & Bikes',icon:'🏍️',color:'#5c3d8f',dateField:'date',detailField:'vehicle'},
+    {key:'flowers',label:'Flowers',icon:'💐',color:'#be185d',dateField:'delivDate',detailField:'arrangement'},
+    {key:'boats',label:'Boats & Cruises',icon:'⛵',color:'#0e7490',dateField:'date',detailField:'trip'},
+    {key:'transfers',label:'Transfers',icon:'🚌',color:'#92400e',dateField:'date',detailField:'route'},
+    {key:'vantours',label:'Van Tours',icon:'🚐',color:'#7c5e2e',dateField:'date',detailField:'tourType'},
+  ];
+  genTabs.forEach(({key,label,icon,color,dateField,detailField})=>{
+    const items=(GEN_DATA[key]||[]).filter(r=>(r[dateField]||'').slice(0,10)===date);
+    if(!items.length)return;
+    sections.push({title:label,icon,color,items:items.map(r=>({
+      ref:r.ref||'',name:r.name||'',room:r.room||'',detail:(r[detailField]||'')+(r.pax?' · '+r.pax+' pax':'')+(r.time?' · '+r.time:'')+(r.company?' · '+r.company:''),extra:r.bookedBy?'Booked by: '+r.bookedBy:'',cost:r.cost?'€'+r.cost:'',status:r.status||''
+    }))});
+  });
+
+  if(!sections.length){
+    showToast('No bookings found for '+fmt,'w');return;
+  }
+
+  // Build printable page
+  const statusBadge=(s)=>{const map={confirmed:'background:#f0fdf4;color:#16a34a',waiting:'background:#fffbeb;color:#d97706',cancelled:'background:#fce8e8;color:#dc2626;text-decoration:line-through',commission:'background:#fffbeb;color:#b45309'};const st=s||'waiting';return '<span style="'+( map[st]||map.waiting)+';padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;text-transform:capitalize">'+st+'</span>';};
+
+  const sectHtml=sections.map(sec=>`
+    <div style="margin-bottom:28px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid ${sec.color}">
+        <span style="font-size:18px">${sec.icon}</span>
+        <h2 style="font-size:15px;font-weight:700;color:${sec.color};margin:0">${sec.title}</h2>
+        <span style="font-size:12px;color:#9ca3af;margin-left:auto">${sec.items.length} booking${sec.items.length>1?'s':''}</span>
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead>
+          <tr style="background:#f9fafb">
+            <th style="padding:7px 10px;text-align:left;color:#6b7280;font-size:10px;text-transform:uppercase;letter-spacing:.7px;border-bottom:1px solid #e5e7eb">Room</th>
+            <th style="padding:7px 10px;text-align:left;color:#6b7280;font-size:10px;text-transform:uppercase;letter-spacing:.7px;border-bottom:1px solid #e5e7eb">Guest</th>
+            <th style="padding:7px 10px;text-align:left;color:#6b7280;font-size:10px;text-transform:uppercase;letter-spacing:.7px;border-bottom:1px solid #e5e7eb">Ref</th>
+            <th style="padding:7px 10px;text-align:left;color:#6b7280;font-size:10px;text-transform:uppercase;letter-spacing:.7px;border-bottom:1px solid #e5e7eb">Details</th>
+            <th style="padding:7px 10px;text-align:left;color:#6b7280;font-size:10px;text-transform:uppercase;letter-spacing:.7px;border-bottom:1px solid #e5e7eb">Cost</th>
+            <th style="padding:7px 10px;text-align:left;color:#6b7280;font-size:10px;text-transform:uppercase;letter-spacing:.7px;border-bottom:1px solid #e5e7eb">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${sec.items.map((it,i)=>`<tr style="border-bottom:1px solid #f3f4f6;background:${i%2===0?'#fff':'#f9fafb'}">
+            <td style="padding:8px 10px;font-weight:700;color:${sec.color};font-size:14px">${it.room||'—'}</td>
+            <td style="padding:8px 10px"><div style="font-weight:600">${esc(it.name)}</div>${it.extra?'<div style="font-size:10px;color:#9ca3af">'+esc(it.extra)+'</div>':''}</td>
+            <td style="padding:8px 10px;color:#9ca3af;font-size:11px">${esc(it.ref)}</td>
+            <td style="padding:8px 10px;color:#374151">${esc(it.detail)}</td>
+            <td style="padding:8px 10px;font-weight:700;color:#1a6644">${it.cost||'—'}</td>
+            <td style="padding:8px 10px">${statusBadge(it.status)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`).join('');
+
+  const total=sections.reduce((s,sec)=>s+sec.items.length,0);
+  const win=window.open('','_blank','width=900,height=800');
+  win.document.write(`<!DOCTYPE html><html><head><title>Daily Experiences — ${fmt}</title>
+  <style>
+    body{font-family:Arial,sans-serif;padding:28px;color:#1a2535;max-width:900px;margin:0 auto}
+    h1{font-size:22px;color:#1a6644;margin-bottom:2px}
+    .sub{font-size:13px;color:#6b7280;margin-bottom:24px;display:flex;align-items:center;gap:12px}
+    @media print{body{padding:14px;max-width:none}button{display:none!important}}
+  </style></head><body>
+  <h1>📋 Daily Experiences & Services</h1>
+  <div class="sub">
+    <span><strong>${fmt}</strong></span>
+    <span>·</span><span>White Rocks Hotel &amp; Bungalows</span>
+    <span>·</span><span>${total} total bookings</span>
+    <button onclick="window.print()" style="margin-left:auto;padding:7px 16px;background:#1a6644;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer">🖨️ Print</button>
+  </div>
+  ${sectHtml}
+  <script>window.onload=function(){}<\/script>
+  </body></html>`);
+  win.document.close();
+}
+
 function expGoTab(tab,el){
   expCurrentTab=tab;
   EXP_TABS.forEach(t=>{
@@ -2106,8 +2289,11 @@ function renderGenTab(tab){
     }
     else if(tab==='boats'){
       const isOpen_boats=genIsOpen('boats',i);
-      html+='<tr class="'+rc+(isOpen_boats?' car-ep-open':'')+'" onclick="genToggleRow(\'boats\','+i+')">'+baseFields+'<td>'+inpDate(i,'date',r.date)+'</td><td>'+inpTime(i,'time',r.time)+'</td><td>'+inp(i,'trip',r.trip,'Trip / Cruise')+'</td><td>'+inpNum(i,'pax',r.pax,'50px')+'</td><td style="padding:7px 9px;font-weight:700;color:'+col+'">'+(r.cost?'€'+r.cost:'')+'</td><td>'+inp(i,'company',r.company,'Company')+'</td><td style="padding:5px 7px">'+sb(r,i)+'</td><td style="padding:4px 7px"><div style="display:flex;gap:3px">'+genExpandBtn('boats',i,'#0e7490')+'<button onclick="event.stopPropagation();genDel(\'boats\','+i+')" style="width:26px;height:26px;background:#fce8e8;border:none;border-radius:6px;cursor:pointer;color:var(--coral);display:flex;align-items:center;justify-content:center"><i class="ti ti-trash" style="font-size:12px"></i></button></div></td></tr>';
-      if(isOpen_boats){html+='<tr class="car-ep" style="background:#e0f7fa"><td colspan="20" onclick="event.stopPropagation()">'+epBaseFields('boats',i,r,'#0e7490')+'<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:12px;margin-top:10px">'+epField('Trip / Cruise','#0e7490',epInp('boats',i,'trip',r.trip,'Trip name...'))+epField('Tour Date','#0e7490',epDate('boats',i,'date',r.date))+epField('Departure Time','#0e7490',epTime('boats',i,'time',r.time))+epField('Pax','#0e7490',epNum('boats',i,'pax',r.pax,'2','1',null))+epField('Cost €','#0e7490',epNum('boats',i,'cost',r.cost,'0','0',null))+epField('Company','#0e7490',epInp('boats',i,'company',r.company,'MAK / Ego / SIW...'))+epField('Notes','#0e7490',epInp('boats',i,'notes',r.notes,'Pickup, extras...'))+epStatus('boats',i,r.status,4)+'</div></td></tr>';}
+      html+='<tr class="'+rc+(isOpen_boats?' car-ep-open':'')+'" onclick="genToggleRow(\'boats\','+i+')">'+baseFields+'<td>'+inpDate(i,'date',r.date)+'</td><td>'+inpTime(i,'time',r.time)+'</td><td>'+inp(i,'trip',r.trip,'Trip / Cruise')+'</td><td>'+inpNum(i,'pax',r.pax,'50px')+'</td><td style="padding:7px 9px;font-weight:700;color:'+col+'">'+(r.cost?'€'+r.cost:'')+'</td><td onclick="event.stopPropagation()">'+inp(i,'company',r.company,'Company')+'</td><td onclick="event.stopPropagation()">'+inp(i,'bookedBy',r.bookedBy,'Staff')+'</td><td style="padding:5px 7px">'+sb(r,i)+'</td><td style="padding:4px 7px"><div style="display:flex;gap:3px">'+genExpandBtn('boats',i,'#0e7490')+'<button onclick="event.stopPropagation();genDel(\'boats\','+i+')" style="width:26px;height:26px;background:#fce8e8;border:none;border-radius:6px;cursor:pointer;color:var(--coral);display:flex;align-items:center;justify-content:center"><i class="ti ti-trash" style="font-size:12px"></i></button></div></td></tr>';
+    // Normalize company codes to full names for display
+  const _coMap={'mak':'MAK Yachting','ego':'Ego Cruises','siw':'Seven Islands Ways','MAK':'MAK Yachting','Ego':'Ego Cruises','SIW':'Seven Islands Ways'};
+  if(tab==='boats'){GEN_DATA['boats'].forEach(r=>{if(r.company&&_coMap[r.company])r.company=_coMap[r.company];});}
+    if(isOpen_boats){html+='<tr class="car-ep" style="background:#e0f7fa"><td colspan="20" onclick="event.stopPropagation()">'+epBaseFields('boats',i,r,'#0e7490')+'<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:12px;margin-top:10px">'+epField('Trip / Cruise','#0e7490',epInp('boats',i,'trip',r.trip,'Trip name...'))+epField('Tour Date','#0e7490',epDate('boats',i,'date',r.date))+epField('Departure Time','#0e7490',epTime('boats',i,'time',r.time))+epField('Pax','#0e7490',epNum('boats',i,'pax',r.pax,'2','1',null))+epField('Cost €','#0e7490',epNum('boats',i,'cost',r.cost,'0','0',null))+epField('Company','#0e7490',epInp('boats',i,'company',r.company,'MAK / Ego / SIW...'))+epField('Notes','#0e7490',epInp('boats',i,'notes',r.notes,'Pickup, extras...'))+epStatus('boats',i,r.status,4)+'</div></td></tr>';}
     }
     else if(tab==='transfers'){
       const isOpen_transfers=genIsOpen('transfers',i);
@@ -2149,7 +2335,7 @@ function renderGenSum(tab){
   el.innerHTML=any?html:'<div style="font-size:12px;color:var(--muted2);padding:6px">No data yet</div>';
 }
 
-function genDel(tab,i){if(!confirm('Delete this booking?'))return;GEN_DATA[tab].splice(i,1);svGen(tab);renderGenTab(tab);showToast('Deleted','w');}
+function genDel(tab,i){const saved=GEN_DATA[tab].splice(i,1)[0];svGen(tab);renderGenTab(tab);setTimeout(function(){showToast('Deleted','w',function(){GEN_DATA[tab].splice(i,0,saved);svGen(tab);renderGenTab(tab);});},50);}
 
 const GEN_FIELDS={
   excursions:[
@@ -2241,8 +2427,13 @@ function gmBoatsUpdateTrips(){
   const notesWrap=document.getElementById('gm-notes-wrap');
   let opts='<option value="">-- Select cruise --</option>';
   if(co==='MAK'){
-    const all=[...(MAK_CATALOG.cruises.v1||[]),...(MAK_CATALOG.cruises.v2||[]),...(MAK_CATALOG.cruises.v3||[])];
-    opts+=all.map(t=>'<option value="'+t.name+'">'+t.name+(t.price?' (€'+t.price+')':'')+'</option>').join('');
+    MAK_CATALOG.vessels.forEach(v=>{
+      const cruises=MAK_CATALOG.cruises[v.id]||[];
+      if(!cruises.length)return;
+      opts+='<optgroup label="'+v.name+'">';
+      opts+=cruises.map(t=>'<option value="'+t.name+'">'+t.name+(t.price&&!t.onRequest?' (€'+t.price+')':t.onRequest?' (On Request)':'')+'</option>').join('');
+      opts+='</optgroup>';
+    });
     opts+='<option value="Custom / Private">Custom / Private Charter</option>';
     if(notesWrap)notesWrap.style.display='';
   } else {
@@ -2255,6 +2446,31 @@ function gmBoatsUpdateTrips(){
   }
   tripSel.innerHTML=opts;
 }
+function gmBoatsAutoFillCost(){
+  const co=document.getElementById('gm-company')?.value||'';
+  const trip=document.getElementById('gm-trip')?.value||'';
+  const costEl=document.getElementById('gm-cost');
+  if(!costEl||!trip)return;
+  // Find price from catalogs
+  let price=null;
+  if(co==='MAK'){
+    MAK_CATALOG.vessels.forEach(v=>{
+      const t=(MAK_CATALOG.cruises[v.id]||[]).find(x=>x.name===trip);
+      if(t&&!t.onRequest&&t.price)price=t.price;
+    });
+  } else if(co==='Ego'){
+    const t=EGO_CATALOG.find(x=>x.name===trip);
+    if(t)price=t.privateCost;
+  } else if(co==='SIW'){
+    const t=SIW_CATALOG.find(x=>x.name===trip);
+    const pax=parseInt(document.getElementById('gm-pax')?.value)||4;
+    const month=new Date().getMonth()+1;
+    const hs=(month>=7&&month<=9);
+    if(t&&!t.onRequest)price=hs?t.priceHS:t.priceLS;
+  }
+  if(price)costEl.value=price;
+}
+
 function gmMotoUpdateVehicles(){
   const co=document.getElementById('gm-company')?.value||'';
   const vSel=document.getElementById('gm-vehicle');if(!vSel)return;
@@ -2358,7 +2574,7 @@ function genAdd(tab){
     } else if(f.type==='boats_company'){
       html+='<div>'+lbl2+'<select style="'+selStyle+'" id="gm-company" onchange="gmBoatsUpdateTrips()"><option value="">-- Company --</option><option value="MAK">MAK Yachting</option><option value="Ego">Ego Cruises</option><option value="SIW">Seven Islands Ways</option></select></div>';
     } else if(f.type==='boats_trip'){
-      html+='<div>'+lbl2+'<select style="'+selStyle+'" id="gm-trip"><option value="">-- Select cruise --</option></select></div>';
+      html+='<div>'+lbl2+'<select style="'+selStyle+'" id="gm-trip" onchange="gmBoatsAutoFillCost()"><option value="">-- Select cruise --</option></select></div>';
     } else if(f.type==='boats_notes'){
       html+='<div id="gm-notes-wrap" style="grid-column:1/3;display:none">'+lbl2+'<input class="tr-inp" style="width:100%" id="gm-notes" type="text" placeholder="Custom MAK trip description, vessel, special request..."></div>';
     } else if(f.type==='vantour_select'){
@@ -2383,8 +2599,10 @@ function genModalClose(){document.getElementById('genModal').classList.remove('o
 function genModalSave(){
   const tab=genModalTab;const fields=GEN_FIELDS[tab]||[];
   const row={status:'waiting',id:Date.now()+''};
+  const modalContainer=document.getElementById('gm-fields');
   fields.forEach(f=>{
-    const el=document.getElementById('gm-'+f.id);if(!el)return;
+    const el=modalContainer?modalContainer.querySelector('#gm-'+f.id):document.getElementById('gm-'+f.id);
+    if(!el)return;
     let v=el.value;
     if(f.upper)v=v.toUpperCase();
     if(f.type==='number')v=v?parseFloat(v)||0:'';
@@ -2394,6 +2612,11 @@ function genModalSave(){
   if(tab==='moto'&&!row.cost){const ap=motoAutoPrice(row.vehicle,row.days||3,row.rentalDate);if(ap)row.cost=ap;}
   // For vantours: try auto-price
   if(tab==='vantours'&&!row.cost){const vp=vanTourAutoPrice(row.tour,row.pax||2,row.tourType||'standard');if(vp)row.cost=vp;}
+  // Boats: store full company name
+  if(tab==='boats'&&row.company){
+    const coMap={'MAK':'MAK Yachting','Ego':'Ego Cruises','SIW':'Seven Islands Ways'};
+    if(coMap[row.company])row.company=coMap[row.company];
+  }
   if(!row.name&&!row.ref){showToast('Please fill in at least Name or Ref','w');return;}
   GEN_DATA[tab].unshift(row);svGen(tab);genModalClose();renderGenTab(tab);showToast('Booking added!','s');
 }
@@ -2655,8 +2878,8 @@ function carAdd(){
 }
 
 function carDel(i){
-  if(!confirm('Delete this car booking?'))return;
-  CARS.splice(i,1);svCars();carOpenEP=null;renderCars();showToast('Deleted','w');
+  const saved=CARS.splice(i,1)[0];svCars();carOpenEP=null;renderCars();
+  setTimeout(function(){showToast('Deleted','w',function(){CARS.splice(i,0,saved);svCars();renderCars();});},50);
 }
 
 function setCarM(m,el){
@@ -3184,6 +3407,100 @@ function renderGenRevSummary(tab,rows){
   obs.observe(document.body,{childList:true,subtree:true});
   window.addEventListener('click',e=>{if(e.target.closest('.tab,.exp-subtab'))setTimeout(initAll,120);});
 })();
+
+let _menuEditMode=false;
+
+function menuEditToggle(){
+  if(_menuEditMode){
+    // Save and exit
+    _menuEditMode=false;
+    const btn=document.getElementById('menu-edit-btn');
+    if(btn){btn.style.background='rgba(255,255,255,.15)';btn.title='Edit Menu';}
+    menuEditSave();
+    return;
+  }
+  // Ask for password
+  const pw=prompt('Enter edit password:');
+  if(!pw)return;
+  if(pw!=='fom2026'){showToast('Wrong password','w');return;}
+  _menuEditMode=true;
+  const btn=document.getElementById('menu-edit-btn');
+  if(btn){btn.style.background='rgba(255,255,255,.35)';btn.title='Save Menu';}
+  menuEditRender();
+  // Open dropdown
+  document.getElementById('ddMenu').classList.add('open');
+}
+
+function menuEditRender(){
+  const menu=document.getElementById('ddMenu');
+  if(!menu)return;
+  // Collect current items
+  const items=[];
+  menu.querySelectorAll('.dd-item,.dd-sec-lbl,.dd-divider').forEach(el=>{
+    if(el.classList.contains('dd-divider'))items.push({type:'divider',el});
+    else if(el.classList.contains('dd-sec-lbl'))items.push({type:'sec',text:el.textContent,el});
+    else items.push({type:'item',id:el.id,text:el.querySelector('span')||el,el});
+  });
+  // Add edit bar at bottom
+  if(!menu.querySelector('.dd-edit-bar')){
+    const bar=document.createElement('div');
+    bar.className='dd-edit-bar';
+    bar.innerHTML='<span style="font-size:11px;color:var(--muted);flex:1">Edit section labels above</span>'
+      +'<button onclick="menuEditSave()" style="background:#1a6644;color:#fff">Save</button>'
+      +'<button onclick="menuEditCancel()" style="background:var(--bg);color:var(--muted);border:1px solid var(--border)">Cancel</button>';
+    menu.appendChild(bar);
+  }
+  // Make sec-lbl editable
+  menu.querySelectorAll('.dd-sec-lbl').forEach(el=>{
+    el.contentEditable='true';
+    el.style.outline='1px dashed #f0c060';
+    el.style.borderRadius='4px';
+    el.style.padding='2px 4px';
+    el.style.cursor='text';
+  });
+  // Make dd-item labels editable
+  menu.querySelectorAll('.dd-item').forEach(el=>{
+    const icon=el.querySelector('i');
+    const txt=el.childNodes[el.childNodes.length-1];
+    if(txt&&txt.nodeType===3){
+      const span=document.createElement('span');
+      span.contentEditable='true';
+      span.style.outline='1px dashed #b2d8ff';
+      span.style.borderRadius='4px';
+      span.style.padding='0 3px';
+      span.style.cursor='text';
+      span.textContent=txt.textContent;
+      txt.replaceWith(span);
+    }
+  });
+}
+
+function menuEditSave(){
+  const menu=document.getElementById('ddMenu');
+  if(!menu)return;
+  // Remove edit bar
+  const bar=menu.querySelector('.dd-edit-bar');
+  if(bar)bar.remove();
+  // Restore sec-lbl
+  menu.querySelectorAll('.dd-sec-lbl').forEach(el=>{
+    el.contentEditable='false';
+    el.style.outline='';el.style.padding='';el.style.cursor='';
+  });
+  // Restore item text
+  menu.querySelectorAll('.dd-item span[contenteditable]').forEach(span=>{
+    const txt=document.createTextNode(span.textContent);
+    span.replaceWith(txt);
+  });
+  _menuEditMode=false;
+  showToast('Menu saved','s');
+}
+
+function menuEditCancel(){
+  _menuEditMode=false;
+  const btn=document.getElementById('menu-edit-btn');
+  if(btn){btn.style.background='rgba(255,255,255,.15)';}
+  menuEditSave();
+}
 </script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
@@ -3249,7 +3566,7 @@ function goTab(t){
   if(t==='alerts')renderAlerts();
   if(t==='comp'){renderComp();const cd=document.getElementById('comp-date');if(cd&&!cd.value)cd.value=new Date().toISOString().split('T')[0];}
   if(t==='ac'){renderAC();const ad=document.getElementById('ac-date');if(ad&&!ad.value)ad.value=new Date().toISOString().split('T')[0];}
-  if(t==='experiences')renderCars();
+  if(t==='experiences'){renderCars();const ed=document.getElementById('exp-daily-date');if(ed&&!ed.value)ed.value=new Date().toISOString().split('T')[0];}
   if(t==='suggestions')renderSuggestions();
 }
 function renderStats(){
@@ -3550,7 +3867,45 @@ document.addEventListener('keydown', function(e){
   if(el.closest('#ta-text,#goo-text')) return; // allow newlines in review textarea
 });
 
-function showToast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');setTimeout(()=>t.className='toast',2500);}
+let _undoTimer=null;let _undoInterval=null;let _undoSecs=10;let _undoCommit=null;let _undoRollback=null;
+
+function showToast(msg,type,undoFn){
+  const t=document.getElementById('toast');
+  if(_undoTimer){clearTimeout(_undoTimer);_undoTimer=null;}
+  if(_undoInterval){clearInterval(_undoInterval);_undoInterval=null;}
+  if(_undoCommit){_undoCommit();_undoCommit=null;_undoRollback=null;}
+  if(undoFn){
+    _undoRollback=undoFn;_undoCommit=null;_undoSecs=10;
+    t.innerHTML=msg+' <button class="toast-undo-btn" onclick="undoLast()">&#x21A9; Undo</button><span class="toast-countdown" id="undo-cd"> 10</span>';
+    t.className='toast show'+(type?' '+type:'');
+    _undoInterval=setInterval(function(){
+      _undoSecs--;
+      const cd=document.getElementById('undo-cd');
+      if(cd)cd.textContent=' '+_undoSecs;
+      if(_undoSecs<=0){clearInterval(_undoInterval);_undoInterval=null;}
+    },1000);
+    _undoTimer=setTimeout(function(){
+      t.className='toast';
+      _undoRollback=null;_undoCommit=null;
+    },10500);
+  } else {
+    t.innerHTML=msg;
+    t.className='toast show'+(type?' '+type:'');
+    _undoTimer=setTimeout(function(){t.className='toast';},2500);
+  }
+}
+
+function undoLast(){
+  if(!_undoRollback)return;
+  if(_undoTimer){clearTimeout(_undoTimer);_undoTimer=null;}
+  if(_undoInterval){clearInterval(_undoInterval);_undoInterval=null;}
+  _undoRollback();
+  _undoRollback=null;_undoCommit=null;
+  const t=document.getElementById('toast');
+  t.innerHTML='&#x2713; Restored!';
+  t.className='toast show s';
+  setTimeout(function(){t.className='toast';},2000);
+}
 function exportResJSON(){const blob=new Blob([JSON.stringify(RES,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='white_rocks_reservations_'+new Date().toISOString().split('T')[0]+'.json';a.click();showToast('Exported '+RES.length+' reservations','s');}
 function importResJSON(inp){const file=inp.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{const data=JSON.parse(e.target.result);if(!Array.isArray(data))throw new Error('Invalid format');const ex=new Set(RES.map(r=>r.ref));let added=0,skipped=0;data.forEach(r=>{if(!r.name||!r.arr)return;const row={ref:r.ref||'',name:r.name||'',room:r.room||'',type:r.type||'DBL',arr:r.arr||'',dep:r.dep||'',ad:r.ad||2,day1:r.day1||'',day3:r.day3||'',rating:r.rating||0,notes:r.notes||''};if(ex.has(row.ref)&&row.ref)skipped++;else{RES.push(row);if(row.ref)ex.add(row.ref);added++;}});sv();renderRes();goTab('res');showToast(added+' imported'+(skipped?' \u2014 '+skipped+' skipped':''),'s');}catch(err){showToast('Error: '+err.message,'w');}inp.value='';};reader.readAsText(file);}
 function exportGroomJSON(){const blob=new Blob([JSON.stringify(GR,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='grooms_'+new Date().toISOString().split('T')[0]+'.json';a.click();showToast('Exported','s');}
@@ -3631,13 +3986,16 @@ const revSelected={ta:new Set(), goo:new Set()};
 
 function revDeleteEntry(src,idx){
   const history=src==='ta'?taHistory:gooHistory;
-  const r=history[idx];
-  if(!confirm('Delete "'+r.period+'" entry?'))return;
-  if(src==='ta'){taHistory.splice(idx,1);svTA();if(typeof fbdb!=='undefined')fbdb.ref('ta_reviews').set(taHistory);}
-  else{gooHistory.splice(idx,1);svGoo();if(typeof fbdb!=='undefined')fbdb.ref('goo_reviews').set(gooHistory);}
+  const saved=history.splice(idx,1)[0];
+  if(src==='ta'){svTA();if(typeof fbdb!=='undefined')fbdb.ref('ta_reviews').set(taHistory);}
+  else{svGoo();if(typeof fbdb!=='undefined')fbdb.ref('goo_reviews').set(gooHistory);}
   revSelected[src].clear();
   renderRevHistory(src);
-  showToast('Entry deleted','w');
+  showToast('"'+saved.period+'" deleted','w',function(){
+    if(src==='ta'){taHistory.splice(idx,0,saved);svTA();if(typeof fbdb!=='undefined')fbdb.ref('ta_reviews').set(taHistory);}
+    else{gooHistory.splice(idx,0,saved);svGoo();if(typeof fbdb!=='undefined')fbdb.ref('goo_reviews').set(gooHistory);}
+    revSelected[src].clear();renderRevHistory(src);
+  });
 }
 
 function revToggleSelect(src,idx){
@@ -5162,7 +5520,7 @@ function compAdd(){
   ['comp-room','comp-guest','comp-reason','comp-gift','comp-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
 }
 
-function compDel(i){if(!confirm('Delete?'))return;COMP_DATA.splice(i,1);svComp();renderComp();showToast('Deleted','w');}
+function compDel(i){const saved=COMP_DATA.splice(i,1)[0];svComp();renderComp();setTimeout(function(){showToast('Deleted','w',function(){COMP_DATA.splice(i,0,saved);svComp();renderComp();});},50);}
 
 function compCycleStatus(i){
   const o=['open','pending','resolved'];
