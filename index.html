@@ -1487,12 +1487,13 @@ canvas.an-chart{width:100%!important;height:220px!important}
       <div class="car-tbl-wrap">
         <table class="car-tbl">
           <thead><tr>
+          <thead><tr>
             <th style="width:28px">#</th><th style="width:95px">Ref No</th><th style="min-width:130px">Full Name</th>
             <th style="width:52px">Room</th><th style="width:105px">Day of Booking</th>
             <th style="width:105px">Delivery Date</th><th style="width:80px">Delivery Time</th>
             <th style="min-width:160px">Arrangement</th>
-            <th style="width:90px">Bosoni Price</th><th style="width:90px">Gross Price</th>
-            <th style="min-width:90px">Booked By</th><th style="width:105px">Status</th><th style="width:58px"></th>
+            <th style="width:90px">Bosoni €</th><th style="width:90px">Gross €</th>
+            <th style="min-width:100px">Booked By</th><th style="width:105px">Status</th><th style="width:58px"></th>
           </tr></thead>
           <tbody id="flowersTbody"></tbody>
         </table>
@@ -1546,7 +1547,7 @@ canvas.an-chart{width:100%!important;height:220px!important}
             <th style="width:52px">Room</th><th style="width:105px">Day of Booking</th>
             <th style="width:105px">Transfer Date</th><th style="width:80px">Time</th>
             <th style="min-width:180px">Route</th>
-            <th style="width:90px">Cost</th><th style="min-width:90px">Booked By</th><th style="width:105px">Status</th><th style="width:58px"></th>
+            <th style="width:90px">Cost</th><th style="min-width:90px">Booked By</th><th style="min-width:100px">Company</th><th style="width:105px">Status</th><th style="width:58px"></th>
           </tr></thead>
           <tbody id="transfersTbody"></tbody>
         </table>
@@ -2336,7 +2337,7 @@ function renderGenTab(tab){
     else if(tab==='flowers'){
       const isOpen_flowers=genIsOpen('flowers',i);
       const flSel='<select style="width:100%;padding:6px 8px;border:1.5px solid #fbcfe8;border-radius:8px;font-size:12px;outline:none" onchange="const _f=flowersGetByName(this.value);GEN_DATA[\'flowers\']['+i+'].arrangement=this.value;if(_f){GEN_DATA[\'flowers\']['+i+'].bosoniPrice=_f.bosoni;GEN_DATA[\'flowers\']['+i+'].grossPrice=_f.gross;}svGen(\'flowers\');">'+FLOWERS_CATALOG.map(f=>'<option value="'+f.name+'"'+(r.arrangement===f.name?' selected':'')+'>'+f.name+(f.gross?' (€'+f.gross+')':'')+'</option>').join('')+'</select>';
-      html+='<tr class="'+rc+(isOpen_flowers?' car-ep-open':'')+'" onclick="genToggleRow(\'flowers\','+i+')">'+baseFields+'<td>'+inpDate(i,'delivDate',r.delivDate)+'</td><td>'+inpTime(i,'delivTime',r.delivTime)+'</td><td>'+inp(i,'arrangement',r.arrangement,'Arrangement')+'</td><td style="padding:7px 9px;font-weight:700;color:#be185d">'+(r.bosoniPrice?'€'+r.bosoniPrice:'')+'</td><td style="padding:7px 9px;font-weight:700;color:#0d4a2f">'+(r.grossPrice?'€'+r.grossPrice:'')+'</td><td style="padding:5px 7px">'+sb(r,i)+'</td><td style="padding:4px 7px"><div style="display:flex;gap:3px">'+genExpandBtn('flowers',i,'#be185d')+'<button onclick="event.stopPropagation();genDel(\'flowers\','+i+')" style="width:26px;height:26px;background:#fce8e8;border:none;border-radius:6px;cursor:pointer;color:var(--coral);display:flex;align-items:center;justify-content:center"><i class="ti ti-trash" style="font-size:12px"></i></button></div></td></tr>';
+      html+='<tr class="'+rc+(isOpen_flowers?' car-ep-open':'')+'" onclick="genToggleRow(\'flowers\','+i+')">'+baseFields+'<td>'+inpDate(i,'delivDate',r.delivDate)+'</td><td>'+inpTime(i,'delivTime',r.delivTime)+'</td><td>'+inp(i,'arrangement',r.arrangement,'Arrangement')+'</td><td style="padding:7px 9px;font-weight:700;color:#be185d">'+(r.bosoniPrice?'€'+r.bosoniPrice:'')+'</td><td style="padding:7px 9px;font-weight:700;color:#0d4a2f">'+(r.grossPrice?'€'+r.grossPrice:'')+'</td><td>'+inp(i,'bookedBy',r.bookedBy,'Staff name')+'</td><td style="padding:5px 7px">'+sb(r,i)+'</td><td style="padding:4px 7px"><div style="display:flex;gap:3px">'+genExpandBtn('flowers',i,'#be185d')+'<button onclick="event.stopPropagation();genDel(\'flowers\','+i+')" style="width:26px;height:26px;background:#fce8e8;border:none;border-radius:6px;cursor:pointer;color:var(--coral);display:flex;align-items:center;justify-content:center"><i class="ti ti-trash" style="font-size:12px"></i></button></div></td></tr>';
       if(isOpen_flowers){html+='<tr class="car-ep" style="background:#fff0f7"><td colspan="20" onclick="event.stopPropagation()">'+epBaseFields('flowers',i,r,'#be185d')+'<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:12px;margin-top:10px">'+epField('Arrangement','#be185d',flSel)+epField('Delivery Date','#be185d',epDate('flowers',i,'delivDate',r.delivDate))+epField('Delivery Time','#be185d',epTime('flowers',i,'delivTime',r.delivTime))+epField('Bosoni €','#be185d',epNum('flowers',i,'bosoniPrice',r.bosoniPrice,'0','0',null))+epField('Gross €','#1a6644',epNum('flowers',i,'grossPrice',r.grossPrice,'0','0',null))+epField('Notes','#be185d',epInp('flowers',i,'notes',r.notes,'Room decoration...'))+epStatus('flowers',i,r.status,4)+'</div></td></tr>';}
     }
     else if(tab==='boats'){
@@ -2349,13 +2350,14 @@ function renderGenTab(tab){
     }
     else if(tab==='transfers'){
       const isOpen_transfers=genIsOpen('transfers',i);
-      const bwBadge=r.bothWays?'<span style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d;border-radius:5px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:4px">⇔ Both Ways</span>':'';const displayCost=r.bothWays&&r.totalCost?'€'+r.totalCost+' total':r.cost?'€'+r.cost:'';html+='<tr class="'+rc+(isOpen_transfers?' car-ep-open':'')+' " onclick="genToggleRow(\'transfers\','+i+')">'  +baseFields+'<td>'+inpDate(i,'date',r.date)+'</td><td>'+inpTime(i,'time',r.time)+'</td><td style="padding:5px 7px"><div style="display:flex;align-items:center;gap:3px">'+inp(i,'route',r.route,'Hotel → Airport')+bwBadge+'</div>'+(r.bothWays&&r.returnDate?'<div style="font-size:10px;color:#92400e;padding:2px 9px">↩ Return: '+r.returnDate+(r.returnTime?' '+r.returnTime:'')+'</div>':'')+'</td><td style="padding:7px 9px;font-weight:700;color:'+col+'">'+displayCost+'</td><td>'+inp(i,'company',r.company,'Company')+'</td><td style="padding:5px 7px">'+sb(r,i)+'</td><td style="padding:4px 7px"><div style="display:flex;gap:3px">'+genExpandBtn('transfers',i,'#92400e')+'<button onclick="event.stopPropagation();genDel(\'transfers\','+i+')" style="width:26px;height:26px;background:#fce8e8;border:none;border-radius:6px;cursor:pointer;color:var(--coral);display:flex;align-items:center;justify-content:center"><i class="ti ti-trash" style="font-size:12px"></i></button></div></td></tr>';
+      const bwBadge=r.bothWays?'<span style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d;border-radius:5px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:4px">⇔ Both Ways</span>':'';const displayCost=r.bothWays&&r.totalCost?'€'+r.totalCost+' total':r.cost?'€'+r.cost:'';html+='<tr class="'+rc+(isOpen_transfers?' car-ep-open':'')+' " onclick="genToggleRow(\'transfers\','+i+')">'  +baseFields+'<td>'+inpDate(i,'date',r.date)+'</td>'+'<td>'+inpTime(i,'time',r.time)+'</td>'+'<td style="padding:5px 7px">'+'<div style="display:flex;align-items:center;gap:3px">'+inp(i,'route',r.route,'Hotel → Airport')+bwBadge+'</div>'+(r.bothWays?(r.returnRoute||r.returnDate?'<div style="font-size:10px;color:#92400e;padding:2px 9px">↩ '+(r.returnRoute||'')+(r.returnDate?' '+r.returnDate:'')+(r.returnTime?' '+r.returnTime:'')+'</div>':''):'')+(r.notes?'<div style="font-size:10px;color:var(--muted);padding:1px 9px;font-style:italic">ℹ '+esc(r.notes)+'</div>':'')+'</td>'+'<td style="padding:7px 9px;font-weight:700;color:'+col+'">'+displayCost+'</td>'+'<td>'+inp(i,'bookedBy',r.bookedBy,'Staff name')+'</td>'+'<td>'+inp(i,'company',r.company,'Company...')+'</td>'+'<td style="padding:5px 7px">'+sb(r,i)+'</td>'+'<td style="padding:4px 7px"><div style="display:flex;gap:3px">'+genExpandBtn('transfers',i,'#92400e')+'<button onclick="event.stopPropagation();genDel(\'transfers\','+i+')" style="width:26px;height:26px;background:#fce8e8;border:none;border-radius:6px;cursor:pointer;color:var(--coral);display:flex;align-items:center;justify-content:center"><i class="ti ti-trash" style="font-size:12px"></i></button></div></td>'+'</tr>';
       if(isOpen_transfers){
         const bwChkd=r.bothWays?'checked':'';
         const bwReturnFields=r.bothWays?
           '<div style="grid-column:1/-1;padding:10px 14px;background:#fff8f0;border:1px solid #fcd34d;border-radius:9px;margin-top:4px">'
           +'<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#92400e;margin-bottom:8px">↩ Return Journey</div>'
           +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">'
+          +epField('Return Route','#92400e',epInp('transfers',i,'returnRoute',r.returnRoute,'Airport → Hotel'))
           +epField('Return Date','#92400e',epDate('transfers',i,'returnDate',r.returnDate))
           +epField('Return Time','#92400e',epTime('transfers',i,'returnTime',r.returnTime))
           +epField('Return Cost €','#92400e',epNum('transfers',i,'returnCost',r.returnCost,'0','0',null))
@@ -2454,8 +2456,9 @@ const GEN_FIELDS={
     {id:'arrangement',label:'Arrangement',type:'flowers_select'},
     {id:'bosoniPrice',label:'Bosoni €',type:'number',ph:'0'},
     {id:'grossPrice',label:'Gross €',type:'number',ph:'0'},
-    {id:'status',label:'Status',type:'status'},
-    {id:'bookedBy',label:'Booked By',type:'text',ph:'Staff name'}
+    {id:'notes',label:'Notes',type:'text_full',ph:'Special requests...'},
+    {id:'bookedBy',label:'Booked By',type:'text'},
+    {id:'status',label:'Status',type:'status'}
   ],
   boats:[
     {id:'ref',label:'Ref No',type:'text',ph:'Ref'},
@@ -2477,16 +2480,15 @@ const GEN_FIELDS={
     {id:'name',label:'Full Name',type:'text',ph:'SURNAME NAME',upper:true},
     {id:'room',label:'Room',type:'text',ph:'407'},
     {id:'bookDate',label:'Day of Booking',type:'date'},
-    {id:'date',label:'Transfer Date (outbound)',type:'date'},
+    {id:'date',label:'Transfer Date',type:'date'},
     {id:'time',label:'Time',type:'time'},
-    {id:'route',label:'Route',type:'text',ph:'Hotel → Airport'},
-    {id:'cost',label:'Cost € (outbound)',type:'number',ph:'0'},
+    {id:'route',label:'Route',type:'text_full',ph:'Hotel → Airport'},
+    {id:'cost',label:'Cost €',type:'number',ph:'0'},
     {id:'bothWays',label:'Both Ways',type:'transfer_bothways'},
-    {id:'returnDate',label:'Return Date',type:'date'},
-    {id:'returnTime',label:'Return Time',type:'time'},
-    {id:'returnCost',label:'Return Cost €',type:'number',ph:'0'},
-    {id:'status',label:'Status',type:'status'},
-    {id:'bookedBy',label:'Booked By',type:'text',ph:'Staff name'}
+    {id:'notes',label:'Notes / Flight #',type:'text_full',ph:'Flight number, special requests...'},
+    {id:'bookedBy',label:'Booked By',type:'text',ph:'Staff name'},
+    {id:'company',label:'Company / Driver',type:'text',ph:'Company name'},
+    {id:'status',label:'Status',type:'status'}
   ],
   vantours:[
     {id:'ref',label:'Ref No',type:'text',ph:'Ref'},
@@ -2661,15 +2663,16 @@ function genAdd(tab){
         +'<span style="font-size:11px;color:var(--muted);margin-left:4px">— tick to add return journey</span>'
         +'</div>'
         +'<div id="gm-return-fields" style="display:none;margin-top:8px;padding:12px 14px;background:#fff8f0;border:1px solid #fcd34d;border-radius:9px">'
-        +'<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#92400e;margin-bottom:8px">Return Journey</div>'
-        +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">'
+        +'<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#92400e;margin-bottom:8px">↩ Return Journey</div>'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'
+        +'<div style="grid-column:1/-1"><label style="display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Return Route</label><input class="tr-inp" style="width:100%" type="text" id="gm-returnRoute" placeholder="Airport → Hotel"></div>'
         +'<div><label style="display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Return Date</label><input class="tr-inp" style="width:100%" type="date" id="gm-returnDate"></div>'
         +'<div><label style="display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Return Time</label><input class="tr-inp" style="width:100%" type="time" id="gm-returnTime"></div>'
         +'<div><label style="display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Return Cost €</label><input class="tr-inp" style="width:100%" type="number" min="0" id="gm-returnCost" placeholder="0"></div>'
         +'</div></div>'
         +'</div>';
     } else if(f.type==='status'){
-      html+='<div>'+lbl2+'<select class="tr-inp" style="width:100%" id="gm-'+f.id+'"><option value="waiting">⏳ Waiting</option><option value="confirmed">✓ Confirmed</option><option value="commission">💰 Commission</option><option value="cancelled">✗ Cancelled</option></select></div>';
+      html+='<div style="grid-column:1/-1">'+lbl2+'<select class="tr-inp" style="width:100%" id="gm-'+f.id+'"><option value="waiting">⏳ Waiting</option><option value="confirmed">✓ Confirmed</option><option value="commission">💰 Commission</option><option value="cancelled">✗ Cancelled</option></select></div>';
     } else if(f.type==='exc_select'){
       html+='<div style="grid-column:1/3">'+lbl2+'<select style="'+selStyle+'" id="gm-excursion" onchange="gmExcUpdateInfo()"><option value="">-- Select excursion --</option>'+EXC_CATALOG.map(e=>'<option value="'+e.name+'">'+e.name+'</option>').join('')+'</select><div id="gm-exc-info" style="'+infoStyle+'"></div></div>';
     } else if(f.type==='moto_company'){
@@ -2729,6 +2732,7 @@ function genModalSave(){
     const bw=document.getElementById('gm-bothWays');
     row.bothWays=bw&&bw.checked?true:false;
     if(row.bothWays){
+      row.returnRoute=document.getElementById('gm-returnRoute')?.value||'';
       row.returnDate=document.getElementById('gm-returnDate')?.value||'';
       row.returnTime=document.getElementById('gm-returnTime')?.value||'';
       row.returnCost=parseFloat(document.getElementById('gm-returnCost')?.value)||0;
