@@ -1295,8 +1295,8 @@ canvas.an-chart{width:100%!important;height:220px!important}
       <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
         <span style="font-size:11px;color:var(--muted);font-weight:600">Add Day:</span>
         <input type="date" id="ms-add-day-date" style="padding:5px 8px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;font-family:var(--sans);outline:none">
-        <input type="time" id="ms-add-day-start" style="padding:5px 8px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;font-family:var(--sans);outline:none;width:90px">
-        <input type="time" id="ms-add-day-end" style="padding:5px 8px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;font-family:var(--sans);outline:none;width:90px">
+        <input type="time" id="ms-add-day-start" style="padding:5px 8px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;font-family:var(--sans);outline:none;width:90px" step="1800">
+        <input type="time" id="ms-add-day-end" style="padding:5px 8px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;font-family:var(--sans);outline:none;width:90px" step="1800">
         <button onclick="msAddDay()" style="display:flex;align-items:center;gap:5px;padding:6px 12px;background:#b45309;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--sans)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Add</button>
       </div>
     </div>
@@ -2349,8 +2349,35 @@ function renderGenTab(tab){
     }
     else if(tab==='transfers'){
       const isOpen_transfers=genIsOpen('transfers',i);
-      html+='<tr class="'+rc+(isOpen_transfers?' car-ep-open':'')+'" onclick="genToggleRow(\'transfers\','+i+')">'+baseFields+'<td>'+inpDate(i,'date',r.date)+'</td><td>'+inpTime(i,'time',r.time)+'</td><td>'+inp(i,'route',r.route,'Hotel → Airport')+'</td><td style="padding:7px 9px;font-weight:700;color:'+col+'">'+(r.cost?'€'+r.cost:'')+'</td><td>'+inp(i,'company',r.company,'Company')+'</td><td style="padding:5px 7px">'+sb(r,i)+'</td><td style="padding:4px 7px"><div style="display:flex;gap:3px">'+genExpandBtn('transfers',i,'#92400e')+'<button onclick="event.stopPropagation();genDel(\'transfers\','+i+')" style="width:26px;height:26px;background:#fce8e8;border:none;border-radius:6px;cursor:pointer;color:var(--coral);display:flex;align-items:center;justify-content:center"><i class="ti ti-trash" style="font-size:12px"></i></button></div></td></tr>';
-      if(isOpen_transfers){html+='<tr class="car-ep" style="background:#fef9f0"><td colspan="20" onclick="event.stopPropagation()">'+epBaseFields('transfers',i,r,'#92400e')+'<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:12px;margin-top:10px">'+epField('Route','#92400e',epInp('transfers',i,'route',r.route,'Hotel → Airport'))+epField('Date','#92400e',epDate('transfers',i,'date',r.date))+epField('Time','#92400e',epTime('transfers',i,'time',r.time))+epField('Pax','#92400e',epNum('transfers',i,'pax',r.pax,'1','1',null))+epField('T.O.','#92400e',epInp('transfers',i,'to',r.to,'Tour operator'))+epField('Company / Car','#92400e',epInp('transfers',i,'company',r.company,'Company name'))+epField('Cost €','#92400e',epNum('transfers',i,'cost',r.cost,'0','0',null))+epField('Flight #','#92400e',epInp('transfers',i,'notes',r.notes,'Flight number...'))+epStatus('transfers',i,r.status,4)+'</div></td></tr>';}
+      const bwBadge=r.bothWays?'<span style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d;border-radius:5px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:4px">⇔ Both Ways</span>':'';const displayCost=r.bothWays&&r.totalCost?'€'+r.totalCost+' total':r.cost?'€'+r.cost:'';html+='<tr class="'+rc+(isOpen_transfers?' car-ep-open':'')+' " onclick="genToggleRow(\'transfers\','+i+')">'  +baseFields+'<td>'+inpDate(i,'date',r.date)+'</td><td>'+inpTime(i,'time',r.time)+'</td><td style="padding:5px 7px"><div style="display:flex;align-items:center;gap:3px">'+inp(i,'route',r.route,'Hotel → Airport')+bwBadge+'</div>'+(r.bothWays&&r.returnDate?'<div style="font-size:10px;color:#92400e;padding:2px 9px">↩ Return: '+r.returnDate+(r.returnTime?' '+r.returnTime:'')+'</div>':'')+'</td><td style="padding:7px 9px;font-weight:700;color:'+col+'">'+displayCost+'</td><td>'+inp(i,'company',r.company,'Company')+'</td><td style="padding:5px 7px">'+sb(r,i)+'</td><td style="padding:4px 7px"><div style="display:flex;gap:3px">'+genExpandBtn('transfers',i,'#92400e')+'<button onclick="event.stopPropagation();genDel(\'transfers\','+i+')" style="width:26px;height:26px;background:#fce8e8;border:none;border-radius:6px;cursor:pointer;color:var(--coral);display:flex;align-items:center;justify-content:center"><i class="ti ti-trash" style="font-size:12px"></i></button></div></td></tr>';
+      if(isOpen_transfers){
+        const bwChkd=r.bothWays?'checked':'';
+        const bwReturnFields=r.bothWays?
+          '<div style="grid-column:1/-1;padding:10px 14px;background:#fff8f0;border:1px solid #fcd34d;border-radius:9px;margin-top:4px">'
+          +'<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#92400e;margin-bottom:8px">↩ Return Journey</div>'
+          +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">'
+          +epField('Return Date','#92400e',epDate('transfers',i,'returnDate',r.returnDate))
+          +epField('Return Time','#92400e',epTime('transfers',i,'returnTime',r.returnTime))
+          +epField('Return Cost €','#92400e',epNum('transfers',i,'returnCost',r.returnCost,'0','0',null))
+          +'</div></div>':'';
+        html+='<tr class="car-ep" style="background:#fef9f0"><td colspan="20" onclick="event.stopPropagation()">'+epBaseFields('transfers',i,r,'#92400e')
+          +'<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:12px;margin-top:10px">'
+          +epField('Route','#92400e',epInp('transfers',i,'route',r.route,'Hotel → Airport'))
+          +epField('Outbound Date','#92400e',epDate('transfers',i,'date',r.date))
+          +epField('Outbound Time','#92400e',epTime('transfers',i,'time',r.time))
+          +epField('Pax','#92400e',epNum('transfers',i,'pax',r.pax,'1','1',null))
+          +epField('T.O.','#92400e',epInp('transfers',i,'to',r.to,'Tour operator'))
+          +epField('Company / Car','#92400e',epInp('transfers',i,'company',r.company,'Company name'))
+          +epField('Outbound Cost €','#92400e',epNum('transfers',i,'cost',r.cost,'0','0',null))
+          +epField('Flight #','#92400e',epInp('transfers',i,'notes',r.notes,'Flight number...'))
+          +'<div style="grid-column:1/-1"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px 12px;background:#fef3c7;border-radius:8px;border:1px solid #fcd34d">'
+          +'<input type="checkbox" '+bwChkd+' style="width:16px;height:16px;accent-color:#92400e;cursor:pointer" onchange="trToggleBothWays('+i+',this.checked)">'
+          +'<span style="font-size:13px;font-weight:600;color:#92400e">↔ Both Ways (Return Transfer)</span>'
+          +'</label></div>'
+          +bwReturnFields
+          +epStatus('transfers',i,r.status,4)
+          +'</div></td></tr>';
+      }
     }
     else if(tab==='vantours'){
       const isOpen_vt=genIsOpen('vantours',i);
@@ -2450,10 +2477,14 @@ const GEN_FIELDS={
     {id:'name',label:'Full Name',type:'text',ph:'SURNAME NAME',upper:true},
     {id:'room',label:'Room',type:'text',ph:'407'},
     {id:'bookDate',label:'Day of Booking',type:'date'},
-    {id:'date',label:'Transfer Date',type:'date'},
+    {id:'date',label:'Transfer Date (outbound)',type:'date'},
     {id:'time',label:'Time',type:'time'},
     {id:'route',label:'Route',type:'text',ph:'Hotel → Airport'},
-    {id:'cost',label:'Cost €',type:'number',ph:'0'},
+    {id:'cost',label:'Cost € (outbound)',type:'number',ph:'0'},
+    {id:'bothWays',label:'Both Ways',type:'transfer_bothways'},
+    {id:'returnDate',label:'Return Date',type:'date'},
+    {id:'returnTime',label:'Return Time',type:'time'},
+    {id:'returnCost',label:'Return Cost €',type:'number',ph:'0'},
     {id:'status',label:'Status',type:'status'},
     {id:'bookedBy',label:'Booked By',type:'text',ph:'Staff name'}
   ],
@@ -2570,6 +2601,16 @@ function gmMotoUpdatePrice(){
     }
   }
 }
+function trToggleBothWays(i,val){
+  GEN_DATA['transfers'][i].bothWays=val;
+  if(!val){GEN_DATA['transfers'][i].returnDate='';GEN_DATA['transfers'][i].returnCost=0;}
+  svGen('transfers');renderGenTab('transfers');
+}
+function gmTransferBothWaysToggle(){
+  var chk=document.getElementById('gm-bothWays');
+  var rf=document.getElementById('gm-return-fields');
+  if(rf)rf.style.display=(chk&&chk.checked)?'block':'none';
+}
 function gmExcUpdateInfo(){
   const name=document.getElementById('gm-excursion')?.value;
   const exc=EXC_CATALOG.find(e=>e.name===name);
@@ -2613,7 +2654,21 @@ function genAdd(tab){
   let html='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">';
   fields.forEach(f=>{
     const lbl2='<label style="display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">'+f.label+'</label>';
-    if(f.type==='status'){
+    if(f.type==='transfer_bothways'){
+      html+='<div style="grid-column:1/3"><div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:#fef9f0;border:1.5px solid #fcd34d;border-radius:9px;margin-bottom:4px">'
+        +'<input type="checkbox" id="gm-bothWays" style="width:17px;height:17px;cursor:pointer;accent-color:#92400e" onchange="gmTransferBothWaysToggle()">'
+        +'<label for="gm-bothWays" style="font-size:13px;font-weight:600;cursor:pointer;color:#92400e">Both Ways (Return Transfer)</label>'
+        +'<span style="font-size:11px;color:var(--muted);margin-left:4px">— tick to add return journey</span>'
+        +'</div>'
+        +'<div id="gm-return-fields" style="display:none;margin-top:8px;padding:12px 14px;background:#fff8f0;border:1px solid #fcd34d;border-radius:9px">'
+        +'<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#92400e;margin-bottom:8px">Return Journey</div>'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">'
+        +'<div><label style="display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Return Date</label><input class="tr-inp" style="width:100%" type="date" id="gm-returnDate"></div>'
+        +'<div><label style="display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Return Time</label><input class="tr-inp" style="width:100%" type="time" id="gm-returnTime"></div>'
+        +'<div><label style="display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Return Cost €</label><input class="tr-inp" style="width:100%" type="number" min="0" id="gm-returnCost" placeholder="0"></div>'
+        +'</div></div>'
+        +'</div>';
+    } else if(f.type==='status'){
       html+='<div>'+lbl2+'<select class="tr-inp" style="width:100%" id="gm-'+f.id+'"><option value="waiting">⏳ Waiting</option><option value="confirmed">✓ Confirmed</option><option value="commission">💰 Commission</option><option value="cancelled">✗ Cancelled</option></select></div>';
     } else if(f.type==='exc_select'){
       html+='<div style="grid-column:1/3">'+lbl2+'<select style="'+selStyle+'" id="gm-excursion" onchange="gmExcUpdateInfo()"><option value="">-- Select excursion --</option>'+EXC_CATALOG.map(e=>'<option value="'+e.name+'">'+e.name+'</option>').join('')+'</select><div id="gm-exc-info" style="'+infoStyle+'"></div></div>';
@@ -2668,6 +2723,17 @@ function genModalSave(){
   if(tab==='boats'&&row.company){
     const coMap={'MAK':'MAK Yachting','Ego':'Ego Cruises','SIW':'Seven Islands Ways'};
     if(coMap[row.company])row.company=coMap[row.company];
+  }
+  // Transfers: handle bothWays
+  if(tab==='transfers'){
+    const bw=document.getElementById('gm-bothWays');
+    row.bothWays=bw&&bw.checked?true:false;
+    if(row.bothWays){
+      row.returnDate=document.getElementById('gm-returnDate')?.value||'';
+      row.returnTime=document.getElementById('gm-returnTime')?.value||'';
+      row.returnCost=parseFloat(document.getElementById('gm-returnCost')?.value)||0;
+      row.totalCost=(parseFloat(row.cost)||0)+row.returnCost;
+    }
   }
   if(!row.name&&!row.ref){showToast('Please fill in at least Name or Ref','w');return;}
   GEN_DATA[tab].unshift(row);svGen(tab);genModalClose();renderGenTab(tab);showToast('Booking added!','s');
@@ -4656,6 +4722,32 @@ function wlPromote(type,dateKey,idx){const entries=clsData[type][dateKey]||[];if
 
 /* MASSAGE */
 let massageData=JSON.parse(localStorage.getItem('massage_data')||'{}');
+function msAddDay(){
+  var dateKey=document.getElementById('ms-add-day-date').value;
+  var start=document.getElementById('ms-add-day-start').value;
+  var end=document.getElementById('ms-add-day-end').value;
+  if(!dateKey){showToast('Select a date','w');return;}
+  if(!start||!end){showToast('Select start and end time','w');return;}
+  // Round to nearest 30 min
+  function roundTo30(t){var m=timeToMins(t);var r=Math.round(m/30)*30;return minsToTime(r);}
+  start=roundTo30(start);end=roundTo30(end);
+  if(timeToMins(start)>=timeToMins(end)){showToast('End time must be after start','w');return;}
+  if(!MASSAGE_SCHEDULE[dateKey])MASSAGE_SCHEDULE[dateKey]=[];
+  // Check if window already exists
+  var exists=MASSAGE_SCHEDULE[dateKey].some(function(w){return w.start===start&&w.end===end;});
+  if(exists){showToast('This time window already exists','w');return;}
+  MASSAGE_SCHEDULE[dateKey].push({start:start,end:end});
+  // Also store in massageData so it persists via Firebase
+  if(!massageData[dateKey])massageData[dateKey]={};
+  massageData[dateKey].__customSlots=MASSAGE_SCHEDULE[dateKey];
+  svMassage();
+  // Reset fields
+  document.getElementById('ms-add-day-date').value='';
+  document.getElementById('ms-add-day-start').value='';
+  document.getElementById('ms-add-day-end').value='';
+  renderMassage();
+  showToast('Day added!','s');
+}
 function svMassage(){try{localStorage.setItem('massage_data',JSON.stringify(massageData));}catch(e){}if(typeof fbdb!=='undefined')fbdb.ref('massage_data').set(massageData);}
 const MASSAGE_SCHEDULE={
   '2026-05-28':[{start:'11:00',end:'13:00'},{start:'17:30',end:'19:00'}],
@@ -4681,7 +4773,7 @@ const MASSAGE_SCHEDULE={
 };
 function timeToMins(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
 function minsToTime(m){return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');}
-function getSlots(dateKey){const windows=MASSAGE_SCHEDULE[dateKey]||[];const slots=[];windows.forEach(w=>{let cur=timeToMins(w.start);const end=timeToMins(w.end);while(cur+60<=end){slots.push(minsToTime(cur));cur+=60;}});return slots;}
+function getSlots(dateKey){const windows=MASSAGE_SCHEDULE[dateKey]||[];const slots=[];windows.forEach(w=>{let cur=Math.round(timeToMins(w.start)/30)*30;const end=Math.round(timeToMins(w.end)/30)*30;while(cur+60<=end){slots.push(minsToTime(cur));cur+=60;}});return slots;}
 let msMFilter='all'; // month filter: 'all' or '05','06',...
 let msSFilter='all'; // status filter: 'all','waiting','confirmed','commission','cancelled'
 
